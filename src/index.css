@@ -1,0 +1,25 @@
+body {
+  margin: 0;
+  background-color: #f9f7f5;
+  font-family: 'Nunito', sans-serif;
+}
+
+#root {
+  width: 100%;
+  min-height: 100svh;
+}
+
+.card-hover:hover img {
+  transform: scale(1.06);
+}
+
+.search-overlay {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.search-overlay.active {
+  opacity: 1;
+  pointer-events: auto;
+}
