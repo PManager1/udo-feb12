@@ -25,6 +25,17 @@ export default function SettingsPage() {
   const [phone, setPhone] = useState('')
   const [location, setLocation] = useState('')
   const [profileLoading, setProfileLoading] = useState(true)
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+
+  // Lock body scroll when mobile menu is open
+  useEffect(() => {
+    if (mobileMenuOpen) {
+      document.body.style.overflow = 'hidden'
+    } else {
+      document.body.style.overflow = ''
+    }
+    return () => { document.body.style.overflow = '' }
+  }, [mobileMenuOpen])
 
   useEffect(() => {
     updateTokenDisplay()
@@ -156,6 +167,26 @@ export default function SettingsPage() {
 
   return (
     <>
+      {/* Mobile Menu Overlay */}
+      {mobileMenuOpen && (
+        <div className="fixed inset-0 bg-white z-[9999] flex flex-col p-4 px-8 pb-8 lg:hidden">
+          <button onClick={() => setMobileMenuOpen(false)} className="absolute top-4 right-4 p-2 text-gray-800 z-10">
+            <svg className="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+          <div className="w-full flex justify-center items-center mb-12">
+            <Link to="/" onClick={() => setMobileMenuOpen(false)} className="text-3xl font-bold">
+              <span className="text-orange-500">U <span className="-mx-1"></span>-</span><span className="text-gray-800">DO</span>
+            </Link>
+          </div>
+          <nav className="flex flex-col gap-6 w-full">
+            <Link to="/" onClick={() => setMobileMenuOpen(false)} className="text-2xl font-bold text-gray-800 border-b border-gray-100 pb-4 w-full">Home</Link>
+            <Link to="/settings/" onClick={() => setMobileMenuOpen(false)} className="text-2xl font-bold text-orange-500 border-b border-gray-100 pb-4 w-full">Settings</Link>
+          </nav>
+        </div>
+      )}
+
       {/* Nav */}
       <nav className="bg-white shadow-sm sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -163,13 +194,20 @@ export default function SettingsPage() {
             <Link to="/" className="text-2xl font-bold">
               <span className="text-orange-500">U <span className="-mx-1"></span>-</span><span className="text-gray-800">DO</span>
             </Link>
-            <div className="flex items-center space-x-4">
+            {/* Desktop nav */}
+            <div className="hidden md:flex items-center space-x-4">
               <Link to="/" className="text-gray-700 hover:text-orange-500 transition-colors">Home</Link>
               <span className="text-gray-700 font-medium">Settings</span>
               <Link to="/login/" className="bg-orange-500 text-white px-4 py-2 rounded-full font-semibold hover:bg-orange-600 transition-colors">
                 My Account
               </Link>
             </div>
+            {/* Mobile hamburger */}
+            <button onClick={() => setMobileMenuOpen(true)} className="md:hidden p-2 rounded-lg hover:bg-gray-100 transition">
+              <svg className="w-8 h-8 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
+            </button>
           </div>
         </div>
       </nav>

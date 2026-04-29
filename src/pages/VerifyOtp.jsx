@@ -10,6 +10,17 @@ export default function VerifyOtpPage() {
 
   const [otp, setOtp] = useState(['', '', '', ''])
   const [loading, setLoading] = useState(false)
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
+
+  // Lock body scroll when mobile menu is open
+  useEffect(() => {
+    if (mobileMenuOpen) {
+      document.body.style.overflow = 'hidden'
+    } else {
+      document.body.style.overflow = ''
+    }
+    return () => { document.body.style.overflow = '' }
+  }, [mobileMenuOpen])
   const [message, setMessage] = useState({ text: '', type: '' })
   const inputRefs = useRef([])
 
@@ -137,6 +148,26 @@ export default function VerifyOtpPage() {
 
   return (
     <>
+      {/* Mobile Menu Overlay */}
+      {mobileMenuOpen && (
+        <div className="fixed inset-0 bg-white z-[9999] flex flex-col p-4 px-8 pb-8 lg:hidden">
+          <button onClick={() => setMobileMenuOpen(false)} className="absolute top-4 right-4 p-2 text-gray-800 z-10">
+            <svg className="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+          <div className="w-full flex justify-center items-center mb-12">
+            <Link to="/" onClick={() => setMobileMenuOpen(false)} className="text-3xl font-bold">
+              <span className="text-orange-500">U <span className="-mx-1"></span>-</span><span className="text-gray-800">DO</span>
+            </Link>
+          </div>
+          <nav className="flex flex-col gap-6 w-full">
+            <Link to="/login/" onClick={() => setMobileMenuOpen(false)} className="text-2xl font-bold text-gray-800 border-b border-gray-100 pb-4 w-full">Sign in</Link>
+            <Link to="/signup/" onClick={() => setMobileMenuOpen(false)} className="bg-orange-500 text-white text-xl font-bold py-4 px-8 rounded-full shadow-md text-center mt-4">Join</Link>
+          </nav>
+        </div>
+      )}
+
       {/* Header */}
       <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-200 shadow-sm">
         <div className="absolute left-6 sm:left-12 top-1/2 -translate-y-1/2 z-[60] hover:opacity-90 transition">
@@ -163,6 +194,11 @@ export default function VerifyOtpPage() {
             <button className="p-3 rounded-full hover:bg-gray-100 transition-colors">
               <svg className="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+              </svg>
+            </button>
+            <button onClick={() => setMobileMenuOpen(true)} className="p-2 rounded-lg hover:bg-gray-100 transition">
+              <svg className="w-8 h-8 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
               </svg>
             </button>
           </div>
@@ -261,15 +297,15 @@ export default function VerifyOtpPage() {
             <div>
               <h4 className="text-lg font-semibold mb-4 text-gray-800">Support</h4>
               <ul className="space-y-2">
-                <li><Link to="/contact-us/" className="text-gray-700 hover:text-orange-500 transition">Help Center</Link></li>
-                <li><Link to="/contact-us/" className="text-gray-700 hover:text-orange-500 transition">Contact Us</Link></li>
+                <li><a href="/contact-us/" className="text-gray-700 hover:text-orange-500 transition">Help Center</a></li>
+                <li><a href="/contact-us/" className="text-gray-700 hover:text-orange-500 transition">Contact Us</a></li>
               </ul>
             </div>
             <div>
               <h4 className="text-lg font-semibold mb-4 text-gray-800">Legal</h4>
               <ul className="space-y-2">
-                <li><Link to="/terms/" className="text-gray-700 hover:text-orange-500 transition">Terms of Service</Link></li>
-                <li><Link to="/privacy/" className="text-gray-700 hover:text-orange-500 transition">Privacy Policy</Link></li>
+                <li><a href="/terms/" className="text-gray-700 hover:text-orange-500 transition">Terms of Service</a></li>
+                <li><a href="/privacy/" className="text-gray-700 hover:text-orange-500 transition">Privacy Policy</a></li>
               </ul>
             </div>
             <div>

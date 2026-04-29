@@ -1,18 +1,21 @@
 import { useState, useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import tokenManager from '../utils/tokenManager'
-import { USER_API } from '../config/api'
+import { USER_API, SEARCH_OVERLAY_API } from '../config/api'
 
 function HomePage() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const [mobileDropdownOpen, setMobileDropdownOpen] = useState(false)
   const [desktopDropdownOpen, setDesktopDropdownOpen] = useState(false)
   const [whyReadMore, setWhyReadMore] = useState(false)
+  const [showSearchOverlay, setShowSearchOverlay] = useState(false)
+  const [searchItems, setSearchItems] = useState({ recentSearches: [], popularOnUDO: [], trendingNow: [] })
 
   // User info state
-  const [userName, setUserName] = useState('John Doe')
-  const [userEmail, setUserEmail] = useState('john.doe@email.com')
-  const [userInitials, setUserInitials] = useState('JD')
+  const [isLoggedIn, setIsLoggedIn] = useState(false)
+  const [userName, setUserName] = useState('')
+  const [userEmail, setUserEmail] = useState('')
+  const [userInitials, setUserInitials] = useState('')
 
   const mobileDropdownRef = useRef(null)
   const desktopDropdownRef = useRef(null)
@@ -56,11 +59,35 @@ function HomePage() {
           .map(n => n.charAt(0).toUpperCase())
           .join('')
         if (initials) setUserInitials(initials)
+        setIsLoggedIn(true)
       } catch (error) {
         console.error('HomePage: Error loading profile:', error)
       }
     }
     loadProfile()
+  }, [])
+
+  // Fetch search overlay items on mount
+  useEffect(() => {
+    async function loadSearchItems() {
+      try {
+        const response = await fetch(SEARCH_OVERLAY_API.publicItems)
+        const json = await response.json()
+        const data = { recentSearches: [], popularOnUDO: [], trendingNow: [] }
+        if (json.items && Array.isArray(json.items)) {
+          json.items.forEach(item => {
+            const card = { href: item.href, label: item.label, image: item.image }
+            if (item.section === 'recent_searches') data.recentSearches.push(card)
+            else if (item.section === 'popular_on_udo') data.popularOnUDO.push(card)
+            else if (item.section === 'trending_now') data.trendingNow.push(card)
+          })
+        }
+        setSearchItems(data)
+      } catch (err) {
+        console.error('Failed to load search overlay items:', err)
+      }
+    }
+    loadSearchItems()
   }, [])
 
   // Close dropdowns on outside click
@@ -77,6 +104,7 @@ function HomePage() {
       if (e.key === 'Escape') {
         setMobileDropdownOpen(false)
         setDesktopDropdownOpen(false)
+        setShowSearchOverlay(false)
       }
     }
     document.addEventListener('click', handleClickOutside)
@@ -119,28 +147,39 @@ function HomePage() {
   return (
     <>
       {/* Mobile Menu Overlay */}
-      <div
-        className={`flex lg:hidden relative ${mobileMenuOpen ? 'fixed inset-0 bg-white z-[9999] flex-col p-4 px-8 pb-8' : 'hidden'}`}
-      >
-        <button
-          onClick={() => setMobileMenuOpen(false)}
-          className="absolute top-4 right-4 p-2 text-gray-800 z-10"
-        >
-          <svg className="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
-          </svg>
-        </button>
+      {mobileMenuOpen && (
+        <div className="fixed inset-0 bg-white z-[9999] flex flex-col p-4 px-8 pb-8 lg:hidden">
+          <button
+            onClick={() => setMobileMenuOpen(false)}
+            className="absolute top-4 right-4 p-2 text-gray-800 z-10"
+          >
+            <svg className="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
 
-        <div className="w-full flex justify-center items-center mb-12">
-          <div className="text-3xl font-bold">
-            <span className="text-orange-500">U <span className="-mx-1"></span>-</span><span className="text-gray-800">DO</span>
+          <div className="w-full flex justify-center items-center mb-12">
+            <Link to="/" onClick={() => setMobileMenuOpen(false)} className="text-3xl font-bold">
+              <span className="text-orange-500">U <span className="-mx-1"></span>-</span><span className="text-gray-800">DO</span>
+            </Link>
           </div>
+          {isLoggedIn ? (
+            <nav className="flex flex-col gap-6 w-full">
+              <div className="border-b border-gray-100 pb-4">
+                <p className="text-lg font-semibold text-gray-900">{userName}</p>
+                <p className="text-sm text-gray-500">{userEmail}</p>
+              </div>
+              <Link to="/settings/" onClick={() => setMobileMenuOpen(false)} className="text-2xl font-bold text-gray-800 border-b border-gray-100 pb-4 w-full">Profile Settings</Link>
+              <button onClick={() => { setMobileMenuOpen(false); handleSignOut() }} className="text-2xl font-bold text-red-600 border-b border-gray-100 pb-4 w-full text-left">Sign Out</button>
+            </nav>
+          ) : (
+            <nav className="flex flex-col gap-6 w-full">
+              <Link to="/login/" onClick={() => setMobileMenuOpen(false)} className="text-2xl font-bold text-gray-800 border-b border-gray-100 pb-4 w-full">Sign in</Link>
+              <Link to="/signup/" onClick={() => setMobileMenuOpen(false)} className="bg-orange-500 text-white text-xl font-bold py-4 px-8 rounded-full shadow-md text-center mt-4">Join</Link>
+            </nav>
+          )}
         </div>
-        <nav className="flex flex-col gap-6 w-full">
-          <Link to="/login/" className="text-2xl font-bold text-gray-800 border-b border-gray-100 pb-4 w-full">Sign in</Link>
-          <Link to="/signup/" className="bg-orange-500 text-white text-xl font-bold py-4 px-8 rounded-full shadow-md text-center mt-4">Join</Link>
-        </nav>
-      </div>
+      )}
 
       {/* Header */}
       <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-200 shadow-sm">
@@ -162,6 +201,7 @@ function HomePage() {
                 placeholder="Search"
                 className="w-full pl-5 pr-12 py-3.5 bg-[#DADAD3] border border-gray-300 rounded-full text-base focus:outline-none focus:ring-2 focus:ring-gray-400/50 transition shadow-sm cursor-pointer"
                 readOnly
+                onClick={() => setShowSearchOverlay(true)}
               />
               <button className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700">
                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -173,7 +213,7 @@ function HomePage() {
 
           {/* Mobile buttons */}
           <div className="flex items-center gap-2 lg:hidden ml-auto">
-            <button className="p-3 rounded-full hover:bg-gray-100 transition-colors">
+            <button onClick={() => setShowSearchOverlay(true)} className="p-3 rounded-full hover:bg-gray-100 transition-colors">
               <svg className="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
               </svg>
@@ -296,9 +336,9 @@ function HomePage() {
             Let someone do it for you.
           </p>
           <div className="mt-3 flex gap-4 justify-center flex-wrap">
-            <Link to="/profiles-list/" className="inline-block bg-orange-500 hover:bg-orange-600 text-white font-semibold py-3 px-8 rounded-full text-lg transition duration-300 shadow-md hover:shadow-lg cursor-pointer">
+            <a href="/profiles-list/" className="inline-block bg-orange-500 hover:bg-orange-600 text-white font-semibold py-3 px-8 rounded-full text-lg transition duration-300 shadow-md hover:shadow-lg cursor-pointer">
               Browse Professionals
-            </Link>
+            </a>
           </div>
 
           {/* Trust Badges */}
@@ -340,7 +380,7 @@ function HomePage() {
             <div className="absolute bottom-5 left-5 text-white"><p className="text-xs uppercase tracking-wider opacity-90">Home improvement</p><p className="text-4xl font-semibold">Mount art or shelves</p></div>
           </a>
 
-          <a href="/mover" className="group relative rounded-3xl overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300 bg-white h-[351px] w-[96%] mx-auto cursor-pointer">
+          <a href="/Mover/" className="group relative rounded-3xl overflow-hidden shadow-md hover:shadow-xl transition-shadow duration-300 bg-white h-[351px] w-[96%] mx-auto cursor-pointer">
             <img src="/img/movers/local-moving.jpg" alt="Movers" className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" />
             <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent"></div>
             <div className="absolute bottom-5 left-5 text-white"><p className="text-xs uppercase tracking-wider opacity-90">Professional help</p><p className="text-4xl font-semibold">Movers</p></div>
@@ -379,9 +419,9 @@ function HomePage() {
                 <span className="text-base font-normal text-gray-700">Let somebody else do it for you. </span>
                 Connect with local professionals for any task around your home. From furniture assembly to home repairs, we make it easy to find skilled help at fair prices. No middleman, no hidden fees, just quality service you can trust.
               </p>
-              <Link to="/profiles-list/" className="bg-orange-500 hover:bg-orange-600 text-white font-semibold py-4 px-8 rounded-full text-lg transition duration-300 shadow-md hover:shadow-lg w-fit inline-block mt-8">
+              <a href="/profiles-list/" className="bg-orange-500 hover:bg-orange-600 text-white font-semibold py-4 px-8 rounded-full text-lg transition duration-300 shadow-md hover:shadow-lg w-fit inline-block mt-8">
                 Browse Professionals
-              </Link>
+              </a>
             </div>
           </div>
         </div>
@@ -515,7 +555,7 @@ function HomePage() {
               <h4 className="text-lg font-semibold mb-4 text-gray-800">Quick Links</h4>
               <ul className="space-y-2">
                 <li><Link to="/" className="text-gray-700 hover:text-orange-500 transition">Home</Link></li>
-                <li><Link to="/profiles-list/" className="text-gray-700 hover:text-orange-500 transition">Services</Link></li>
+                <li><a href="/profiles-list/" className="text-gray-700 hover:text-orange-500 transition">Services</a></li>
                 <li><a href="/join-as-professional/" className="text-gray-700 hover:text-orange-500 transition">Join as Pro</a></li>
               </ul>
             </div>
@@ -523,16 +563,16 @@ function HomePage() {
               <h4 className="text-lg font-semibold mb-4 text-gray-800">Support</h4>
               <ul className="space-y-2">
                 <li><a href="#" className="text-gray-700 hover:text-orange-500 transition">Help Center</a></li>
-                <li><Link to="/safety/" className="text-gray-700 hover:text-orange-500 transition">Safety</Link></li>
-                <li><Link to="/contact-us/" className="text-gray-700 hover:text-orange-500 transition">Contact Us</Link></li>
+                <li><a href="/safety/" className="text-gray-700 hover:text-orange-500 transition">Safety</a></li>
+                <li><a href="/contact-us/" className="text-gray-700 hover:text-orange-500 transition">Contact Us</a></li>
               </ul>
             </div>
             <div>
               <h4 className="text-lg font-semibold mb-4 text-gray-800">Legal</h4>
               <ul className="space-y-2">
-                <li><Link to="/terms/" className="text-gray-700 hover:text-orange-500 transition">Terms of Service</Link></li>
-                <li><Link to="/privacy/" className="text-gray-700 hover:text-orange-500 transition">Privacy Policy</Link></li>
-                <li><Link to="/trademark/" className="text-gray-700 hover:text-orange-500 transition">Trademark</Link></li>
+                <li><a href="/terms/" className="text-gray-700 hover:text-orange-500 transition">Terms of Service</a></li>
+                <li><a href="/privacy/" className="text-gray-700 hover:text-orange-500 transition">Privacy Policy</a></li>
+                <li><a href="/trademark/" className="text-gray-700 hover:text-orange-500 transition">Trademark</a></li>
               </ul>
             </div>
             <div>
@@ -567,6 +607,81 @@ function HomePage() {
           </div>
         </div>
       </footer>
+
+      {/* Search Overlay */}
+      {showSearchOverlay && (
+        <div className="fixed left-0 right-0 top-0 z-[100] bg-black/20 backdrop-blur-sm h-full" onClick={(e) => { if (e.target === e.currentTarget) setShowSearchOverlay(false) }}>
+          <div className="mx-4 pt-4 h-[70vh] bg-white shadow-2xl p-8 overflow-y-auto pointer-events-auto">
+            <div className="flex items-center justify-between mb-8">
+              <div className="flex-1 mr-4">
+                <input
+                  type="text"
+                  placeholder="What do you need done today?"
+                  className="w-full text-2xl font-light border-b-2 border-gray-200 py-4 focus:outline-none focus:border-orange-500 transition bg-[#DADAD3]"
+                  autoFocus
+                />
+              </div>
+              <button onClick={() => setShowSearchOverlay(false)} className="p-2 hover:bg-gray-100 rounded-full transition">
+                <svg className="w-8 h-8 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
+
+            {searchItems.recentSearches.length > 0 && (
+              <>
+                <h3 className="text-xl font-bold text-gray-900 mb-2">Recent searches</h3>
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+                  {searchItems.recentSearches.map(item => (
+                    <a key={item.label} href={item.href}>
+                      <div className="group bg-gray-100 hover:bg-gray-200 rounded-2xl cursor-pointer transition overflow-hidden relative w-full h-[82.5px] flex items-center">
+                        {item.image && <img src={item.image} alt={item.label} className="w-[30%] h-full object-cover rounded-l-2xl" />}
+                        <span className="text-gray-900 flex-1 text-center text-lg font-medium">{item.label}</span>
+                      </div>
+                    </a>
+                  ))}
+                </div>
+              </>
+            )}
+
+            {searchItems.popularOnUDO.length > 0 && (
+              <>
+                <h3 className="text-xl font-bold text-gray-900 mt-12 mb-2">Popular on UDO</h3>
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+                  {searchItems.popularOnUDO.map(item => (
+                    <a key={item.label} href={item.href}>
+                      <div className="group bg-gray-100 hover:bg-gray-200 rounded-2xl cursor-pointer transition overflow-hidden relative w-full h-[82.5px] flex items-center">
+                        {item.image && <img src={item.image} alt={item.label} className="w-[30%] h-full object-cover rounded-l-2xl" />}
+                        <span className="text-gray-900 flex-1 text-center text-lg font-medium">{item.label}</span>
+                      </div>
+                    </a>
+                  ))}
+                </div>
+              </>
+            )}
+
+            {searchItems.trendingNow.length > 0 && (
+              <>
+                <h3 className="text-xl font-bold text-gray-900 mt-12 mb-2">Trending now</h3>
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+                  {searchItems.trendingNow.map(item => (
+                    <a key={item.label} href={item.href}>
+                      <div className="group bg-gray-100 hover:bg-gray-200 rounded-2xl cursor-pointer transition overflow-hidden relative w-full h-[82.5px] flex items-center">
+                        {item.image && <img src={item.image} alt={item.label} className="w-[30%] h-full object-cover rounded-l-2xl" />}
+                        <span className="text-gray-900 flex-1 text-center text-lg font-medium">{item.label}</span>
+                      </div>
+                    </a>
+                  ))}
+                </div>
+              </>
+            )}
+
+            {searchItems.recentSearches.length === 0 && searchItems.popularOnUDO.length === 0 && searchItems.trendingNow.length === 0 && (
+              <p className="text-center text-gray-500 py-8">Loading suggestions...</p>
+            )}
+          </div>
+        </div>
+      )}
     </>
   )
 }
