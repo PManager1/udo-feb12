@@ -21,18 +21,32 @@ function HomePage() {
   useEffect(() => {
     async function loadProfile() {
       const headers = tokenManager.getHeaders()
-      if (!headers.Authorization) return
+      if (!headers.Authorization) {
+        console.log('HomePage: No auth token found, skipping profile fetch')
+        return
+      }
 
       try {
+        console.log('HomePage: Fetching profile from', USER_API.getProfile)
         const response = await fetch(USER_API.getProfile, { headers })
-        if (!response.ok) return
+        console.log('HomePage: Profile response status:', response.status)
+        
+        if (!response.ok) {
+          const errorText = await response.text()
+          console.error('HomePage: Profile fetch failed:', response.status, errorText)
+          return
+        }
+        
         const data = await response.json()
+        console.log('HomePage: Profile data received:', data)
+        
         const user = data.user || data
 
         const first = user.firstName || ''
         const last = user.lastName || ''
         const fullName = [first, last].filter(Boolean).join(' ') || 'User'
 
+        console.log('HomePage: Setting name to:', fullName)
         setUserName(fullName)
         if (user.email) setUserEmail(user.email)
 
@@ -43,7 +57,7 @@ function HomePage() {
           .join('')
         if (initials) setUserInitials(initials)
       } catch (error) {
-        console.error('Error loading profile:', error)
+        console.error('HomePage: Error loading profile:', error)
       }
     }
     loadProfile()

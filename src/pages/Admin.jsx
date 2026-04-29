@@ -104,15 +104,31 @@ export default function Admin() {
     )
   }
 
-  function sendPushNotification() {
+  async function sendPushNotification() {
     if (!pushTitle && !pushMessage) {
       setPushStatus({ type: 'warn', text: '⚠️ Please enter a title or message before sending.' })
       return
     }
-    setPushStatus({ type: 'sending', text: 'Sending notification…' })
-    setTimeout(() => {
-      setPushStatus({ type: 'success', text: `✅ Notification queued! "${pushTitle || 'No title'}" — ${pushMessage || 'No body'}` })
-    }, 800)
+    setPushStatus({ type: 'sending', text: 'Sending notification to all devices…' })
+    try {
+      const res = await fetch(API_BASE + 'admin/test-send-push-notification', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          target: 'iClient',
+          title: pushTitle || 'Hello from Birdy!',
+          message: pushMessage || 'A new update is available!',
+        }),
+      })
+      const data = await res.json()
+      if (res.ok && data.success) {
+        setPushStatus({ type: 'success', text: `✅ Sent to ${data.sent} devices! "${pushTitle || 'Hello from Birdy!'}" — ${pushMessage || 'Update'}` })
+      } else {
+        setPushStatus({ type: 'warn', text: `⚠️ ${data.message || data.error || 'Failed to send notification'}` })
+      }
+    } catch (err) {
+      setPushStatus({ type: 'warn', text: `❌ Network error: ${err.message}` })
+    }
   }
 
   function EndpointRow({ method, path, label, tryable }) {
@@ -325,7 +341,7 @@ export default function Admin() {
                 )}
                 <div className="pt-3 border-t border-gray-100 space-y-2">
                   <p className="text-[10px] uppercase tracking-wider text-gray-400 font-bold mb-2">API Endpoint</p>
-                  <EndpointRow method="POST" path="/admin/send-push-notification" label="Needs body" />
+                  <EndpointRow method="POST" path="/admin/test-send-push-notification" label="Needs body" />
                 </div>
               </div>
             </AdminCard>
