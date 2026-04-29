@@ -1,6 +1,8 @@
 // Central API Configuration for UDO Application
 
-const API_BASE = 'http://localhost:3030/';
+const API_BASE = window.location.hostname === 'localhost'
+  ? 'http://localhost:3030/'
+  : 'https://tcdlm857gf.execute-api.us-east-1.amazonaws.com/dev/';
 
 // Authentication Endpoints
 export const AUTH_API = {
