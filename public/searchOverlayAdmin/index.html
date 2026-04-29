@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Search Overlay Admin — UDO</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="../config.js"></script>
+  <style>
+    .toggle-switch {
+      position: relative;
+      width: 48px;
+      height: 26px;
+      cursor: pointer;
+    }
+    .toggle-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+    .toggle-slider {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-color: #ccc;
+      border-radius: 26px;
+      transition: 0.3s;
+    }
+    .toggle-slider:before {
+      content: "";
+      position: absolute;
+      height: 20px;
+      width: 20px;
+      left: 3px;
+      bottom: 3px;
+      background-color: white;
+      border-radius: 50%;
+      transition: 0.3s;
+    }
+    .toggle-switch input:checked + .toggle-slider {
+      background-color: #22c55e;
+    }
+    .toggle-switch input:checked + .toggle-slider:before {
+      transform: translateX(22px);
+    }
+    .section-badge {
+      display: inline-block;
+      padding: 2px 8px;
+      border-radius: 9999px;
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+    .section-recent { background: #dbeafe; color: #1e40af; }
+    .section-popular { background: #fef3c7; color: #92400e; }
+    .section-trending { background: #ede9fe; color: #5b21b6; }
+    .item-card {
+      transition: all 0.2s;
+    }
+    .item-card:hover {
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    .item-card.disabled-item {
+      opacity: 0.5;
+    }
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      padding: 12px 24px;
+      border-radius: 8px;
+      color: white;
+      font-weight: 500;
+      z-index: 1000;
+      animation: slideIn 0.3s, fadeOut 0.3s 2.5s forwards;
+    }
+    .toast-success { background: #22c55e; }
+    .toast-error { background: #ef4444; }
+    @keyframes slideIn { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+    @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }
+  </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+  <!-- Header -->
+  <header class="bg-white border-b border-gray-200 sticky top-0 z-50">
+    <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+      <div>
+        <h1 class="text-2xl font-bold text-gray-900">Search Overlay Admin</h1>
+        <p class="text-sm text-gray-500 mt-1">Toggle items on/off to control what appears in the search overlay</p>
+      </div>
+      <div class="flex gap-3">
+        <button onclick="loadItems()" class="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg text-sm font-medium text-gray-700 transition">
+          ↻ Refresh
+        </button>
+        <button onclick="showAddModal()" class="px-4 py-2 bg-orange-500 hover:bg-orange-600 rounded-lg text-sm font-medium text-white transition">
+          + Add Item
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Section Filters -->
+  <div class="max-w-6xl mx-auto px-6 mt-6">
+    <div class="flex gap-2">
+      <button onclick="filterSection('all')" id="filter-all" class="px-4 py-2 rounded-full text-sm font-medium bg-gray-900 text-white transition">All</button>
+      <button onclick="filterSection('recent_searches')" id="filter-recent_searches" class="px-4 py-2 rounded-full text-sm font-medium bg-gray-100 text-gray-700 hover:bg-gray-200 transition">Recent Searches</button>
+      <button onclick="filterSection('popular_on_udo')" id="filter-popular_on_udo" class="px-4 py-2 rounded-full text-sm font-medium bg-gray-100 text-gray-700 hover:bg-gray-200 transition">Popular on UDO</button>
+      <button onclick="filterSection('trending_now')" id="filter-trending_now" class="px-4 py-2 rounded-full text-sm font-medium bg-gray-100 text-gray-700 hover:bg-gray-200 transition">Trending Now</button>
+    </div>
+  </div>
+
+  <!-- Items Grid -->
+  <main class="max-w-6xl mx-auto px-6 py-6">
+    <div id="itemsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      <!-- Items will be loaded here -->
+    </div>
+    <div id="loadingState" class="text-center py-12 text-gray-400">
+      Loading items...
+    </div>
+    <div id="emptyState" class="hidden text-center py-12 text-gray-400">
+      No items found.
+    </div>
+  </main>
+
+  <!-- Add/Edit Modal -->
+  <div id="itemModal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+    <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md mx-4 p-6">
+      <div class="flex items-center justify-between mb-6">
+        <h2 id="modalTitle" class="text-xl font-bold text-gray-900">Add New Item</h2>
+        <button onclick="closeModal()" class="p-1 hover:bg-gray-100 rounded-full">
+          <svg class="w-6 h-6 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+      <form id="itemForm" onsubmit="handleFormSubmit(event)">
+        <input type="hidden" id="formMode" value="add" />
+        <input type="hidden" id="formOriginalId" value="" />
+        
+        <div class="space-y-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">ID</label>
+            <input type="text" id="formId" required placeholder="e.g. recent-plumbing"
+              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 text-sm" />
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Label</label>
+            <input type="text" id="formLabel" required placeholder="e.g. Plumbing"
+              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 text-sm" />
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Link (href)</label>
+            <input type="text" id="formHref" required placeholder="e.g. profiles-list/"
+              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 text-sm" />
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Image Path</label>
+            <input type="text" id="formImage" required placeholder="e.g. img/plumbing.webp"
+              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 text-sm" />
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Section</label>
+            <select id="formSection" required
+              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 text-sm">
+              <option value="recent_searches">Recent Searches</option>
+              <option value="popular_on_udo">Popular on UDO</option>
+              <option value="trending_now">Trending Now</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Sort Order</label>
+            <input type="number" id="formSortOrder" value="1" min="1"
+              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 text-sm" />
+          </div>
+        </div>
+
+        <div class="flex gap-3 mt-6">
+          <button type="button" onclick="closeModal()" class="flex-1 px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg text-sm font-medium text-gray-700 transition">
+            Cancel
+          </button>
+          <button type="submit" class="flex-1 px-4 py-2 bg-orange-500 hover:bg-orange-600 rounded-lg text-sm font-medium text-white transition">
+            Save
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    let allItems = [];
+    let currentFilter = 'all';
+
+    // Show toast notification
+    function showToast(message, type = 'success') {
+      const toast = document.createElement('div');
+      toast.className = `toast toast-${type}`;
+      toast.textContent = message;
+      document.body.appendChild(toast);
+      setTimeout(() => toast.remove(), 3000);
+    }
+
+    // Load all items from backend
+    async function loadItems() {
+      const grid = document.getElementById('itemsGrid');
+      const loading = document.getElementById('loadingState');
+      const empty = document.getElementById('emptyState');
+
+      loading.classList.remove('hidden');
+      grid.innerHTML = '';
+      empty.classList.add('hidden');
+
+      try {
+        const response = await fetch(SEARCH_OVERLAY_API.adminItems);
+        const json = await response.json();
+        allItems = json.items || [];
+        renderItems();
+      } catch (error) {
+        console.error('Failed to load items:', error);
+        showToast('Failed to load items', 'error');
+      } finally {
+        loading.classList.add('hidden');
+      }
+    }
+
+    // Render items to the grid
+    function renderItems() {
+      const grid = document.getElementById('itemsGrid');
+      const empty = document.getElementById('emptyState');
+
+      let filtered = allItems;
+      if (currentFilter !== 'all') {
+        filtered = allItems.filter(item => item.section === currentFilter);
+      }
+
+      // Sort by section then sort_order
+      filtered.sort((a, b) => {
+        if (a.section !== b.section) return a.section.localeCompare(b.section);
+        return a.sort_order - b.sort_order;
+      });
+
+      if (filtered.length === 0) {
+        grid.innerHTML = '';
+        empty.classList.remove('hidden');
+        return;
+      }
+
+      empty.classList.add('hidden');
+
+      grid.innerHTML = filtered.map(item => {
+        const sectionClass = item.section === 'recent_searches' ? 'section-recent' :
+                             item.section === 'popular_on_udo' ? 'section-popular' : 'section-trending';
+        const sectionLabel = item.section === 'recent_searches' ? 'Recent' :
+                             item.section === 'popular_on_udo' ? 'Popular' : 'Trending';
+
+        return `
+          <div class="item-card bg-white rounded-xl border border-gray-200 p-4 ${!item.is_active ? 'disabled-item' : ''}" data-id="${item.id}">
+            <div class="flex items-start gap-3">
+              <img src="${item.image}" alt="${item.label}" 
+                class="w-16 h-16 rounded-lg object-cover flex-shrink-0 bg-gray-100"
+                onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2264%22 height=%2264%22><rect fill=%22%23f3f4f6%22 width=%2264%22 height=%2264%22/><text x=%2250%25%22 y=%2250%25%22 text-anchor=%22middle%22 dy=%22.3em%22 fill=%22%239ca3af%22 font-size=%2212%22>No img</text></svg>'" />
+              <div class="flex-1 min-w-0">
+                <div class="flex items-center gap-2 mb-1">
+                  <h3 class="font-semibold text-gray-900 truncate">${item.label}</h3>
+                  <span class="section-badge ${sectionClass}">${sectionLabel}</span>
+                </div>
+                <p class="text-xs text-gray-500 truncate">${item.href}</p>
+                <p class="text-xs text-gray-400 mt-1">Order: ${item.sort_order} · ID: ${item.id}</p>
+              </div>
+            </div>
+            <div class="flex items-center justify-between mt-3 pt-3 border-t border-gray-100">
+              <div class="flex items-center gap-2">
+                <label class="toggle-switch">
+                  <input type="checkbox" ${item.is_active ? 'checked' : ''} onchange="toggleItem('${item.id}', this.checked)" />
+                  <span class="toggle-slider"></span>
+                </label>
+                <span class="text-xs font-medium ${item.is_active ? 'text-green-600' : 'text-gray-400'}">
+                  ${item.is_active ? 'Active' : 'Disabled'}
+                </span>
+              </div>
+              <div class="flex gap-1">
+                <button onclick="editItem('${item.id}')" class="p-1.5 hover:bg-gray-100 rounded-lg transition" title="Edit">
+                  <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                  </svg>
+                </button>
+                <button onclick="deleteItem('${item.id}')" class="p-1.5 hover:bg-red-50 rounded-lg transition" title="Delete">
+                  <svg class="w-4 h-4 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // Filter by section
+    function filterSection(section) {
+      currentFilter = section;
+      // Update filter button styles
+      document.querySelectorAll('[id^="filter-"]').forEach(btn => {
+        btn.className = 'px-4 py-2 rounded-full text-sm font-medium bg-gray-100 text-gray-700 hover:bg-gray-200 transition';
+      });
+      document.getElementById(`filter-${section}`).className = 'px-4 py-2 rounded-full text-sm font-medium bg-gray-900 text-white transition';
+      renderItems();
+    }
+
+    // Toggle item active status
+    async function toggleItem(id, isActive) {
+      try {
+        const response = await fetch(`${SEARCH_OVERLAY_API.adminItems}/${id}/toggle`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ is_active: isActive })
+        });
+        const json = await response.json();
+        if (json.success) {
+          // Update local data
+          const item = allItems.find(i => i.id === id);
+          if (item) item.is_active = isActive;
+          renderItems();
+          showToast(`Item ${isActive ? 'enabled' : 'disabled'}`);
+        } else {
+          showToast(json.message || 'Failed to toggle', 'error');
+          loadItems(); // Reload to reset UI
+        }
+      } catch (error) {
+        console.error('Toggle error:', error);
+        showToast('Failed to toggle item', 'error');
+        loadItems();
+      }
+    }
+
+    // Show add modal
+    function showAddModal() {
+      document.getElementById('formMode').value = 'add';
+      document.getElementById('formOriginalId').value = '';
+      document.getElementById('modalTitle').textContent = 'Add New Item';
+      document.getElementById('formId').disabled = false;
+      document.getElementById('formId').value = '';
+      document.getElementById('formLabel').value = '';
+      document.getElementById('formHref').value = '';
+      document.getElementById('formImage').value = '';
+      document.getElementById('formSection').value = 'recent_searches';
+      document.getElementById('formSortOrder').value = '1';
+      document.getElementById('itemModal').classList.remove('hidden');
+    }
+
+    // Edit item
+    function editItem(id) {
+      const item = allItems.find(i => i.id === id);
+      if (!item) return;
+
+      document.getElementById('formMode').value = 'edit';
+      document.getElementById('formOriginalId').value = id;
+      document.getElementById('modalTitle').textContent = 'Edit Item';
+      document.getElementById('formId').value = item.id;
+      document.getElementById('formId').disabled = true;
+      document.getElementById('formLabel').value = item.label;
+      document.getElementById('formHref').value = item.href;
+      document.getElementById('formImage').value = item.image;
+      document.getElementById('formSection').value = item.section;
+      document.getElementById('formSortOrder').value = item.sort_order;
+      document.getElementById('itemModal').classList.remove('hidden');
+    }
+
+    // Close modal
+    function closeModal() {
+      document.getElementById('itemModal').classList.add('hidden');
+    }
+
+    // Handle form submit (add or edit)
+    async function handleFormSubmit(event) {
+      event.preventDefault();
+
+      const mode = document.getElementById('formMode').value;
+      const payload = {
+        id: document.getElementById('formId').value.trim(),
+        label: document.getElementById('formLabel').value.trim(),
+        href: document.getElementById('formHref').value.trim(),
+        image: document.getElementById('formImage').value.trim(),
+        section: document.getElementById('formSection').value,
+        sort_order: parseInt(document.getElementById('formSortOrder').value) || 1,
+        is_active: true
+      };
+
+      try {
+        let url, method;
+        if (mode === 'add') {
+          url = SEARCH_OVERLAY_API.adminItems;
+          method = 'POST';
+        } else {
+          const originalId = document.getElementById('formOriginalId').value;
+          url = `${SEARCH_OVERLAY_API.adminItems}/${originalId}`;
+          method = 'PUT';
+          // Preserve active status for edits
+          const existing = allItems.find(i => i.id === originalId);
+          if (existing) payload.is_active = existing.is_active;
+        }
+
+        const response = await fetch(url, {
+          method,
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+
+        const json = await response.json();
+        if (json.success || response.ok) {
+          showToast(mode === 'add' ? 'Item created!' : 'Item updated!');
+          closeModal();
+          loadItems();
+        } else {
+          showToast(json.message || 'Failed to save', 'error');
+        }
+      } catch (error) {
+        console.error('Save error:', error);
+        showToast('Failed to save item', 'error');
+      }
+    }
+
+    // Delete item
+    async function deleteItem(id) {
+      if (!confirm(`Delete this item? This cannot be undone.`)) return;
+
+      try {
+        const response = await fetch(`${SEARCH_OVERLAY_API.adminItems}/${id}`, {
+          method: 'DELETE'
+        });
+        const json = await response.json();
+        if (json.success) {
+          showToast('Item deleted');
+          loadItems();
+        } else {
+          showToast(json.message || 'Failed to delete', 'error');
+        }
+      } catch (error) {
+        console.error('Delete error:', error);
+        showToast('Failed to delete item', 'error');
+      }
+    }
+
+    // Close modal on backdrop click
+    document.getElementById('itemModal').addEventListener('click', (e) => {
+      if (e.target === document.getElementById('itemModal')) {
+        closeModal();
+      }
+    });
+
+    // Close modal on Escape
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeModal();
+    });
+
+    // Load on page ready
+    document.addEventListener('DOMContentLoaded', loadItems);
+  </script>
+</body>
+</html>

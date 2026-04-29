@@ -1,0 +1,1508 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>U-Do: Let someone do it for you.</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2270%22 font-family=%22Arial, sans-serif%22 font-weight=%22900%22 letter-spacing=%22-2%22><tspan fill=%22%23f97316%22>U</tspan><tspan fill=%22%23000000%22>DO</tspan></text></svg">  
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Nunito', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+
+    <!-- Navigation -->
+    <nav class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <a href="../index.html" class="text-2xl font-bold">
+                    <span class="text-orange-500">U <span class="-mx-1"></span>-</span><span class="text-gray-800">DO</span>
+                </a>
+                
+                <div class="flex items-center space-x-4">
+                    <a href="../foods/" class="text-gray-700 hover:text-orange-500 transition-colors">Foods</a>
+                    <a href="../settings/" class="text-gray-700 hover:text-orange-500 transition-colors">Settings</a>
+                    <button class="bg-orange-500 text-white px-4 py-2 rounded-full font-semibold hover:bg-orange-600 transition-colors">
+                        Post a Ride
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Page Header -->
+        <div class="mb-8">
+            <h1 class="text-4xl font-bold text-gray-900 mb-2">Rideshare Marketplace</h1>
+            <p class="text-gray-600 text-lg">Find rides or offer rides to others</p>
+        </div>
+
+        <!-- Tabs -->
+        <div class="flex gap-2 mb-8">
+            <button id="allTab" class="tab-btn active px-6 py-3 rounded-full font-semibold transition-all bg-orange-500 text-white">
+                All Rides
+            </button>
+            <button id="needRideTab" class="tab-btn px-6 py-3 rounded-full font-semibold transition-all bg-white text-gray-700 hover:bg-gray-100">
+                Need a Ride
+            </button>
+            <button id="offerRideTab" class="tab-btn px-6 py-3 rounded-full font-semibold transition-all bg-white text-gray-700 hover:bg-gray-100">
+                Offering a Ride
+            </button>
+        </div>
+
+        <!-- Search & Filters -->
+        <div class="bg-white rounded-2xl shadow-sm p-6 mb-8">
+            <div class="flex flex-col gap-4">
+                <!-- Route Search: From and To -->
+                <div class="flex flex-col md:flex-row gap-4">
+                    <!-- From Search -->
+                    <div class="relative flex-1">
+                        <div class="absolute left-4 top-1/2 -translate-y-1/2">
+                            <div class="w-3 h-3 bg-green-500 rounded-full"></div>
+                        </div>
+                        <input type="text" 
+                               id="fromSearch"
+                               placeholder="From (e.g., Washington D.C.)" 
+                               list="fromLocations"
+                               class="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                               autocomplete="off">
+                        <datalist id="fromLocations">
+                            <option value="Rosslyn, VA">
+                            <option value="Washington D.C.">
+                            <option value="Washington">
+                            <option value="DC Area">
+                            <option value="Arlington, VA">
+                            <option value="Baltimore, MD">
+                            <option value="Virginia">
+                            <option value="Maryland">
+                            <option value="San Francisco, CA">
+                            <option value="San Diego, CA">
+                            <option value="Oakland, CA">
+                            <option value="Long Beach, CA">
+                            <option value="Bakersfield, CA">
+                            <option value="Houston, TX">
+                            <option value="Austin, TX">
+                            <option value="Fort Worth, TX">
+                            <option value="Corpus Christi, TX">
+                            <option value="Plano, TX">
+                        </datalist>
+                    </div>
+                    
+                    <!-- Arrow Icon -->
+                    <div class="flex items-center justify-center">
+                        <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
+                        </svg>
+                    </div>
+                    
+                    <!-- To Search -->
+                    <div class="relative flex-1">
+                        <div class="absolute left-4 top-1/2 -translate-y-1/2">
+                            <div class="w-3 h-3 bg-red-500 rounded-full"></div>
+                        </div>
+                        <input type="text" 
+                               id="toSearch"
+                               placeholder="To (e.g., New York City)" 
+                               list="toLocations"
+                               class="w-full pl-12 pr-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                               autocomplete="off">
+                        <datalist id="toLocations">
+                            <option value="North Florida">
+                            <option value="Florida">
+                            <option value="Miami, FL">
+                            <option value="Texas">
+                            <option value="Toronto, ON">
+                            <option value="Canada">
+                            <option value="New York City">
+                            <option value="Boston, MA">
+                            <option value="Philadelphia">
+                            <option value="Los Angeles, CA">
+                            <option value="Sacramento, CA">
+                            <option value="Fresno, CA">
+                            <option value="San Jose, CA">
+                            <option value="Santa Barbara, CA">
+                            <option value="Dallas, TX">
+                            <option value="San Antonio, TX">
+                            <option value="El Paso, TX">
+                            <option value="Houston, TX">
+                        </datalist>
+                    </div>
+                </div>
+                
+                <!-- Filters Row -->
+                <div class="flex flex-col lg:flex-row gap-4 pt-2">
+                    <!-- Location Filter -->
+                    <select id="locationFilter" class="px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent bg-white min-w-[180px]">
+                        <option value="all">All Locations</option>
+                        <option value="dc">Washington D.C.</option>
+                        <option value="va">Virginia</option>
+                        <option value="md">Maryland</option>
+                        <option value="fl">Florida</option>
+                        <option value="ca">California</option>
+                        <option value="tx">Texas</option>
+                        <option value="canada">Canada</option>
+                    </select>
+                    
+                    <!-- Price Filter -->
+                    <select id="priceFilter" class="px-4 py-3 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent bg-white min-w-[160px]">
+                        <option value="all">All Prices</option>
+                        <option value="under50">Under $50</option>
+                        <option value="50to100">$50 - $100</option>
+                        <option value="100to200">$100 - $200</option>
+                        <option value="over200">$200+</option>
+                    </select>
+                    
+                    <!-- Similar Direction Toggle -->
+                    <button id="similarDirectionBtn" class="px-4 py-3 border-2 border-orange-500 bg-white text-orange-500 rounded-xl font-semibold hover:bg-orange-50 transition-all flex items-center gap-2 min-w-[220px]">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 20l-5.447-2.724A1 1 0 013 16.382V5.618a1 1 0 011.447-.894L9 7m0 13l6-3m-6 3V7m6 10l4.553 2.276A1 1 0 0021 18.382V7.618a1 1 0 00-.553-.894L15 4m0 13V4m0 0L9 7" />
+                        </svg>
+                        <span>Show Similar Direction</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Ride Cards Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="rideCardsGrid">
+            
+            <!-- Card 1: Need Ride -->
+            <div class="ride-card bg-white rounded-2xl shadow-sm overflow-hidden hover:shadow-xl transition-shadow duration-300" data-type="need" data-origin="Rosslyn, VA" data-destination="North Florida">
+                <div class="relative">
+                    <!-- Card Header - Need Ride -->
+                    <div class="bg-red-100 px-4 py-3 border-b border-red-200">
+                        <div class="flex items-center justify-between">
+                            <span class="bg-red-500 text-white text-xs font-bold px-3 py-1 rounded-full flex items-center">
+                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 2 9-2zm0 0v-8"/>
+                                </svg>
+                                NEED RIDE
+                            </span>
+                            <span class="text-red-600 font-bold text-lg">$150</span>
+                        </div>
+                    </div>
+                    
+                    <div class="p-5">
+                        <!-- Profile Badge with Rating -->
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="flex items-center gap-3">
+                                <div class="w-12 h-12 bg-gradient-to-br from-orange-400 to-orange-600 rounded-full flex items-center justify-center text-white font-bold text-lg">
+                                    JD
+                                </div>
+                                <div>
+                                    <p class="font-semibold text-gray-900">John Doe</p>
+                                    <p class="text-xs text-gray-500">Traveler</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-1">
+                                <svg class="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.783.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                                </svg>
+                                <span class="text-sm font-semibold text-gray-700">4.8</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Route -->
+                        <div class="mb-4">
+                            <div class="flex items-center mb-3">
+                                <div class="w-3 h-3 bg-green-500 rounded-full mr-3 flex-shrink-0"></div>
+                                <div class="flex-1">
+                                    <p class="text-xs text-gray-500 mb-1">FROM</p>
+                                    <p class="font-bold text-gray-900">Rosslyn, VA</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center mb-3">
+                                <div class="w-3 h-3 bg-red-500 rounded-full mr-3 flex-shrink-0"></div>
+                                <div class="flex-1">
+                                    <p class="text-xs text-gray-500 mb-1">TO</p>
+                                    <p class="font-bold text-gray-900">North Florida</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Divider -->
+                        <div class="border-t border-gray-200 my-4"></div>
+                        
+                        <!-- Details -->
+                        <div class="space-y-2 mb-4">
+                            <p class="text-sm text-gray-700">
+                                <span class="font-semibold">Date:</span> Flexible
+                            </p>
+                            <p class="text-sm text-gray-700">
+                                <span class="font-semibold">Passengers:</span> 1 person
+                            </p>
+                            <p class="text-sm text-gray-700">
+                                <span class="font-semibold">Description:</span> A traveler is looking for transportation to Florida.
+                            </p>
+                        </div>
+                        
+                        <!-- Action Button -->
+                        <button class="w-full bg-red-500 hover:bg-red-600 text-white font-bold py-3 rounded-xl transition-colors flex items-center justify-center">
+                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+                            </svg>
+                            Contact Rider
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 2: Need Ride -->
+            <div class="ride-card bg-white rounded-2xl shadow-sm overflow-hidden hover:shadow-xl transition-shadow duration-300" data-type="need" data-origin="Washington D.C." data-destination="Texas">
+                <div class="relative">
+                    <div class="bg-red-100 px-4 py-3 border-b border-red-200">
+                        <div class="flex items-center justify-between">
+                            <span class="bg-red-500 text-white text-xs font-bold px-3 py-1 rounded-full flex items-center">
+                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 2 9-2zm0 0v-8"/>
+                                </svg>
+                                NEED RIDE
+                            </span>
+                            <span class="text-red-600 font-bold text-lg">Price TBD</span>
+                        </div>
+                    </div>
+                    
+                    <div class="p-5">
+                        <!-- Profile Badge with Rating -->
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="flex items-center gap-3">
+                                <div class="w-12 h-12 bg-gradient-to-br from-blue-400 to-blue-600 rounded-full flex items-center justify-center text-white font-bold text-lg">
+                                    SM
+                                </div>
+                                <div>
+                                    <p class="font-semibold text-gray-900">Sarah Miller</p>
+                                    <p class="text-xs text-gray-500">Traveler</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-1">
+                                <svg class="w-5 h-5 text-yellow-400" fill="currentColor" viewBox="0 0 20 20">
+                                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.783.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>
+                                </svg>
+                                <span class="text-sm font-semibold text-gray-700">4.5</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Route -->
+                        <div class="mb-4">
+                            <div class="flex items-center mb-3">
+                                <div class="w-3 h-3 bg-green-500 rounded-full mr-3 flex-shrink-0"></div>
+                                <div class="flex-1">
+                                    <p class="text-xs text-gray-500 mb-1">FROM</p>
+                                    <p class="font-bold text-gray-900">Washington, D.C.</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center mb-3">
+                                <div class="w-3 h-3 bg-red-500 rounded-full mr-3 flex-shrink-0"></div>
+                                <div class="flex-1">
+                                    <p class="text-xs text-gray-500 mb-1">TO</p>
+                                    <p class="font-bold text-gray-900">Texas</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="border-t border-gray-200 my-4"></div>
+                        
+                        <div class="space-y-2 mb-4">
+                            <p class="text-sm text-gray-700">
+                                <span class="font-semibold">Date:</span> Weekend
+                            </p>
+                            <p class="text-sm text-gray-700">
+                                <span class="font-semibold">Passengers:</span> 2 people
+                            </p>
+                            <p class="text-sm text-gray-700">
+                                <span class="font-semibold">Description:</span> A request for a trip from Washington, D.C. to Texas.
+                            </p>
+                        </div>
+                        
+                        <button class="w-full bg-red-500 hover:bg-red-600 text-white font-bold py-3 rounded-xl transition-colors flex items-center justify-center">
+                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+                            </svg>
+                            Contact Rider
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 3: Offering Ride -->
+            <div class="ride-card bg-white rounded-2xl shadow-sm overflow-hidden hover:shadow-xl transition-shadow duration-300" data-type="offer" data-origin="DC area" data-destination="Toronto, ON">
+                <div class="relative">
+                    <div class="bg-green-100 px-4 py-3 border-b border-green-200">
+                        <div class="flex items-center justify-between">
+                            <span class="bg-green-500 text-white text-xs font-bold px-3 py-1 rounded-full flex items-center">
+                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"/>
+                                </svg>
+                                OFFERING RIDE
+                            </span>
+                            <span class="text-green-600 font-bold text-lg">$80</span>
+                        </div>
+                    </div>
+                    
+                    <div class="p-5">
+                        <div class="mb-4">
+                            <div class="flex items-center mb-3">
+                                <div class="w-3 h-3 bg-green-500 rounded-full mr-3 flex-shrink-0"></div>
+                                <div class="flex-1">
+                                    <p class="text-xs text-gray-500 mb-1">FROM</p>
+                                    <p class="font-bold text-gray-900">DC Area</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center mb-3">
+                                <div class="w-3 h-3 bg-red-500 rounded-full mr-3 flex-shrink-0"></div>
+                                <div class="flex-1">
+                                    <p class="text-xs text-gray-500 mb-1">TO</p>
+                                    <p class="font-bold text-gray-900">Toronto, ON</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="border-t border-gray-200 my-4"></div>
+                        
+                        <div class="space-y-2 mb-4">
+                            <p class="text-sm text-gray-700">
+                                <span class="font-semibold">Date:</span> Next week
+                            </p>
+                            <p class="text-sm text-gray-700">
+                                <span class="font-semibold">Seats Available:</span> 3 seats
+                            </p>
+                            <p class="text-sm text-gray-700">
+                                <span class="font-semibold">Description:</span> Someone is offering a ride from DC area to Toronto.
+                            </p>
+                        </div>
+                        
+                        <button class="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-3 rounded-xl transition-colors flex items-center justify-center">
+                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 0118.364 18.364M9 9l12 12m0 0L9 21"/>
+                            </svg>
+                            Book This Ride
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 4: Offering Ride -->
+            <div class="ride-card bg-white rounded-2xl shadow-sm overflow-hidden hover:shadow-xl transition-shadow duration-300" data-type="offer" data-origin="Arlington, VA" data-destination="New York City">
+                <div class="relative">
+                    <div class="bg-green-100 px-4 py-3 border-b border-green-200">
+                        <div class="flex items-center justify-between">
+                            <span class="bg-green-500 text-white text-xs font-bold px-3 py-1 rounded-full flex items-center">
+                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"/>
+                                </svg>
+                                OFFERING RIDE
+                            </span>
+                            <span class="text-green-600 font-bold text-lg">$45</span>
+                        </div>
+                    </div>
+                    
+                    <div class="p-5">
+                        <div class="mb-4">
+                            <div class="flex items-center mb-3">
+                                <div class="w-3 h-3 bg-green-500 rounded-full mr-3 flex-shrink-0"></div>
+                                <div class="flex-1">
+                                    <p class="text-xs text-gray-500 mb-1">FROM</p>
+                                    <p class="font-bold text-gray-900">Arlington, VA</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center mb-3">
+                                <div class="w-3 h-3 bg-red-500 rounded-full mr-3 flex-shrink-0"></div>
+                                <div class="flex-1">
+                                    <p class="text-xs text-gray-500 mb-1">TO</p>
+                                    <p class="font-bold text-gray-900">New York City</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="border-t border-gray-200 my-4"></div>
+                        
+                        <div class="space-y-2 mb-4">
+                            <p class="text-sm text-gray-700">
+                                <span class="font-semibold">Date:</span> Saturday
+                            </p>
+                            <p class="text-sm text-gray-700">
+                                <span class="font-semibold">Seats Available:</span> 2 seats
+                            </p>
+                            <p class="text-sm text-gray-700">
+                                <span class="font-semibold">Description:</span> Comfortable ride, non-smoking.
+                            </p>
+                        </div>
+                        
+                        <button class="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-3 rounded-xl transition-colors flex items-center justify-center">
+                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 0118.364 18.364M9 9l12 12m0 0L9 21"/>
+                            </svg>
+                            Book This Ride
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 5: Need Ride -->
+            <div class="ride-card bg-white rounded-2xl shadow-sm overflow-hidden hover:shadow-xl transition-shadow duration-300" data-type="need" data-origin="Baltimore, MD" data-destination="Miami, FL">
+                <div class="relative">
+                    <div class="bg-red-100 px-4 py-3 border-b border-red-200">
+                        <div class="flex items-center justify-between">
+                            <span class="bg-red-500 text-white text-xs font-bold px-3 py-1 rounded-full flex items-center">
+                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 2 9-2zm0 0v-8"/>
+                                </svg>
+                                NEED RIDE
+                            </span>
+                            <span class="text-red-600 font-bold text-lg">$120</span>
+                        </div>
+                    </div>
+                    
+                    <div class="p-5">
+                        <div class="mb-4">
+                            <div class="flex items-center mb-3">
+                                <div class="w-3 h-3 bg-green-500 rounded-full mr-3 flex-shrink-0"></div>
+                                <div class="flex-1">
+                                    <p class="text-xs text-gray-500 mb-1">FROM</p>
+                                    <p class="font-bold text-gray-900">Baltimore, MD</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center mb-3">
+                                <div class="w-3 h-3 bg-red-500 rounded-full mr-3 flex-shrink-0"></div>
+                                <div class="flex-1">
+                                    <p class="text-xs text-gray-500 mb-1">TO</p>
+                                    <p class="font-bold text-gray-900">Miami, FL</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="border-t border-gray-200 my-4"></div>
+                        
+                        <div class="space-y-2 mb-4">
+                            <p class="text-sm text-gray-700">
+                                <span class="font-semibold">Date:</span> Flexible
+                            </p>
+                            <p class="text-sm text-gray-700">
+                                <span class="font-semibold">Passengers:</span> 1 person
+                            </p>
+                            <p class="text-sm text-gray-700">
+                                <span class="font-semibold">Description:</span> Need ride to Miami, can split gas.
+                            </p>
+                        </div>
+                        
+                        <button class="w-full bg-red-500 hover:bg-red-600 text-white font-bold py-3 rounded-xl transition-colors flex items-center justify-center">
+                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+                            </svg>
+                            Contact Rider
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 6: Offering Ride -->
+            <div class="ride-card bg-white rounded-2xl shadow-sm overflow-hidden hover:shadow-xl transition-shadow duration-300" data-type="offer" data-origin="Washington D.C." data-destination="Boston, MA">
+                <div class="relative">
+                    <div class="bg-green-100 px-4 py-3 border-b border-green-200">
+                        <div class="flex items-center justify-between">
+                            <span class="bg-green-500 text-white text-xs font-bold px-3 py-1 rounded-full flex items-center">
+                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"/>
+                                </svg>
+                                OFFERING RIDE
+                            </span>
+                            <span class="text-green-600 font-bold text-lg">$60</span>
+                        </div>
+                    </div>
+                    
+                    <div class="p-5">
+                        <div class="mb-4">
+                            <div class="flex items-center mb-3">
+                                <div class="w-3 h-3 bg-green-500 rounded-full mr-3 flex-shrink-0"></div>
+                                <div class="flex-1">
+                                    <p class="text-xs text-gray-500 mb-1">FROM</p>
+                                    <p class="font-bold text-gray-900">Washington, D.C.</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center mb-3">
+                                <div class="w-3 h-3 bg-red-500 rounded-full mr-3 flex-shrink-0"></div>
+                                <div class="flex-1">
+                                    <p class="text-xs text-gray-500 mb-1">TO</p>
+                                    <p class="font-bold text-gray-900">Boston, MA</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="border-t border-gray-200 my-4"></div>
+                        
+                        <div class="space-y-2 mb-4">
+                            <p class="text-sm text-gray-700">
+                                <span class="font-semibold">Date:</span> Sunday
+                            </p>
+                            <p class="text-sm text-gray-700">
+                                <span class="font-semibold">Seats Available:</span> 4 seats
+                            </p>
+                            <p class="text-sm text-gray-700">
+                                <span class="font-semibold">Description:</span> Spacious SUV, pet friendly.
+                            </p>
+                        </div>
+                        
+                        <button class="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-3 rounded-xl transition-colors flex items-center justify-center">
+                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 0118.364 18.364M9 9l12 12m0 0L9 21"/>
+                            </svg>
+                            Book This Ride
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 7: California - Need Ride -->
+            <div class="ride-card bg-white rounded-2xl shadow-sm overflow-hidden hover:shadow-xl transition-shadow duration-300" data-type="need" data-origin="San Francisco, CA" data-destination="Los Angeles, CA">
+                <div class="relative">
+                    <div class="bg-red-100 px-4 py-3 border-b border-red-200">
+                        <div class="flex items-center justify-between">
+                            <span class="bg-red-500 text-white text-xs font-bold px-3 py-1 rounded-full flex items-center">
+                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 2 9-2zm0 0v-8"/>
+                                </svg>
+                                NEED RIDE
+                            </span>
+                            <span class="text-red-600 font-bold text-lg">$50</span>
+                        </div>
+                    </div>
+                    
+                    <div class="p-5">
+                        <div class="mb-4">
+                            <div class="flex items-center mb-3">
+                                <div class="w-3 h-3 bg-green-500 rounded-full mr-3 flex-shrink-0"></div>
+                                <div class="flex-1">
+                                    <p class="text-xs text-gray-500 mb-1">FROM</p>
+                                    <p class="font-bold text-gray-900">San Francisco, CA</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center mb-3">
+                                <div class="w-3 h-3 bg-red-500 rounded-full mr-3 flex-shrink-0"></div>
+                                <div class="flex-1">
+                                    <p class="text-xs text-gray-500 mb-1">TO</p>
+                                    <p class="font-bold text-gray-900">Los Angeles, CA</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="border-t border-gray-200 my-4"></div>
+                        
+                        <div class="space-y-2 mb-4">
+                            <p class="text-sm text-gray-700">
+                                <span class="font-semibold">Date:</span> Saturday
+                            </p>
+                            <p class="text-sm text-gray-700">
+                                <span class="font-semibold">Passengers:</span> 2 people
+                            </p>
+                            <p class="text-sm text-gray-700">
+                                <span class="font-semibold">Description:</span> Traveling from San Francisco to LA for weekend trip.
+                            </p>
+                        </div>
+                        
+                        <button class="w-full bg-red-500 hover:bg-red-600 text-white font-bold py-3 rounded-xl transition-colors flex items-center justify-center">
+                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+                            </svg>
+                            Contact Rider
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 8: California - Offering Ride -->
+            <div class="ride-card bg-white rounded-2xl shadow-sm overflow-hidden hover:shadow-xl transition-shadow duration-300" data-type="offer" data-origin="San Diego, CA" data-destination="Sacramento, CA">
+                <div class="relative">
+                    <div class="bg-green-100 px-4 py-3 border-b border-green-200">
+                        <div class="flex items-center justify-between">
+                            <span class="bg-green-500 text-white text-xs font-bold px-3 py-1 rounded-full flex items-center">
+                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"/>
+                                </svg>
+                                OFFERING RIDE
+                            </span>
+                            <span class="text-green-600 font-bold text-lg">$70</span>
+                        </div>
+                    </div>
+                    
+                    <div class="p-5">
+                        <div class="mb-4">
+                            <div class="flex items-center mb-3">
+                                <div class="w-3 h-3 bg-green-500 rounded-full mr-3 flex-shrink-0"></div>
+                                <div class="flex-1">
+                                    <p class="text-xs text-gray-500 mb-1">FROM</p>
+                                    <p class="font-bold text-gray-900">San Diego, CA</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center mb-3">
+                                <div class="w-3 h-3 bg-red-500 rounded-full mr-3 flex-shrink-0"></div>
+                                <div class="flex-1">
+                                    <p class="text-xs text-gray-500 mb-1">TO</p>
+                                    <p class="font-bold text-gray-900">Sacramento, CA</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="border-t border-gray-200 my-4"></div>
+                        
+                        <div class="space-y-2 mb-4">
+                            <p class="text-sm text-gray-700">
+                                <span class="font-semibold">Date:</span> Next Friday
+                            </p>
+                            <p class="text-sm text-gray-700">
+                                <span class="font-semibold">Seats Available:</span> 2 seats
+                            </p>
+                            <p class="text-sm text-gray-700">
+                                <span class="font-semibold">Description:</span> Comfortable sedan, air conditioning.
+                            </p>
+                        </div>
+                        
+                        <button class="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-3 rounded-xl transition-colors flex items-center justify-center">
+                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 0118.364 18.364M9 9l12 12m0 0L9 21"/>
+                            </svg>
+                            Book This Ride
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 9: California - Need Ride -->
+            <div class="ride-card bg-white rounded-2xl shadow-sm overflow-hidden hover:shadow-xl transition-shadow duration-300" data-type="need" data-origin="Oakland, CA" data-destination="Fresno, CA">
+                <div class="relative">
+                    <div class="bg-red-100 px-4 py-3 border-b border-red-200">
+                        <div class="flex items-center justify-between">
+                            <span class="bg-red-500 text-white text-xs font-bold px-3 py-1 rounded-full flex items-center">
+                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 2 9-2zm0 0v-8"/>
+                                </svg>
+                                NEED RIDE
+                            </span>
+                            <span class="text-red-600 font-bold text-lg">$45</span>
+                        </div>
+                    </div>
+                    
+                    <div class="p-5">
+                        <div class="mb-4">
+                            <div class="flex items-center mb-3">
+                                <div class="w-3 h-3 bg-green-500 rounded-full mr-3 flex-shrink-0"></div>
+                                <div class="flex-1">
+                                    <p class="text-xs text-gray-500 mb-1">FROM</p>
+                                    <p class="font-bold text-gray-900">Oakland, CA</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center mb-3">
+                                <div class="w-3 h-3 bg-red-500 rounded-full mr-3 flex-shrink-0"></div>
+                                <div class="flex-1">
+                                    <p class="text-xs text-gray-500 mb-1">TO</p>
+                                    <p class="font-bold text-gray-900">Fresno, CA</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="border-t border-gray-200 my-4"></div>
+                        
+                        <div class="space-y-2 mb-4">
+                            <p class="text-sm text-gray-700">
+                                <span class="font-semibold">Date:</span> Flexible
+                            </p>
+                            <p class="text-sm text-gray-700">
+                                <span class="font-semibold">Passengers:</span> 1 person
+                            </p>
+                            <p class="text-sm text-gray-700">
+                                <span class="font-semibold">Description:</span> Student traveling to visit family.
+                            </p>
+                        </div>
+                        
+                        <button class="w-full bg-red-500 hover:bg-red-600 text-white font-bold py-3 rounded-xl transition-colors flex items-center justify-center">
+                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+                            </svg>
+                            Contact Rider
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 10: California - Offering Ride -->
+            <div class="ride-card bg-white rounded-2xl shadow-sm overflow-hidden hover:shadow-xl transition-shadow duration-300" data-type="offer" data-origin="Long Beach, CA" data-destination="San Jose, CA">
+                <div class="relative">
+                    <div class="bg-green-100 px-4 py-3 border-b border-green-200">
+                        <div class="flex items-center justify-between">
+                            <span class="bg-green-500 text-white text-xs font-bold px-3 py-1 rounded-full flex items-center">
+                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"/>
+                                </svg>
+                                OFFERING RIDE
+                            </span>
+                            <span class="text-green-600 font-bold text-lg">$55</span>
+                        </div>
+                    </div>
+                    
+                    <div class="p-5">
+                        <div class="mb-4">
+                            <div class="flex items-center mb-3">
+                                <div class="w-3 h-3 bg-green-500 rounded-full mr-3 flex-shrink-0"></div>
+                                <div class="flex-1">
+                                    <p class="text-xs text-gray-500 mb-1">FROM</p>
+                                    <p class="font-bold text-gray-900">Long Beach, CA</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center mb-3">
+                                <div class="w-3 h-3 bg-red-500 rounded-full mr-3 flex-shrink-0"></div>
+                                <div class="flex-1">
+                                    <p class="text-xs text-gray-500 mb-1">TO</p>
+                                    <p class="font-bold text-gray-900">San Jose, CA</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="border-t border-gray-200 my-4"></div>
+                        
+                        <div class="space-y-2 mb-4">
+                            <p class="text-sm text-gray-700">
+                                <span class="font-semibold">Date:</span> Saturday
+                            </p>
+                            <p class="text-sm text-gray-700">
+                                <span class="font-semibold">Seats Available:</span> 3 seats
+                            </p>
+                            <p class="text-sm text-gray-700">
+                                <span class="font-semibold">Description:</span> Short trip up north, good conversation.
+                            </p>
+                        </div>
+                        
+                        <button class="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-3 rounded-xl transition-colors flex items-center justify-center">
+                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 0118.364 18.364M9 9l12 12m0 0L9 21"/>
+                            </svg>
+                            Book This Ride
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 11: California - Need Ride -->
+            <div class="ride-card bg-white rounded-2xl shadow-sm overflow-hidden hover:shadow-xl transition-shadow duration-300" data-type="need" data-origin="Bakersfield, CA" data-destination="Santa Barbara, CA">
+                <div class="relative">
+                    <div class="bg-red-100 px-4 py-3 border-b border-red-200">
+                        <div class="flex items-center justify-between">
+                            <span class="bg-red-500 text-white text-xs font-bold px-3 py-1 rounded-full flex items-center">
+                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 2 9-2zm0 0v-8"/>
+                                </svg>
+                                NEED RIDE
+                            </span>
+                            <span class="text-red-600 font-bold text-lg">$30</span>
+                        </div>
+                    </div>
+                    
+                    <div class="p-5">
+                        <div class="mb-4">
+                            <div class="flex items-center mb-3">
+                                <div class="w-3 h-3 bg-green-500 rounded-full mr-3 flex-shrink-0"></div>
+                                <div class="flex-1">
+                                    <p class="text-xs text-gray-500 mb-1">FROM</p>
+                                    <p class="font-bold text-gray-900">Bakersfield, CA</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center mb-3">
+                                <div class="w-3 h-3 bg-red-500 rounded-full mr-3 flex-shrink-0"></div>
+                                <div class="flex-1">
+                                    <p class="text-xs text-gray-500 mb-1">TO</p>
+                                    <p class="font-bold text-gray-900">Santa Barbara, CA</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="border-t border-gray-200 my-4"></div>
+                        
+                        <div class="space-y-2 mb-4">
+                            <p class="text-sm text-gray-700">
+                                <span class="font-semibold">Date:</span> Tomorrow
+                            </p>
+                            <p class="text-sm text-gray-700">
+                                <span class="font-semibold">Passengers:</span> 1 person
+                            </p>
+                            <p class="text-sm text-gray-700">
+                                <span class="font-semibold">Description:</span> Day trip to the coast.
+                            </p>
+                        </div>
+                        
+                        <button class="w-full bg-red-500 hover:bg-red-600 text-white font-bold py-3 rounded-xl transition-colors flex items-center justify-center">
+                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+                            </svg>
+                            Contact Rider
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 12: Texas - Offering Ride -->
+            <div class="ride-card bg-white rounded-2xl shadow-sm overflow-hidden hover:shadow-xl transition-shadow duration-300" data-type="offer" data-origin="Houston, TX" data-destination="Dallas, TX">
+                <div class="relative">
+                    <div class="bg-green-100 px-4 py-3 border-b border-green-200">
+                        <div class="flex items-center justify-between">
+                            <span class="bg-green-500 text-white text-xs font-bold px-3 py-1 rounded-full flex items-center">
+                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"/>
+                                </svg>
+                                OFFERING RIDE
+                            </span>
+                            <span class="text-green-600 font-bold text-lg">$40</span>
+                        </div>
+                    </div>
+                    
+                    <div class="p-5">
+                        <div class="mb-4">
+                            <div class="flex items-center mb-3">
+                                <div class="w-3 h-3 bg-green-500 rounded-full mr-3 flex-shrink-0"></div>
+                                <div class="flex-1">
+                                    <p class="text-xs text-gray-500 mb-1">FROM</p>
+                                    <p class="font-bold text-gray-900">Houston, TX</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center mb-3">
+                                <div class="w-3 h-3 bg-red-500 rounded-full mr-3 flex-shrink-0"></div>
+                                <div class="flex-1">
+                                    <p class="text-xs text-gray-500 mb-1">TO</p>
+                                    <p class="font-bold text-gray-900">Dallas, TX</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="border-t border-gray-200 my-4"></div>
+                        
+                        <div class="space-y-2 mb-4">
+                            <p class="text-sm text-gray-700">
+                                <span class="font-semibold">Date:</span> Sunday
+                            </p>
+                            <p class="text-sm text-gray-700">
+                                <span class="font-semibold">Seats Available:</span> 3 seats
+                            </p>
+                            <p class="text-sm text-gray-700">
+                                <span class="font-semibold">Description:</span> Regular trip between cities, comfortable ride.
+                            </p>
+                        </div>
+                        
+                        <button class="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-3 rounded-xl transition-colors flex items-center justify-center">
+                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 0118.364 18.364M9 9l12 12m0 0L9 21"/>
+                            </svg>
+                            Book This Ride
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 13: Texas - Need Ride -->
+            <div class="ride-card bg-white rounded-2xl shadow-sm overflow-hidden hover:shadow-xl transition-shadow duration-300" data-type="need" data-origin="Austin, TX" data-destination="San Antonio, TX">
+                <div class="relative">
+                    <div class="bg-red-100 px-4 py-3 border-b border-red-200">
+                        <div class="flex items-center justify-between">
+                            <span class="bg-red-500 text-white text-xs font-bold px-3 py-1 rounded-full flex items-center">
+                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 2 9-2zm0 0v-8"/>
+                                </svg>
+                                NEED RIDE
+                            </span>
+                            <span class="text-red-600 font-bold text-lg">$25</span>
+                        </div>
+                    </div>
+                    
+                    <div class="p-5">
+                        <div class="mb-4">
+                            <div class="flex items-center mb-3">
+                                <div class="w-3 h-3 bg-green-500 rounded-full mr-3 flex-shrink-0"></div>
+                                <div class="flex-1">
+                                    <p class="text-xs text-gray-500 mb-1">FROM</p>
+                                    <p class="font-bold text-gray-900">Austin, TX</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center mb-3">
+                                <div class="w-3 h-3 bg-red-500 rounded-full mr-3 flex-shrink-0"></div>
+                                <div class="flex-1">
+                                    <p class="text-xs text-gray-500 mb-1">TO</p>
+                                    <p class="font-bold text-gray-900">San Antonio, TX</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="border-t border-gray-200 my-4"></div>
+                        
+                        <div class="space-y-2 mb-4">
+                            <p class="text-sm text-gray-700">
+                                <span class="font-semibold">Date:</span> Next week
+                            </p>
+                            <p class="text-sm text-gray-700">
+                                <span class="font-semibold">Passengers:</span> 1 person
+                            </p>
+                            <p class="text-sm text-gray-700">
+                                <span class="font-semibold">Description:</span> Weekend getaway, can share expenses.
+                            </p>
+                        </div>
+                        
+                        <button class="w-full bg-red-500 hover:bg-red-600 text-white font-bold py-3 rounded-xl transition-colors flex items-center justify-center">
+                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+                            </svg>
+                            Contact Rider
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 14: Texas - Offering Ride -->
+            <div class="ride-card bg-white rounded-2xl shadow-sm overflow-hidden hover:shadow-xl transition-shadow duration-300" data-type="offer" data-origin="Fort Worth, TX" data-destination="El Paso, TX">
+                <div class="relative">
+                    <div class="bg-green-100 px-4 py-3 border-b border-green-200">
+                        <div class="flex items-center justify-between">
+                            <span class="bg-green-500 text-white text-xs font-bold px-3 py-1 rounded-full flex items-center">
+                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"/>
+                                </svg>
+                                OFFERING RIDE
+                            </span>
+                            <span class="text-green-600 font-bold text-lg">$65</span>
+                        </div>
+                    </div>
+                    
+                    <div class="p-5">
+                        <div class="mb-4">
+                            <div class="flex items-center mb-3">
+                                <div class="w-3 h-3 bg-green-500 rounded-full mr-3 flex-shrink-0"></div>
+                                <div class="flex-1">
+                                    <p class="text-xs text-gray-500 mb-1">FROM</p>
+                                    <p class="font-bold text-gray-900">Fort Worth, TX</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center mb-3">
+                                <div class="w-3 h-3 bg-red-500 rounded-full mr-3 flex-shrink-0"></div>
+                                <div class="flex-1">
+                                    <p class="text-xs text-gray-500 mb-1">TO</p>
+                                    <p class="font-bold text-gray-900">El Paso, TX</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="border-t border-gray-200 my-4"></div>
+                        
+                        <div class="space-y-2 mb-4">
+                            <p class="text-sm text-gray-700">
+                                <span class="font-semibold">Date:</span> Friday
+                            </p>
+                            <p class="text-sm text-gray-700">
+                                <span class="font-semibold">Seats Available:</span> 2 seats
+                            </p>
+                            <p class="text-sm text-gray-700">
+                                <span class="font-semibold">Description:</span> Long trip, experienced driver.
+                            </p>
+                        </div>
+                        
+                        <button class="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-3 rounded-xl transition-colors flex items-center justify-center">
+                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 0118.364 18.364M9 9l12 12m0 0L9 21"/>
+                            </svg>
+                            Book This Ride
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 15: Texas - Need Ride -->
+            <div class="ride-card bg-white rounded-2xl shadow-sm overflow-hidden hover:shadow-xl transition-shadow duration-300" data-type="need" data-origin="Corpus Christi, TX" data-destination="San Antonio, TX">
+                <div class="relative">
+                    <div class="bg-red-100 px-4 py-3 border-b border-red-200">
+                        <div class="flex items-center justify-between">
+                            <span class="bg-red-500 text-white text-xs font-bold px-3 py-1 rounded-full flex items-center">
+                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 19l9 2-9-18-9 2 9-2zm0 0v-8"/>
+                                </svg>
+                                NEED RIDE
+                            </span>
+                            <span class="text-red-600 font-bold text-lg">$35</span>
+                        </div>
+                    </div>
+                    
+                    <div class="p-5">
+                        <div class="mb-4">
+                            <div class="flex items-center mb-3">
+                                <div class="w-3 h-3 bg-green-500 rounded-full mr-3 flex-shrink-0"></div>
+                                <div class="flex-1">
+                                    <p class="text-xs text-gray-500 mb-1">FROM</p>
+                                    <p class="font-bold text-gray-900">Corpus Christi, TX</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center mb-3">
+                                <div class="w-3 h-3 bg-red-500 rounded-full mr-3 flex-shrink-0"></div>
+                                <div class="flex-1">
+                                    <p class="text-xs text-gray-500 mb-1">TO</p>
+                                    <p class="font-bold text-gray-900">San Antonio, TX</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="border-t border-gray-200 my-4"></div>
+                        
+                        <div class="space-y-2 mb-4">
+                            <p class="text-sm text-gray-700">
+                                <span class="font-semibold">Date:</span> Flexible
+                            </p>
+                            <p class="text-sm text-gray-700">
+                                <span class="font-semibold">Passengers:</span> 2 people
+                            </p>
+                            <p class="text-sm text-gray-700">
+                                <span class="font-semibold">Description:</span> Traveling to visit family for the weekend.
+                            </p>
+                        </div>
+                        
+                        <button class="w-full bg-red-500 hover:bg-red-600 text-white font-bold py-3 rounded-xl transition-colors flex items-center justify-center">
+                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"/>
+                            </svg>
+                            Contact Rider
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 16: Texas - Offering Ride -->
+            <div class="ride-card bg-white rounded-2xl shadow-sm overflow-hidden hover:shadow-xl transition-shadow duration-300" data-type="offer" data-origin="Plano, TX" data-destination="Houston, TX">
+                <div class="relative">
+                    <div class="bg-green-100 px-4 py-3 border-b border-green-200">
+                        <div class="flex items-center justify-between">
+                            <span class="bg-green-500 text-white text-xs font-bold px-3 py-1 rounded-full flex items-center">
+                                <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"/>
+                                </svg>
+                                OFFERING RIDE
+                            </span>
+                            <span class="text-green-600 font-bold text-lg">$45</span>
+                        </div>
+                    </div>
+                    
+                    <div class="p-5">
+                        <div class="mb-4">
+                            <div class="flex items-center mb-3">
+                                <div class="w-3 h-3 bg-green-500 rounded-full mr-3 flex-shrink-0"></div>
+                                <div class="flex-1">
+                                    <p class="text-xs text-gray-500 mb-1">FROM</p>
+                                    <p class="font-bold text-gray-900">Plano, TX</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center mb-3">
+                                <div class="w-3 h-3 bg-red-500 rounded-full mr-3 flex-shrink-0"></div>
+                                <div class="flex-1">
+                                    <p class="text-xs text-gray-500 mb-1">TO</p>
+                                    <p class="font-bold text-gray-900">Houston, TX</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="border-t border-gray-200 my-4"></div>
+                        
+                        <div class="space-y-2 mb-4">
+                            <p class="text-sm text-gray-700">
+                                <span class="font-semibold">Date:</span> Saturday
+                            </p>
+                            <p class="text-sm text-gray-700">
+                                <span class="font-semibold">Seats Available:</span> 4 seats
+                            </p>
+                            <p class="text-sm text-gray-700">
+                                <span class="font-semibold">Description:</span> Spacious SUV, good for group trips.
+                            </p>
+                        </div>
+                        
+                        <button class="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-3 rounded-xl transition-colors flex items-center justify-center">
+                            <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 0118.364 18.364M9 9l12 12m0 0L9 21"/>
+                            </svg>
+                            Book This Ride
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Load More Button -->
+        <div class="mt-8 text-center">
+            <button id="loadMoreBtn" class="bg-white border-2 border-orange-500 text-orange-500 px-8 py-3 rounded-full font-semibold hover:bg-orange-500 hover:text-white transition-all">
+                Load More Rides
+            </button>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-[#b0b0a8] text-gray-800 mt-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
+                <!-- Company Info -->
+                <div>
+                    <h3 class="text-2xl font-bold mb-4">
+                        <span class="text-orange-500">U <span class="-mx-1"></span>-</span><span class="text-gray-800">DO</span>
+                    </h3>
+                    <p class="text-gray-700 text-sm leading-relaxed">
+                        Connect with drivers and passengers. Find rides or offer rides - safe, affordable, and convenient.
+                    </p>
+                </div>
+
+                <!-- Quick Links -->
+                <div>
+                    <h4 class="text-lg font-semibold mb-4 text-gray-800">Quick Links</h4>
+                    <ul class="space-y-2">
+                        <li><a href="../index.html" class="text-gray-700 hover:text-orange-500 transition">Home</a></li>
+                        <li><a href="#" class="text-gray-700 hover:text-orange-500 transition">Find a Ride</a></li>
+                        <li><a href="#" class="text-gray-700 hover:text-orange-500 transition">Offer a Ride</a></li>
+                        <li><a href="#" class="text-gray-700 hover:text-orange-500 transition">How It Works</a></li>
+                    </ul>
+                </div>
+
+                <!-- Support -->
+                <div>
+                    <h4 class="text-lg font-semibold mb-4 text-gray-800">Support</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-700 hover:text-orange-500 transition">Help Center</a></li>
+                        <li><a href="#" class="text-gray-700 hover:text-orange-500 transition">Safety</a></li>
+                        <li><a href="../contact-us/" class="text-gray-700 hover:text-orange-500 transition">Contact Us</a></li>
+                        <li><a href="#" class="text-gray-700 hover:text-orange-500 transition">FAQs</a></li>
+                    </ul>
+                </div>
+
+                <!-- Legal -->
+                <div>
+                    <h4 class="text-lg font-semibold mb-4 text-gray-800">Legal</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-700 hover:text-orange-500 transition">Terms of Service</a></li>
+                        <li><a href="#" class="text-gray-700 hover:text-orange-500 transition">Privacy Policy</a></li>
+                        <li><a href="#" class="text-gray-700 hover:text-orange-500 transition">Cookie Policy</a></li>
+                        <li><a href="../trademark/" class="text-gray-700 hover:text-orange-500 transition">Trademark</a></li>
+                    </ul>
+                </div>
+
+                <!-- Language Selector -->
+                <div>
+                    <h4 class="text-lg font-semibold mb-4 text-gray-800">Language</h4>
+                    <div class="relative">
+                        <select id="languageSelector" class="w-full bg-white text-gray-800 border border-gray-400 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-orange-500 cursor-pointer appearance-none pr-8">
+                            <option value="en" selected>English</option>
+                            <option value="es">Español</option>
+                            <option value="fr">Français</option>
+                        </select>
+                        <div class="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none">
+                            <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Social Media & Copyright -->
+            <div class="border-t border-gray-400 mt-10 pt-8 flex flex-col md:flex-row justify-between items-center">
+                <p class="text-gray-700 text-sm mb-4 md:mb-0">
+                    © 2026 UDo, Inc. All rights reserved.
+                </p>
+                <div class="flex space-x-6">
+                    <a href="#" class="text-gray-600 hover:text-orange-500 transition">
+                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z"/>
+                        </svg>
+                    </a>
+                    <a href="#" class="text-gray-600 hover:text-orange-500 transition">
+                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 2.163c3.204 0 3.584.012 4.85.072 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                        </svg>
+                    </a>
+                    <a href="#" class="text-gray-600 hover:text-orange-500 transition">
+                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M22.675 0h-21.35c-.732 0-1.325.593-1.325 1.325v21.351c0 .731.593 1.324 1.325 1.324h11.495v-9.294h-3.128v-3.622h3.128v-2.671c0-3.1 1.893-4.788 4.659-4.788 1.325 0 2.463.099 2.795.143v3.24l-1.918.001c-1.504 0-1.795.715-1.795 1.763v2.313h3.587l-.467 3.622h-3.12v9.293h6.116c.73 0 1.323-.593 1.323-1.325v-21.35c0-.732-.593-1.325-1.325-1.325z"/>
+                        </svg>
+                    </a>
+                    <a href="#" class="text-gray-600 hover:text-orange-500 transition">
+                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667h-3.554v-11.452h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286nm-15.11-13.019c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019h-3.564v-11.452h3.564v11.452zm15.106-20.452h-20.454c-.979 0-1.771.774-1.771 1.729v20.542c0 .956.792 1.729 1.771 1.729h20.451c.978 0 1.778-.773 1.778-1.729v-20.542c0-.955-.8-1.729-1.778-1.729z"/>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Tab functionality
+        const allTab = document.getElementById('allTab');
+        const needRideTab = document.getElementById('needRideTab');
+        const offerRideTab = document.getElementById('offerRideTab');
+        const rideCards = document.querySelectorAll('.ride-card');
+        
+        // Filters
+        const locationFilter = document.getElementById('locationFilter');
+        const priceFilter = document.getElementById('priceFilter');
+        const fromSearch = document.getElementById('fromSearch');
+        const toSearch = document.getElementById('toSearch');
+        const similarDirectionBtn = document.getElementById('similarDirectionBtn');
+        
+        // Current filter state
+        let currentTypeFilter = 'all';
+        let currentLocationFilter = 'all';
+        let currentPriceFilter = 'all';
+        let currentFromSearch = '';
+        let currentToSearch = '';
+        let showSimilarDirection = false;
+        
+        // Similar direction mapping for general regions
+        const regionMap = {
+            'washington': ['dc', 'washington', 'dc area', 'arlington', 'rosslyn', 'virginia'],
+            'florida': ['florida', 'fl', 'north florida', 'miami'],
+            'california': ['california', 'ca', 'san francisco', 'los angeles', 'san diego', 'sacramento', 'oakland', 'fresno', 'san jose', 'long beach', 'santa barbara', 'bakersfield'],
+            'texas': ['texas', 'tx', 'houston', 'dallas', 'austin', 'san antonio', 'fort worth', 'el paso', 'corpus christi', 'plano'],
+            'new york': ['new york city', 'new york', 'nyc'],
+            'boston': ['boston', 'massachusetts', 'ma'],
+            'canada': ['canada', 'toronto', 'ontario', 'on'],
+            'maryland': ['maryland', 'md', 'baltimore']
+        };
+
+        function applyFilters() {
+            rideCards.forEach(card => {
+                const cardType = card.getAttribute('data-type');
+                const origin = card.getAttribute('data-origin').toLowerCase();
+                const destination = card.getAttribute('data-destination').toLowerCase();
+                const priceText = card.querySelector('.bg-red-100 span:last-child, .bg-green-100 span:last-child')?.textContent || '0';
+                const price = parseInt(priceText.replace(/[^0-9]/g, '')) || 0;
+                
+                // Type filter
+                const typeMatch = currentTypeFilter === 'all' || cardType === currentTypeFilter;
+                
+                // Location filter
+                let locationMatch = currentLocationFilter === 'all';
+                if (!locationMatch) {
+                    const locationMap = {
+                        'dc': ['dc', 'washington'],
+                        'va': ['va', 'virginia', 'arlington', 'rosslyn'],
+                        'md': ['md', 'maryland', 'baltimore'],
+                        'fl': ['fl', 'florida', 'miami'],
+                        'ca': ['ca', 'california', 'san francisco', 'los angeles', 'san diego', 'sacramento', 'oakland', 'fresno', 'san jose', 'long beach', 'santa barbara', 'bakersfield'],
+                        'tx': ['tx', 'texas', 'houston', 'dallas', 'austin', 'san antonio', 'fort worth', 'el paso', 'corpus christi', 'plano'],
+                        'canada': ['canada', 'toronto', 'on']
+                    };
+                    
+                    const locations = locationMap[currentLocationFilter] || [];
+                    const combined = origin + ' ' + destination;
+                    locationMatch = locations.some(loc => combined.includes(loc));
+                }
+                
+                // Price filter
+                let priceMatch = currentPriceFilter === 'all';
+                if (!priceMatch) {
+                    switch(currentPriceFilter) {
+                        case 'under50':
+                            priceMatch = price > 0 && price < 50;
+                            break;
+                        case '50to100':
+                            priceMatch = price >= 50 && price <= 100;
+                            break;
+                        case '100to200':
+                            priceMatch = price > 100 && price <= 200;
+                            break;
+                        case 'over200':
+                            priceMatch = price > 200;
+                            break;
+                    }
+                }
+                
+                // From search filter
+                let fromMatch = true;
+                if (currentFromSearch) {
+                    fromMatch = origin.includes(currentFromSearch);
+                }
+                
+                // To search filter
+                let toMatch = true;
+                if (currentToSearch) {
+                    toMatch = destination.includes(currentToSearch);
+                }
+                
+                // Similar direction filter
+                let directionMatch = true;
+                if (showSimilarDirection && (currentFromSearch || currentToSearch)) {
+                    // Check if card is in same general direction
+                    const combined = origin + ' ' + destination;
+                    let hasSimilarDirection = false;
+                    
+                    // Check if any of the search terms match the region map
+                    Object.keys(regionMap).forEach(region => {
+                        const regionKeywords = regionMap[region];
+                        const searchTerms = [currentFromSearch, currentToSearch].filter(t => t);
+                        
+                        searchTerms.forEach(term => {
+                            regionKeywords.forEach(keyword => {
+                                if (term && combined.includes(keyword)) {
+                                    hasSimilarDirection = true;
+                                }
+                            });
+                        });
+                    });
+                    
+                    directionMatch = hasSimilarDirection;
+                }
+                
+                // Apply all filters
+                if (typeMatch && locationMatch && priceMatch && fromMatch && toMatch && directionMatch) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+
+        function filterCards(filter) {
+            currentTypeFilter = filter;
+            applyFilters();
+        }
+
+        allTab.addEventListener('click', () => {
+            filterCards('all');
+            allTab.classList.add('bg-orange-500', 'text-white');
+            allTab.classList.remove('bg-white', 'text-gray-700');
+            needRideTab.classList.remove('bg-orange-500', 'text-white');
+            needRideTab.classList.add('bg-white', 'text-gray-700');
+            offerRideTab.classList.remove('bg-orange-500', 'text-white');
+            offerRideTab.classList.add('bg-white', 'text-gray-700');
+        });
+
+        needRideTab.addEventListener('click', () => {
+            filterCards('need');
+            needRideTab.classList.add('bg-orange-500', 'text-white');
+            needRideTab.classList.remove('bg-white', 'text-gray-700');
+            allTab.classList.remove('bg-orange-500', 'text-white');
+            allTab.classList.add('bg-white', 'text-gray-700');
+            offerRideTab.classList.remove('bg-orange-500', 'text-white');
+            offerRideTab.classList.add('bg-white', 'text-gray-700');
+        });
+
+        offerRideTab.addEventListener('click', () => {
+            filterCards('offer');
+            offerRideTab.classList.add('bg-orange-500', 'text-white');
+            offerRideTab.classList.remove('bg-white', 'text-gray-700');
+            allTab.classList.remove('bg-orange-500', 'text-white');
+            allTab.classList.add('bg-white', 'text-gray-700');
+            needRideTab.classList.remove('bg-orange-500', 'text-white');
+            needRideTab.classList.add('bg-white', 'text-gray-700');
+        });
+
+        // From search functionality
+        fromSearch.addEventListener('keyup', function(e) {
+            currentFromSearch = e.target.value.toLowerCase();
+            applyFilters();
+        });
+        
+        // To search functionality
+        toSearch.addEventListener('keyup', function(e) {
+            currentToSearch = e.target.value.toLowerCase();
+            applyFilters();
+        });
+        
+        // Location filter functionality
+        locationFilter.addEventListener('change', function(e) {
+            currentLocationFilter = e.target.value;
+            applyFilters();
+        });
+        
+        // Price filter functionality
+        priceFilter.addEventListener('change', function(e) {
+            currentPriceFilter = e.target.value;
+            applyFilters();
+        });
+
+        // Similar direction toggle functionality
+        similarDirectionBtn.addEventListener('click', function() {
+            showSimilarDirection = !showSimilarDirection;
+            
+            if (showSimilarDirection) {
+                similarDirectionBtn.classList.add('bg-orange-500', 'text-white');
+                similarDirectionBtn.classList.remove('bg-white', 'text-orange-500');
+            } else {
+                similarDirectionBtn.classList.remove('bg-orange-500', 'text-white');
+                similarDirectionBtn.classList.add('bg-white', 'text-orange-500');
+            }
+            
+            applyFilters();
+        });
+
+        // Load more button
+        const loadMoreBtn = document.getElementById('loadMoreBtn');
+        let moreCardsLoaded = false;
+
+        loadMoreBtn.addEventListener('click', function() {
+            if (!moreCardsLoaded) {
+                const newCards = `
+                    <div class="ride-card bg-white rounded-2xl shadow-sm overflow-hidden hover:shadow-xl transition-shadow duration-300" data-type="offer" data-origin="Washington D.C." data-destination="Philadelphia">
+                        <div class="relative">
+                            <div class="bg-green-100 px-4 py-3 border-b border-green-200">
+                                <div class="flex items-center justify-between">
+                                    <span class="bg-green-500 text-white text-xs font-bold px-3 py-1 rounded-full flex items-center">
+                                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"/>
+                                        </svg>
+                                        OFFERING RIDE
+                                    </span>
+                                    <span class="text-green-600 font-bold text-lg">$35</span>
+                                </div>
+                            </div>
+                            <div class="p-5">
+                                <div class="mb-4">
+                                    <div class="flex items-center mb-3">
+                                        <div class="w-3 h-3 bg-green-500 rounded-full mr-3 flex-shrink-0"></div>
+                                        <div class="flex-1">
+                                            <p class="text-xs text-gray-500 mb-1">FROM</p>
+                                            <p class="font-bold text-gray-900">Washington, D.C.</p>
+                                        </div>
+                                    </div>
+                                    <div class="flex items-center mb-3">
+                                        <div class="w-3 h-3 bg-red-500 rounded-full mr-3 flex-shrink-0"></div>
+                                        <div class="flex-1">
+                                            <p class="text-xs text-gray-500 mb-1">TO</p>
+                                            <p class="font-bold text-gray-900">Philadelphia</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="border-t border-gray-200 my-4"></div>
+                                <div class="space-y-2 mb-4">
+                                    <p class="text-sm text-gray-700">
+                                        <span class="font-semibold">Date:</span> Tomorrow
+                                    </p>
+                                    <p class="text-sm text-gray-700">
+                                        <span class="font-semibold">Seats Available:</span> 1 seat
+                                    </p>
+                                    <p class="text-sm text-gray-700">
+                                        <span class="font-semibold">Description:</span> Quick trip to Philadelphia.
+                                    </p>
+                                </div>
+                                <button class="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-3 rounded-xl transition-colors flex items-center justify-center">
+                                    <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18.364 18.364A9 9 0 005.636 5.636m12.728 12.728A9 9 0 0118.364 18.364M9 9l12 12m0 0L9 21"/>
+                                    </svg>
+                                    Book This Ride
+                                </button>
+                            </div>
+                        </div>
+                    `;
+                
+                document.getElementById('rideCardsGrid').insertAdjacentHTML('beforeend', newCards);
+                loadMoreBtn.textContent = 'No More Rides';
+                loadMoreBtn.disabled = true;
+                loadMoreBtn.classList.add('opacity-50', 'cursor-not-allowed');
+                moreCardsLoaded = true;
+            }
+        });
+    </script>
+
+</body>
+</html>

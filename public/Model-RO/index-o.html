@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>U-Do vs DoorDash Model Calculator</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f7f6; padding: 20px; color: #333; }
+        .container { max-width: 900px; margin: auto; background: white; padding: 30px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        h2 { text-align: center; color: #2c3e50; }
+        .input-section { background: #e8f4f8; padding: 20px; border-radius: 8px; margin-bottom: 25px; display: flex; gap: 20px; align-items: center; justify-content: center; }
+        input { padding: 10px; border: 1px solid #ccc; border-radius: 4px; width: 100px; font-size: 16px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { padding: 15px; text-align: left; border-bottom: 1px solid #ddd; }
+        th { background-color: #f8f9fa; color: #7f8c8d; text-transform: uppercase; font-size: 12px; }
+        .udo-col { font-weight: bold; color: #27ae60; background-color: #f0fff4; }
+        .dd-col { color: #e74c3c; background-color: #fff5f5; }
+        .advantage-row { background-color: #fff9db; font-weight: bold; }
+        .footer-note { font-size: 12px; color: #95a5a6; margin-top: 20px; text-align: center; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>UDO vs. DoorDash Comparison</h2>
+    
+    <div class="input-section">
+        <label><strong>Food Subtotal ($):</strong></label>
+        <input type="number" id="foodInput" value="35.00" step="0.01" oninput="calculate()">
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Component</th>
+                <th>UDO Model</th>
+                <th>DoorDash (30%)</th>
+                <th>UDO Advantage</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Total Customer Pays</td>
+                <td id="udoTotal" class="udo-col"></td>
+                <td id="ddTotal" class="dd-col"></td>
+                <td id="customerAdv" class="advantage-row"></td>
+            </tr>
+            <tr>
+                <td>Restaurant Payout</td>
+                <td id="udoRest" class="udo-col"></td>
+                <td id="ddRest" class="dd-col"></td>
+                <td id="restAdv" class="advantage-row"></td>
+            </tr>
+            <tr>
+                <td>Driver Base Pay</td>
+                <td id="udoDriver" class="udo-col"></td>
+                <td id="ddDriver" class="dd-col"></td>
+                <td id="driverAdv" class="advantage-row"></td>
+            </tr>
+            <tr>
+                <td>Platform Profit (Gross)</td>
+                <td id="udoProfit" class="udo-col"></td>
+                <td id="ddProfit" class="dd-col"></td>
+                <td>--</td>
+            </tr>
+            <tr>
+                <td>Stripe/Processing Fee</td>
+                <td id="udoStripe" class="udo-col"></td>
+                <td id="ddStripe" class="dd-col"></td>
+                <td>--</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <p class="footer-note">Calculations based on 12.5% UDO Fee vs 30% DoorDash Commission.</p>
+</div>
+
+<script>
+function calculate() {
+    // Inputs
+    const food = parseFloat(document.getElementById('foodInput').value) || 0;
+    const deliveryFee = 3.50;
+    
+    // UDO Logic
+    const udoPlatformFee = food * 0.125;
+    const udoStripe = (food + deliveryFee) * 0.029 + 0.30;
+    const udoTotal = food + deliveryFee + udoStripe;
+    const udoRest = food - udoPlatformFee;
+    const udoDriver = deliveryFee + (udoPlatformFee * 0.75);
+    const udoProfit = (udoPlatformFee * 0.25) + 1.00; // Flat $1 + 25% share
+
+    // DoorDash Logic (Approximate market standard)
+    const ddCommission = food * 0.30;
+    const ddServiceFee = food * 0.15; // DD average service fee
+    const ddTotal = food + deliveryFee + ddServiceFee;
+    const ddRest = food - ddCommission;
+    const ddDriver = 2.50; // DD Base pay average
+    const ddProfit = ddCommission + ddServiceFee - ddDriver; 
+    const ddStripe = ddTotal * 0.029 + 0.30;
+
+    // Update HTML
+    document.getElementById('udoTotal').innerText = '$' + udoTotal.toFixed(2);
+    document.getElementById('ddTotal').innerText = '$' + ddTotal.toFixed(2);
+    document.getElementById('customerAdv').innerText = '-$' + (ddTotal - udoTotal).toFixed(2);
+
+    document.getElementById('udoRest').innerText = '$' + udoRest.toFixed(2);
+    document.getElementById('ddRest').innerText = '$' + ddRest.toFixed(2);
+    document.getElementById('restAdv').innerText = '+$' + (udoRest - ddRest).toFixed(2);
+
+    document.getElementById('udoDriver').innerText = '$' + udoDriver.toFixed(2);
+    document.getElementById('ddDriver').innerText = '$' + ddDriver.toFixed(2);
+    document.getElementById('driverAdv').innerText = '+$' + (udoDriver - ddDriver).toFixed(2);
+
+    document.getElementById('udoProfit').innerText = '$' + udoProfit.toFixed(2);
+    document.getElementById('ddProfit').innerText = '$' + ddProfit.toFixed(2);
+
+    document.getElementById('udoStripe').innerText = '$' + udoStripe.toFixed(2);
+    document.getElementById('ddStripe').innerText = '$' + ddStripe.toFixed(2);
+}
+
+// Run once on load
+calculate();
+</script>
+
+</body>
+</html>

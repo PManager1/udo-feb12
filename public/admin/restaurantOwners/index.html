@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Restaurant Owners — UDO Admin</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="../../config.js"></script>
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
+
+    .owner-card {
+      transition: all 0.2s;
+      border: 1px solid #e5e7eb;
+    }
+    .owner-card:hover {
+      box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+      border-color: #f97316;
+    }
+    .owner-card.expanded {
+      border-color: #f97316;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+    }
+
+    .restaurant-panel {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.35s ease, opacity 0.25s ease;
+      opacity: 0;
+    }
+    .owner-card.expanded .restaurant-panel {
+      max-height: 5000px;
+      opacity: 1;
+    }
+
+    .chevron {
+      transition: transform 0.3s ease;
+    }
+    .owner-card.expanded .chevron {
+      transform: rotate(180deg);
+    }
+
+    .badge-active { background: #dcfce7; color: #166534; }
+    .badge-paused { background: #fee2e2; color: #991b1b; }
+    .badge-no-restaurant { background: #f3f4f6; color: #6b7280; }
+
+    .stat-pill {
+      background: #f9fafb;
+      border: 1px solid #e5e7eb;
+      border-radius: 9999px;
+      padding: 2px 10px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .search-box:focus {
+      outline: none;
+      border-color: #f97316;
+      box-shadow: 0 0 0 3px rgba(249, 115, 22, 0.15);
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    .spinner {
+      animation: spin 0.8s linear infinite;
+      display: inline-block;
+    }
+
+    .item-row {
+      transition: background 0.15s;
+    }
+    .item-row:hover {
+      background: #fef7f0;
+    }
+
+    .enter-store-btn {
+      background: linear-gradient(135deg, #f97316, #ea580c);
+      transition: all 0.2s;
+    }
+    .enter-store-btn:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(249, 115, 22, 0.4);
+    }
+  </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+
+  <!-- Header -->
+  <header class="bg-white border-b border-gray-200">
+    <div class="max-w-6xl mx-auto px-6 py-6">
+      <div class="flex items-center gap-3">
+        <a href="../index.html" class="flex items-center gap-3 group">
+          <div class="w-10 h-10 bg-orange-500 rounded-xl flex items-center justify-center">
+            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/>
+            </svg>
+          </div>
+          <div>
+            <h1 class="text-2xl font-bold text-gray-900">Restaurant Owners</h1>
+            <p class="text-sm text-gray-500">View all restaurants, menus & manage stores</p>
+          </div>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-6xl mx-auto px-6 py-8">
+
+    <!-- Stats Bar -->
+    <div class="flex flex-wrap items-center gap-4 mb-6">
+      <div class="stat-pill">🏪 <span id="totalRestaurants">—</span> Restaurants</div>
+      <div class="stat-pill">🍔 <span id="totalItems">—</span> Menu Items</div>
+      <div class="stat-pill">📂 <span id="totalCategories">—</span> Categories</div>
+
+      <div class="flex-1"></div>
+
+      <!-- Search -->
+      <div class="relative">
+        <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+        </svg>
+        <input id="searchInput" type="text" placeholder="Search restaurants, items..." class="search-box pl-10 pr-4 py-2 border border-gray-300 rounded-lg text-sm w-72">
+      </div>
+
+      <!-- Refresh -->
+      <button onclick="loadData()" class="bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg text-sm font-medium transition flex items-center gap-2">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+        </svg>
+        Refresh
+      </button>
+    </div>
+
+    <!-- Loading State -->
+    <div id="loadingState" class="text-center py-16">
+      <svg class="spinner w-10 h-10 text-orange-500 mx-auto mb-4" fill="none" viewBox="0 0 24 24">
+        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
+      </svg>
+      <p class="text-gray-500">Loading restaurants...</p>
+    </div>
+
+    <!-- Error State -->
+    <div id="errorState" class="hidden text-center py-16">
+      <div class="text-5xl mb-4">⚠️</div>
+      <p class="text-gray-700 font-semibold mb-2">Failed to load data</p>
+      <p id="errorMessage" class="text-sm text-gray-500 mb-4"></p>
+      <button onclick="loadData()" class="bg-orange-500 hover:bg-orange-600 text-white px-6 py-2 rounded-lg text-sm font-medium transition">Try Again</button>
+    </div>
+
+    <!-- Content -->
+    <div id="contentArea" class="hidden space-y-4"></div>
+
+    <!-- Empty State -->
+    <div id="emptyState" class="hidden text-center py-16">
+      <div class="text-5xl mb-4">🔍</div>
+      <p class="text-gray-700 font-semibold mb-2">No results found</p>
+      <p class="text-sm text-gray-500">Try adjusting your search query.</p>
+    </div>
+
+  </main>
+
+  <!-- Footer -->
+  <div class="text-center text-xs text-gray-400 py-6 border-t border-gray-100 mt-8">
+    UDO Admin · Restaurant Owners · Backend at <code class="bg-gray-100 px-1 rounded">localhost:3030</code>
+  </div>
+
+  <script>
+    let allRestaurants = [];
+
+    // ==================== Init ====================
+    document.addEventListener('DOMContentLoaded', () => {
+      loadData();
+      document.getElementById('searchInput').addEventListener('input', handleSearch);
+    });
+
+    // ==================== Data Loading ====================
+    async function loadData() {
+      document.getElementById('loadingState').classList.remove('hidden');
+      document.getElementById('errorState').classList.add('hidden');
+      document.getElementById('contentArea').classList.add('hidden');
+      document.getElementById('emptyState').classList.add('hidden');
+
+      try {
+        const res = await fetch(API_BASE + 'admin/restaurants');
+        if (!res.ok) throw new Error(`Server returned ${res.status}`);
+        const data = await res.json();
+
+        allRestaurants = data.restaurants || [];
+
+        // Stats
+        let totalItems = 0, totalCategories = 0;
+        allRestaurants.forEach(r => {
+          totalItems += (r.items || []).length;
+          totalCategories += (r.categories || []).length;
+        });
+        document.getElementById('totalRestaurants').textContent = allRestaurants.length;
+        document.getElementById('totalItems').textContent = totalItems;
+        document.getElementById('totalCategories').textContent = totalCategories;
+
+        renderRestaurants(allRestaurants);
+
+        document.getElementById('loadingState').classList.add('hidden');
+        document.getElementById('contentArea').classList.remove('hidden');
+      } catch (err) {
+        console.error('Load error:', err);
+        document.getElementById('loadingState').classList.add('hidden');
+        document.getElementById('errorState').classList.remove('hidden');
+        document.getElementById('errorMessage').textContent = err.message + ' — Make sure the server is running at ' + API_BASE;
+      }
+    }
+
+    // ==================== Rendering ====================
+    function renderRestaurants(restaurants) {
+      const container = document.getElementById('contentArea');
+      container.innerHTML = '';
+
+      if (restaurants.length === 0) {
+        document.getElementById('emptyState').classList.remove('hidden');
+        return;
+      }
+
+      restaurants.forEach(r => {
+        const card = createRestaurantCard(r);
+        container.appendChild(card);
+      });
+    }
+
+    function createRestaurantCard(r) {
+      const name = r.restaurantName || 'Unnamed Restaurant';
+      const address = r.storeAddress || '';
+      const category = r.category || r.storeType || '';
+      const isPaused = r.emergencyPause || false;
+      const items = r.items || [];
+      const categories = r.categories || [];
+      const userId = r.userId || '';
+      const logoURL = r.logoURL || '';
+      const storeType = r.storeType || '';
+      const hours = r.storeHours || {};
+      const rating = r.rating || 0;
+      const reviewCount = r.reviewCount || 0;
+      const deliveryTime = r.deliveryTime || 0;
+      const deliveryFee = r.deliveryFee || 0;
+
+      const card = document.createElement('div');
+      card.className = 'owner-card bg-white rounded-xl p-5 cursor-pointer';
+      card.dataset.searchText = `${name} ${address} ${category} ${storeType} ${items.map(i => i.name || '').join(' ')}`.toLowerCase();
+
+      card.onclick = (e) => {
+        // Don't toggle if clicking the button
+        if (e.target.closest('.enter-store-btn') || e.target.closest('.toggle-items-btn')) return;
+        toggleCard(card);
+      };
+
+      // Build category lookup map
+      const catMap = {};
+      categories.forEach(c => { catMap[c._id] = c.name; });
+
+      // Group items by category
+      const itemsByCategory = {};
+      const uncategorized = [];
+      items.forEach(item => {
+        const catName = catMap[item.categoryId] || catMap[item.categoryId?.$oid] || null;
+        if (catName) {
+          if (!itemsByCategory[catName]) itemsByCategory[catName] = [];
+          itemsByCategory[catName].push(item);
+        } else {
+          uncategorized.push(item);
+        }
+      });
+
+      // Build items HTML
+      let itemsHtml = '';
+      const allCatNames = Object.keys(itemsByCategory);
+      if (allCatNames.length > 0) {
+        allCatNames.forEach(catName => {
+          itemsHtml += `
+            <div class="mb-4">
+              <h5 class="text-sm font-bold text-gray-700 mb-2 flex items-center gap-1">
+                <span class="w-2 h-2 bg-orange-400 rounded-full"></span>
+                ${catName} <span class="text-gray-400 font-normal">(${itemsByCategory[catName].length})</span>
+              </h5>
+              <div class="space-y-1">
+                ${itemsByCategory[catName].map(item => renderItemRow(item)).join('')}
+              </div>
+            </div>
+          `;
+        });
+      }
+      if (uncategorized.length > 0) {
+        itemsHtml += `
+          <div class="mb-4">
+            <h5 class="text-sm font-bold text-gray-700 mb-2 flex items-center gap-1">
+              <span class="w-2 h-2 bg-gray-400 rounded-full"></span>
+              Uncategorized <span class="text-gray-400 font-normal">(${uncategorized.length})</span>
+            </h5>
+            <div class="space-y-1">
+              ${uncategorized.map(item => renderItemRow(item)).join('')}
+            </div>
+          </div>
+        `;
+      }
+      if (items.length === 0) {
+        itemsHtml = `<p class="text-gray-400 text-sm text-center py-4">No menu items yet</p>`;
+      }
+
+      card.innerHTML = `
+        <div class="flex items-center gap-4">
+          <!-- Logo -->
+          <div class="w-14 h-14 rounded-xl flex-shrink-0 flex items-center justify-center overflow-hidden ${logoURL ? '' : 'bg-orange-100'}">
+            ${logoURL
+              ? `<img src="${logoURL}" alt="${name}" class="w-full h-full object-cover rounded-xl">`
+              : `<svg class="w-7 h-7 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/></svg>`
+            }
+          </div>
+
+          <!-- Info -->
+          <div class="flex-1 min-w-0">
+            <div class="flex items-center gap-2 flex-wrap">
+              <h3 class="font-semibold text-gray-900 truncate">${name}</h3>
+              ${isPaused
+                ? `<span class="badge-paused text-xs font-medium px-2 py-0.5 rounded-full">⏸ Paused</span>`
+                : (items.length > 0
+                  ? `<span class="badge-active text-xs font-medium px-2 py-0.5 rounded-full">● Live</span>`
+                  : `<span class="badge-no-restaurant text-xs font-medium px-2 py-0.5 rounded-full">No items</span>`
+                )
+              }
+              ${storeType ? `<span class="text-xs bg-blue-50 text-blue-600 px-2 py-0.5 rounded-full capitalize">${storeType}</span>` : ''}
+              ${category ? `<span class="text-xs bg-purple-50 text-purple-600 px-2 py-0.5 rounded-full capitalize">${category.replace(/-/g, ' ')}</span>` : ''}
+            </div>
+
+            <div class="flex items-center gap-4 mt-1 flex-wrap">
+              ${r.phoneNumber ? `<span class="text-sm text-green-700 font-medium">📱 ${r.phoneNumber}</span>` : ''}
+              ${address ? `<span class="text-sm text-gray-500 truncate max-w-xs">${address}</span>` : ''}
+              ${rating > 0 ? `<span class="text-xs text-gray-600">⭐ ${rating.toFixed(1)} (${reviewCount})</span>` : ''}
+              ${deliveryTime > 0 ? `<span class="text-xs text-gray-600">🕐 ${deliveryTime} min</span>` : ''}
+              <span class="text-xs font-semibold text-gray-600">📂 ${categories.length} categories</span>
+              <span class="text-xs font-semibold text-gray-600">🍔 ${items.length} items</span>
+            </div>
+          </div>
+
+          <!-- Enter Store Button -->
+          ${userId ? `
+          <button class="enter-store-btn text-white font-semibold px-4 py-2 rounded-xl text-sm whitespace-nowrap flex items-center gap-2"
+                  onclick="event.stopPropagation(); enterStoreView('${userId}', '${name.replace(/'/g, "\\'")}')">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+            Store Manager
+          </button>
+          ` : ''}
+
+          <!-- Chevron -->
+          <svg class="chevron w-5 h-5 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+          </svg>
+        </div>
+
+        <!-- Expandable Menu Panel -->
+        <div class="restaurant-panel">
+          <div class="border-t border-gray-100 mt-4 pt-4">
+              <div class="mb-4">
+                <p class="text-xs font-medium text-gray-500 mb-2">Store Hours</p>
+                <div class="flex flex-wrap gap-1">
+                  ${['monday','tuesday','wednesday','thursday','friday','saturday','sunday'].map(day => {
+                    const time = hours[day];
+                    return `
+                      <span class="text-xs border rounded px-2 py-1 ${time ? 'bg-gray-50 border-gray-200' : 'bg-red-50 border-red-200'}">
+                        <span class="font-medium ${time ? 'text-gray-700' : 'text-red-400'} capitalize">${day.slice(0,3)}</span>
+                        <span class="${time ? 'text-gray-500' : 'text-red-400'} ml-1">${time || 'Closed'}</span>
+                      </span>
+                    `;
+                  }).join('')}
+                </div>
+              </div>
+
+            <!-- Menu Items by Category -->
+            <div class="mb-2">
+              <div class="flex items-center justify-between mb-2">
+                <p class="text-xs font-bold text-gray-500 uppercase tracking-wider">Menu Items</p>
+              </div>
+              ${itemsHtml}
+            </div>
+
+            <!-- Owner User ID -->
+            <div class="mt-3 pt-3 border-t border-gray-100">
+              <p class="text-xs text-gray-400">User ID: <code class="bg-gray-50 px-1 rounded select-all">${userId}</code></p>
+            </div>
+          </div>
+        </div>
+      `;
+
+      return card;
+    }
+
+    function renderItemRow(item) {
+      const name = item.name || 'Unnamed';
+      const price = item.basePrice || 0;
+      const image = item.imageUrl || item.imageURL || '';
+      const available = item.isAvailable !== false;
+
+      return `
+        <div class="item-row flex items-center gap-3 py-2 px-3 rounded-lg">
+          ${image ? `<img src="${image}" alt="${name}" class="w-10 h-10 rounded-lg object-cover flex-shrink-0" onerror="this.style.display='none'">` : ''}
+          <div class="flex-1 min-w-0">
+            <span class="text-sm font-medium text-gray-800 ${!available ? 'line-through text-gray-400' : ''}">${name}</span>
+            ${!available ? '<span class="ml-2 text-xs text-red-500 font-medium">86\'d</span>' : ''}
+          </div>
+          <span class="text-sm font-bold ${price > 0 ? 'text-green-600' : 'text-gray-400'}">$${price.toFixed(2)}</span>
+        </div>
+      `;
+    }
+
+    // ==================== Interactions ====================
+    function toggleCard(card) {
+      const wasExpanded = card.classList.contains('expanded');
+      document.querySelectorAll('.owner-card.expanded').forEach(c => c.classList.remove('expanded'));
+      if (!wasExpanded) card.classList.add('expanded');
+    }
+
+    function enterStoreView(userId, storeName) {
+      if (!confirm(`Enter store manager view for "${storeName}"?\n\nThis will open the merchant dashboard acting as this restaurant owner.`)) return;
+
+      // Store admin target in localStorage so merchant/AddFoodItem pages can use it
+      localStorage.setItem('adminMode', 'true');
+      localStorage.setItem('adminTargetUserId', userId);
+
+      // Navigate to merchant page
+      window.open('../merchant/index.html', '_blank');
+    }
+
+    function handleSearch(e) {
+      const query = e.target.value.toLowerCase().trim();
+      const cards = document.querySelectorAll('.owner-card');
+      let visibleCount = 0;
+
+      cards.forEach(card => {
+        const text = card.dataset.searchText || '';
+        const match = !query || text.includes(query);
+        card.style.display = match ? '' : 'none';
+        if (match) visibleCount++;
+      });
+
+      document.getElementById('emptyState').classList.toggle('hidden', visibleCount > 0);
+      document.getElementById('contentArea').classList.toggle('hidden', visibleCount === 0 && query !== '');
+    }
+  </script>
+
+</body>
+</html>
+</task_progress>
+</write_to_file>

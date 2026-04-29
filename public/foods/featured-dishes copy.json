@@ -1,0 +1,68 @@
+[
+  {
+    "id": 1,
+    "category": "American",
+    "time": "25-30 min",
+    "name": "Grilled Salmon",
+    "rating": "9.4",
+    "ratingText": "Exceptional",
+    "reviews": "48 reviews",
+    "price": "$24.99",
+    "images": [
+      "https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?w=600&h=400&fit=crop",
+      "https://lh3.googleusercontent.com/gps-cs-s/AHVAwercHg7Z0cAuqRHyUdBQZVfn2PwgKW5CKYsfhp0X0ZyONiK6BphMfb11ElrZ39zfkg-gfdpdC0MXMAx2iME9svNnmur1ULo3v2TKBdHL0UI0eo_FSB2lilwrCq6mjuiERrXKir7Yzw=s1360-w1360-h1020-rw?w=600&h=400&fit=crop"
+    ]
+  },
+  {
+    "id": 2,
+    "category": "Italian",
+    "time": "30-40 min",
+    "name": "Margherita Pizza",
+    "ratingText": "Exceptional",
+    "reviews": "48 reviews",
+    "price": "$18.99",
+    "images": [
+      "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=600&h=400&fit=crop",
+      "https://cdn.loveandlemons.com/wp-content/uploads/2023/07/margherita-pizza-recipe.jpg?w=600&h=400&fit=crop"
+    ]
+  },
+  {
+    "id": 3,
+    "category": "Mexican",
+    "time": "20-25 min",
+    "name": "Beef Tacos",
+    "ratingText": "Exceptional",
+    "reviews": "48 reviews",
+    "price": "$14.99",
+    "images": [
+      "https://images.unsplash.com/photo-1565299585323-38d6b0865b47?w=600&h=400&fit=crop",
+      "https://sprinkledwithbalance.com/wp-content/uploads/2022/02/beef-taco-bowl-4.jpg?w=600&h=400&fit=crop"
+    ]
+  },
+  {
+    "id": 4,
+    "category": "Steak",
+    "time": "15-20 min",
+    "name": "Buddha Bowl",
+    "ratingText": "Exceptional",
+    "reviews": "48 reviews",
+    "price": "$16.99",
+    "images": [
+      "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=600&h=400&fit=crop",
+      "https://www.eatingbirdfood.com/wp-content/uploads/2022/04/buddha-bowl-hero-633x950.jpg?w=600&h=400&fit=crop"
+    ]
+  },
+  {
+    "id": 5,
+    "category": "Vegetarian",
+    "time": "15-20 min",
+    "name": "Steak Bites",
+    "ratingText": "Exceptional",
+    "reviews": "48 reviews",
+    "price": "$16.99",
+    "images": [
+      "https://www.modernhoney.com/wp-content/uploads/2022/09/Garlic-Butter-Steak-Bites-9-1200x1800.jpg?w=600&h=400&fit=crop",
+      "https://www.simplyrecipes.com/thmb/b4SdSA5YY1hTAXgZXNNdmlF1cg8=/750x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/simply-recipes-garlic-butter-steak-bites-lead-4-370aa5d4594148c18f650795791f918e.jpg?w=600&h=400&fit=crop"
+    ]
+  }
+]

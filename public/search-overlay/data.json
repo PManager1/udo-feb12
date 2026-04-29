@@ -1,0 +1,73 @@
+{
+  "recentSearches": [
+    {
+      "href": "profiles-list/",
+      "label": "Lawn Care",
+      "image": "img/LawnCare.webp?auto=format&fit=crop&w=100&q=80"
+    },
+    {
+      "href": "rideshare/",
+      "label": "Roadie/ Currie Driver",
+      "image": "img/roadie_Currie_Driver.webp?auto=format&fit=crop&w=100&q=80"
+    },
+    {
+      "href": "/mover",
+      "label": "Movers",
+      "image": "img/moverTruck.webp?auto=format&fit=crop&w=100&q=80"
+    },
+    {
+      "href": "profiles-list/",
+      "label": "Rentals",
+      "image": "img/rentals.jpg?auto=format&fit=crop&w=100&q=80"
+    }
+  ],
+  "popularOnUDO": [
+    {
+      "href": "food-delivery/",
+      "label": "Food Delivery",
+      "image": "img/food/salmon.jpg"
+    },
+    {
+      "href": "foods/",
+      "label": "Food",
+      "image": "img/food/salad2.jpg?w=1600&h=600&fit=crop&w=100&q=80"
+    },
+    {
+      "href": "profiles-list/",
+      "label": "Dog Walker",
+      "image": "img/Dog.avif"
+    },
+    {
+      "href": "profiles-list/",
+      "label": "Movers",
+      "image": "img/movers.jpeg?auto=format&fit=crop&w=100&q=80"
+    }
+  ],
+  "trendingNow": [
+    {
+      "href": "food-delivery/",
+      "label": "Food Delivery",
+      "image": "img/food/salmon.jpg"
+    },
+    {
+      "href": "profiles-list/",
+      "label": "Furniture assembly",
+      "image": "img/couch.jpeg?auto=format&fit=crop&w=100&q=80"
+    },
+    {
+      "href": "profiles-list/",
+      "label": "Mount art or shelves",
+      "image": "img/mountShelves.jpeg?auto=format&fit=crop&w=100&q=80"
+    },
+    {
+      "href": "profiles-list/",
+      "label": "Movers",
+      "image": "img/movers.jpeg?auto=format&fit=crop&w=100&q=80"
+    },
+    {
+      "href": "profiles-list/",
+      "label": "Electrical help",
+      "image": "img/electrical_guy.jpeg?auto=format&fit=crop&w=100&q=80"
+    }
+  ]
+}

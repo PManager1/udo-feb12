@@ -1,0 +1,162 @@
+<div id="searchOverlay" class="hidden fixed left-0 right-0 top-0 z-[100] bg-black/20 backdrop-blur-sm">
+  <div class="mx-4 pt-4 h-[70vh] bg-white shadow-2xl p-8 overflow-y-auto pointer-events-auto">
+    <div class="flex items-center justify-between mb-8">
+      <div class="flex-1 mr-4">
+        <input
+          type="text"
+          id="overlaySearchInput"
+          placeholder="What do you need done today?"
+          class="w-full text-2xl font-light border-b-2 border-gray-200 py-4 focus:outline-none focus:border-orange-500 transition bg-[#DADAD3]"
+          autofocus
+        />
+      </div>
+      <button id="closeSearch" class="p-2 hover:bg-gray-100 rounded-full transition">
+        <svg class="w-8 h-8 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+    </div>
+
+    <div>
+      <h3 class="text-xl font-bold text-gray-900 mb-2">Recent searches</h3>
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+        <a href="profiles-list/">
+          <div class="group bg-gray-100 hover:bg-gray-200 rounded-2xl cursor-pointer transition overflow-hidden relative w-full h-[82.5px] flex items-center">
+            <img src="https://primexgardencenter.com/wp-content/uploads/2023/03/Primex-Garden-Center-Pennsylvania-A-Complete-Guide-to-Spring-Lawn-Care-mowing-the-grass.jpg?auto=format&fit=crop&w=100&q=80" alt="Lawn Care" class="w-[30%] h-full object-cover rounded-l-2xl" />
+            <span class="text-gray-900 flex-1 text-center text-lg font-medium">Lawn Care</span>
+            <button class="absolute top-1/2 -translate-y-1/2 right-0 w-6 h-6 flex items-center justify-center opacity-0 group-hover:opacity-100 transition z-10">
+              <svg class="w-4 h-4 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+        </a>
+
+        <a href="rideshare/">
+          <div class="group bg-gray-100 hover:bg-gray-200 rounded-2xl cursor-pointer transition overflow-hidden relative w-full h-[82.5px] flex items-center">
+            <button class="absolute top-1/2 -translate-y-1/2 right-1 w-6 h-6 flex items-center justify-center opacity-0 group-hover:opacity-100 transition z-10">
+              <svg class="w-4 h-4 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+            <img src="https://images.unsplash.com/photo-1532453288672-3a27e9be9efd?auto=format&fit=crop&w=100&q=80" alt="Recent" class="w-[30%] h-full object-cover rounded-l-2xl" />
+            <span class="text-gray-900 flex-1 text-center text-lg font-medium"> Roadie/ Currie Driver </span>
+          </div>
+        </a>
+
+        <!-- new -->
+        <a href="/mover">
+          <div class="group bg-gray-100 hover:bg-gray-200 rounded-2xl cursor-pointer transition overflow-hidden relative w-full h-[82.5px] flex items-center">
+            <button class="absolute top-1/2 -translate-y-1/2 right-1 w-6 h-6 flex items-center justify-center opacity-0 group-hover:opacity-100 transition z-10">
+              <svg class="w-4 h-4 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+            <img src="https://www.cityrentatruck.com/wp-content/uploads/2023/04/IMG_8315-Edit-Edit.png?auto=format&fit=crop&w=100&q=80" alt="Recent" class="w-[30%] h-full object-cover rounded-l-2xl" />
+            <span class="text-gray-900 flex-1 text-center text-lg font-medium">Movers</span>
+          </div>
+        </a>
+
+        <a href="profiles-list/">
+          <div class="group bg-gray-100 hover:bg-gray-200 rounded-2xl cursor-pointer transition overflow-hidden relative w-full h-[82.5px] flex items-center">
+            <button class="absolute top-1/2 -translate-y-1/2 right-1 w-6 h-6 flex items-center justify-center opacity-0 group-hover:opacity-100 transition z-10">
+              <svg class="w-4 h-4 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+            <img src="https://static.vecteezy.com/system/resources/previews/026/586/050/large_2x/beautiful-modern-house-exterior-with-carport-modern-residential-district-and-minimalist-building-concept-by-ai-generated-free-photo.jpg?auto=format&fit=crop&w=100&q=80" alt="Recent" class="w-[30%] h-full object-cover rounded-l-2xl" />
+            <span class="text-gray-900 flex-1 text-center text-lg font-medium">Rentals</span>
+          </div>
+        </a>
+      </div>
+      
+      <h3 class="text-xl font-bold text-gray-900 mt-12 mb-2">Popular on UDO</h3>
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+        <a href="foods/" class="group bg-gray-100 hover:bg-gray-200 rounded-2xl cursor-pointer transition overflow-hidden relative w-full h-[82.5px] flex items-center">
+          <img src="https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=1600&h=600&fit=crop&w=100&q=80" alt="Recent" class="w-[30%] h-full object-cover rounded-l-2xl" />
+          <span class="text-gray-900 flex-1 text-center text-lg font-medium">Food</span>
+          <button class="absolute top-1/2 -translate-y-1/2 right-0 w-6 h-6 flex items-center justify-center opacity-0 group-hover:opacity-100 transition z-10">
+            <svg class="w-4 h-4 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            </svg>
+          </button>
+        </a>
+
+        <a href="profiles-list/">
+          <div class="group bg-gray-100 hover:bg-gray-200 rounded-2xl cursor-pointer transition overflow-hidden relative w-full h-[82.5px] flex items-center">
+            <img src="https://images.unsplash.com/photo-1622536623059-8277a04654f5?q=80&w=1760&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D?auto=format&fit=crop&w=100&q=80" alt="Recent" class="w-[30%] h-full object-cover rounded-l-2xl" />
+            <span class="text-gray-900 flex-1 text-center text-lg font-medium">Dog Walker </span>
+            <button class="absolute top-1/2 -translate-y-1/2 right-0 w-6 h-6 flex items-center justify-center opacity-0 group-hover:opacity-100 transition z-10">
+              <svg class="w-4 h-4 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+        </a>
+
+        <a href="profiles-list/">
+          <div class="group bg-gray-100 hover:bg-gray-200 rounded-2xl cursor-pointer transition overflow-hidden relative w-full h-[82.5px] flex items-center">
+            <img src="https://images.unsplash.com/photo-1600518464441-9154a4dea21b?auto=format&fit=crop&w=100&q=80" alt="Recent" class="w-[30%] h-full object-cover rounded-l-2xl" />
+            <span class="text-gray-900 flex-1 text-center text-lg font-medium">Movers</span>
+            <button class="absolute top-1/2 -translate-y-1/2 right-0 w-6 h-6 flex items-center justify-center opacity-0 group-hover:opacity-100 transition z-10">
+              <svg class="w-4 h-4 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+        </a>
+      </div>
+
+      <h3 class="text-xl font-bold text-gray-900 mt-12 mb-2">Trending now</h3>
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+        <a href="profiles-list/">
+          <div class="group bg-gray-100 hover:bg-gray-200 rounded-2xl cursor-pointer transition overflow-hidden relative w-full h-[82.5px] flex items-center">
+            <img src="https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=100&q=80" alt="Trending" class="w-[30%] h-full object-cover rounded-l-2xl" />
+            <span class="text-gray-900 flex-1 text-center text-lg font-medium">Furniture assembly</span>
+            <button class="absolute top-1/2 -translate-y-1/2 right-0 w-6 h-6 flex items-center justify-center opacity-0 group-hover:opacity-100 transition z-10">
+              <svg class="w-4 h-4 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+        </a>
+
+        <a href="profiles-list/">
+          <div class="group bg-gray-100 hover:bg-gray-200 rounded-2xl cursor-pointer transition overflow-hidden relative w-full h-[82.5px] flex items-center">
+            <img src="https://images.unsplash.com/photo-1532453288672-3a27e9be9efd?auto=format&fit=crop&w=100&q=80" alt="Trending" class="w-[30%] h-full object-cover rounded-l-2xl" />
+            <span class="text-gray-900 flex-1 text-center text-lg font-medium">Mount art or shelves</span>
+            <button class="absolute top-1/2 -translate-y-1/2 right-0 w-6 h-6 flex items-center justify-center opacity-0 group-hover:opacity-100 transition z-10">
+              <svg class="w-4 h-4 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+        </a>
+
+        <a href="profiles-list/">
+          <div class="group bg-gray-100 hover:bg-gray-200 rounded-2xl cursor-pointer transition overflow-hidden relative w-full h-[82.5px] flex items-center">
+            <img src="https://images.unsplash.com/photo-1600518464441-9154a4dea21b?auto=format&fit=crop&w=100&q=80" alt="Trending" class="w-[30%] h-full object-cover rounded-l-2xl" />
+            <span class="text-gray-900 flex-1 text-center text-lg font-medium">Movers</span>
+            <button class="absolute top-1/2 -translate-y-1/2 right-0 w-6 h-6 flex items-center justify-center opacity-0 group-hover:opacity-100 transition z-10">
+              <svg class="w-4 h-4 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+        </a>
+
+        <a href="profiles-list/">
+          <div class="group bg-gray-100 hover:bg-gray-200 rounded-2xl cursor-pointer transition overflow-hidden relative w-full h-[82.5px] flex items-center">
+            <img src="https://images.unsplash.com/photo-1621905252507-b35492cc74b4?auto=format&fit=crop&w=100&q=80" alt="Trending" class="w-[30%] h-full object-cover rounded-l-2xl" />
+            <span class="text-gray-900 flex-1 text-center text-lg font-medium">Electrical help</span>
+            <button class="absolute top-1/2 -translate-y-1/2 right-0 w-6 h-6 flex items-center justify-center opacity-0 group-hover:opacity-100 transition z-10">
+              <svg class="w-4 h-4 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+        </a>
+      </div>
+    </div>
+  </div>
+</div>

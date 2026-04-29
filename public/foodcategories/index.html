@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Food Categories Admin — UDO</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="../config.js"></script>
+  <script src="../shared/token-manager.js"></script>
+  <style>
+    .toggle-switch {
+      position: relative;
+      width: 48px;
+      height: 26px;
+      cursor: pointer;
+    }
+    .toggle-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+    .toggle-slider {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-color: #ccc;
+      border-radius: 26px;
+      transition: 0.3s;
+    }
+    .toggle-slider:before {
+      content: "";
+      position: absolute;
+      height: 20px;
+      width: 20px;
+      left: 3px;
+      bottom: 3px;
+      background-color: white;
+      border-radius: 50%;
+      transition: 0.3s;
+    }
+    .toggle-switch input:checked + .toggle-slider {
+      background-color: #22c55e;
+    }
+    .toggle-switch input:checked + .toggle-slider:before {
+      transform: translateX(22px);
+    }
+    .item-card {
+      transition: all 0.2s;
+    }
+    .item-card:hover {
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    .item-card.disabled-item {
+      opacity: 0.5;
+    }
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      padding: 12px 24px;
+      border-radius: 8px;
+      color: white;
+      font-weight: 500;
+      z-index: 1000;
+      animation: slideIn 0.3s, fadeOut 0.3s 2.5s forwards;
+    }
+    .toast-success { background: #22c55e; }
+    .toast-error { background: #ef4444; }
+    @keyframes slideIn { from { transform: translateY(20px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+    @keyframes fadeOut { from { opacity: 1; } to { opacity: 0; } }
+  </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+  <!-- Header -->
+  <header class="bg-white border-b border-gray-200 sticky top-0 z-50">
+    <div class="max-w-6xl mx-auto px-6 py-4 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <a href="/admin/" class="text-gray-400 hover:text-orange-500 transition" title="Back to Admin">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+          </svg>
+        </a>
+        <div>
+          <h1 class="text-2xl font-bold text-gray-900">Food Categories</h1>
+          <p class="text-sm text-gray-500 mt-1">Manage shared food categories used across all restaurant menus on /addfooditem</p>
+        </div>
+      </div>
+      <div class="flex gap-3">
+        <span id="countBadge" class="flex items-center px-3 py-2 bg-gray-100 rounded-lg text-sm font-medium text-gray-600">0 categories</span>
+        <button onclick="loadCategories()" class="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg text-sm font-medium text-gray-700 transition">
+          ↻ Refresh
+        </button>
+        <button onclick="showAddModal()" class="px-4 py-2 bg-orange-500 hover:bg-orange-600 rounded-lg text-sm font-medium text-white transition">
+          + Add Category
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Categories Grid -->
+  <main class="max-w-6xl mx-auto px-6 py-6">
+    <div id="categoriesGrid" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4">
+      <!-- Categories will be loaded here -->
+    </div>
+    <div id="loadingState" class="text-center py-12 text-gray-400">
+      <svg class="animate-spin h-8 w-8 mx-auto mb-3 text-gray-300" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+      </svg>
+      Loading categories...
+    </div>
+    <div id="emptyState" class="hidden text-center py-16 text-gray-400">
+      <svg class="w-16 h-16 mx-auto mb-4 text-gray-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" />
+      </svg>
+      <p class="text-lg font-medium text-gray-500">No food categories yet</p>
+      <p class="text-sm mt-1 mb-4">Add categories that restaurants can pick from when creating their menu</p>
+      <button onclick="showAddModal()" class="px-4 py-2 bg-orange-500 hover:bg-orange-600 rounded-lg text-sm font-medium text-white transition">
+        + Add First Category
+      </button>
+    </div>
+  </main>
+
+  <!-- Add/Edit Modal -->
+  <div id="categoryModal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+    <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md mx-4 p-6">
+      <div class="flex items-center justify-between mb-6">
+        <h2 id="modalTitle" class="text-xl font-bold text-gray-900">Add Category</h2>
+        <button onclick="closeModal()" class="p-1 hover:bg-gray-100 rounded-full">
+          <svg class="w-6 h-6 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+      <form id="categoryForm" onsubmit="handleFormSubmit(event)">
+        <input type="hidden" id="formMode" value="add" />
+        <input type="hidden" id="formCategoryId" value="" />
+
+        <div class="space-y-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1">Category Name</label>
+            <input type="text" id="formName" required placeholder="e.g. Burgers"
+              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 text-sm" />
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Category Icon</label>
+            <div class="flex items-center gap-3 mb-2">
+              <div id="selectedIconPreview" class="w-12 h-12 rounded-lg border-2 border-gray-200 flex items-center justify-center text-2xl bg-gray-50">🍽️</div>
+              <input type="text" id="formIcon" value="🍽️"
+                class="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 text-sm"
+                placeholder="Type emoji or pick below"
+                oninput="document.getElementById('selectedIconPreview').textContent = this.value || '🍽️'" />
+            </div>
+            <div class="grid grid-cols-10 gap-1.5 max-h-32 overflow-y-auto border border-gray-200 rounded-lg p-2 bg-gray-50">
+              <button type="button" onclick="pickIcon('🍔')" class="w-8 h-8 flex items-center justify-center text-lg hover:bg-orange-100 rounded transition">🍔</button>
+              <button type="button" onclick="pickIcon('🍕')" class="w-8 h-8 flex items-center justify-center text-lg hover:bg-orange-100 rounded transition">🍕</button>
+              <button type="button" onclick="pickIcon('🌮')" class="w-8 h-8 flex items-center justify-center text-lg hover:bg-orange-100 rounded transition">🌮</button>
+              <button type="button" onclick="pickIcon('🍣')" class="w-8 h-8 flex items-center justify-center text-lg hover:bg-orange-100 rounded transition">🍣</button>
+              <button type="button" onclick="pickIcon('🥗')" class="w-8 h-8 flex items-center justify-center text-lg hover:bg-orange-100 rounded transition">🥗</button>
+              <button type="button" onclick="pickIcon('🍝')" class="w-8 h-8 flex items-center justify-center text-lg hover:bg-orange-100 rounded transition">🍝</button>
+              <button type="button" onclick="pickIcon('🥩')" class="w-8 h-8 flex items-center justify-center text-lg hover:bg-orange-100 rounded transition">🥩</button>
+              <button type="button" onclick="pickIcon('🍗')" class="w-8 h-8 flex items-center justify-center text-lg hover:bg-orange-100 rounded transition">🍗</button>
+              <button type="button" onclick="pickIcon('🧁')" class="w-8 h-8 flex items-center justify-center text-lg hover:bg-orange-100 rounded transition">🧁</button>
+              <button type="button" onclick="pickIcon('🍰')" class="w-8 h-8 flex items-center justify-center text-lg hover:bg-orange-100 rounded transition">🍰</button>
+              <button type="button" onclick="pickIcon('☕')" class="w-8 h-8 flex items-center justify-center text-lg hover:bg-orange-100 rounded transition">☕</button>
+              <button type="button" onclick="pickIcon('🥤')" class="w-8 h-8 flex items-center justify-center text-lg hover:bg-orange-100 rounded transition">🥤</button>
+              <button type="button" onclick="pickIcon('🍹')" class="w-8 h-8 flex items-center justify-center text-lg hover:bg-orange-100 rounded transition">🍹</button>
+              <button type="button" onclick="pickIcon('🍜')" class="w-8 h-8 flex items-center justify-center text-lg hover:bg-orange-100 rounded transition">🍜</button>
+              <button type="button" onclick="pickIcon('🍛')" class="w-8 h-8 flex items-center justify-center text-lg hover:bg-orange-100 rounded transition">🍛</button>
+              <button type="button" onclick="pickIcon('🥘')" class="w-8 h-8 flex items-center justify-center text-lg hover:bg-orange-100 rounded transition">🥘</button>
+              <button type="button" onclick="pickIcon('🫔')" class="w-8 h-8 flex items-center justify-center text-lg hover:bg-orange-100 rounded transition">🫔</button>
+              <button type="button" onclick="pickIcon('🌯')" class="w-8 h-8 flex items-center justify-center text-lg hover:bg-orange-100 rounded transition">🌯</button>
+              <button type="button" onclick="pickIcon('🥪')" class="w-8 h-8 flex items-center justify-center text-lg hover:bg-orange-100 rounded transition">🥪</button>
+              <button type="button" onclick="pickIcon('🍟')" class="w-8 h-8 flex items-center justify-center text-lg hover:bg-orange-100 rounded transition">🍟</button>
+              <button type="button" onclick="pickIcon('🌭')" class="w-8 h-8 flex items-center justify-center text-lg hover:bg-orange-100 rounded transition">🌭</button>
+              <button type="button" onclick="pickIcon('🍖')" class="w-8 h-8 flex items-center justify-center text-lg hover:bg-orange-100 rounded transition">🍖</button>
+              <button type="button" onclick="pickIcon('🥟')" class="w-8 h-8 flex items-center justify-center text-lg hover:bg-orange-100 rounded transition">🥟</button>
+              <button type="button" onclick="pickIcon('🍩')" class="w-8 h-8 flex items-center justify-center text-lg hover:bg-orange-100 rounded transition">🍩</button>
+              <button type="button" onclick="pickIcon('🍦')" class="w-8 h-8 flex items-center justify-center text-lg hover:bg-orange-100 rounded transition">🍦</button>
+              <button type="button" onclick="pickIcon('🧃')" class="w-8 h-8 flex items-center justify-center text-lg hover:bg-orange-100 rounded transition">🧃</button>
+              <button type="button" onclick="pickIcon('🍺')" class="w-8 h-8 flex items-center justify-center text-lg hover:bg-orange-100 rounded transition">🍺</button>
+              <button type="button" onclick="pickIcon('🍽️')" class="w-8 h-8 flex items-center justify-center text-lg hover:bg-orange-100 rounded transition">🍽️</button>
+              <button type="button" onclick="pickIcon('🍲')" class="w-8 h-8 flex items-center justify-center text-lg hover:bg-orange-100 rounded transition">🍲</button>
+              <button type="button" onclick="pickIcon('🍳')" class="w-8 h-8 flex items-center justify-center text-lg hover:bg-orange-100 rounded transition">🍳</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex gap-3 mt-6">
+          <button type="button" onclick="closeModal()" class="flex-1 px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg text-sm font-medium text-gray-700 transition">
+            Cancel
+          </button>
+          <button type="submit" class="flex-1 px-4 py-2 bg-orange-500 hover:bg-orange-600 rounded-lg text-sm font-medium text-white transition">
+            Save
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    let allCategories = [];
+
+    // ===== TOAST =====
+    function showToast(message, type = 'success') {
+      const toast = document.createElement('div');
+      toast.className = `toast toast-${type}`;
+      toast.textContent = message;
+      document.body.appendChild(toast);
+      setTimeout(() => toast.remove(), 3000);
+    }
+
+    // ===== ICON PICKER =====
+    function pickIcon(icon) {
+      document.getElementById('formIcon').value = icon;
+      document.getElementById('selectedIconPreview').textContent = icon;
+    }
+
+    // ===== API ENDPOINTS =====
+    // Public endpoint for reading
+    const FOOD_CATS_PUBLIC = API_BASE + 'food-categories';
+    // Authenticated endpoint for CUD
+    const FOOD_CATS_ADMIN = API_BASE + 'rest/food-categories';
+
+    // Helper to get auth headers using tokenManager (properly parses JSON wrapper)
+    function getAuthHeaders() {
+      const headers = { 'Content-Type': 'application/json' };
+      try {
+        if (typeof tokenManager !== 'undefined' && tokenManager.hasValidToken()) {
+          headers['Authorization'] = 'Bearer ' + tokenManager.getToken();
+        }
+      } catch (e) {
+        console.error('getAuthHeaders error:', e);
+      }
+      return headers;
+    }
+
+    // Helper to safely parse JSON from response (handles non-JSON error bodies)
+    async function safeParseJSON(response) {
+      const text = await response.text();
+      try {
+        return JSON.parse(text);
+      } catch (e) {
+        return { error: text, success: false };
+      }
+    }
+
+    // ===== LOAD CATEGORIES =====
+    async function loadCategories() {
+      const grid = document.getElementById('categoriesGrid');
+      const loading = document.getElementById('loadingState');
+      const empty = document.getElementById('emptyState');
+
+      loading.classList.remove('hidden');
+      grid.innerHTML = '';
+      empty.classList.add('hidden');
+
+      try {
+        const response = await fetch(FOOD_CATS_ADMIN, {
+          headers: getAuthHeaders()
+        });
+        const data = await response.json();
+        // Handle different response shapes
+        allCategories = Array.isArray(data) ? data : (data.categories || data.items || []);
+        renderCategories();
+      } catch (error) {
+        console.error('Failed to load food categories:', error);
+        showToast('Failed to load categories', 'error');
+      } finally {
+        loading.classList.add('hidden');
+      }
+    }
+
+    // ===== RENDER CATEGORIES =====
+    function renderCategories() {
+      const grid = document.getElementById('categoriesGrid');
+      const empty = document.getElementById('emptyState');
+      const countBadge = document.getElementById('countBadge');
+
+      countBadge.textContent = `${allCategories.length} categor${allCategories.length !== 1 ? 'ies' : 'y'}`;
+
+      if (allCategories.length === 0) {
+        grid.innerHTML = '';
+        empty.classList.remove('hidden');
+        return;
+      }
+
+      empty.classList.add('hidden');
+
+      grid.innerHTML = allCategories.map(cat => {
+        const isActive = cat.isActive !== false && cat.is_active !== false;
+        const icon = cat.icon || '🍽️';
+        const name = cat.name || 'Unnamed';
+        const id = cat.id || cat._id;
+
+        return `
+          <div class="item-card bg-white rounded-xl border border-gray-200 p-5 text-center ${!isActive ? 'disabled-item' : ''}" data-id="${id}">
+            <div class="text-4xl mb-3">${icon}</div>
+            <h3 class="font-semibold text-gray-900 truncate mb-1">${name}</h3>
+            <p class="text-xs text-gray-400 mb-3 truncate">ID: ${id}</p>
+
+            <div class="flex items-center justify-center gap-2 mb-3">
+              <label class="toggle-switch">
+                <input type="checkbox" ${isActive ? 'checked' : ''} onchange="toggleCategory('${id}', this.checked)" />
+                <span class="toggle-slider"></span>
+              </label>
+              <span class="text-xs font-medium ${isActive ? 'text-green-600' : 'text-gray-400'}">
+                ${isActive ? 'Active' : 'Disabled'}
+              </span>
+            </div>
+
+            <div class="flex gap-1 justify-center border-t border-gray-100 pt-3">
+              <button onclick="editCategory('${id}')" class="p-1.5 hover:bg-gray-100 rounded-lg transition" title="Edit">
+                <svg class="w-4 h-4 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                </svg>
+              </button>
+              <button onclick="deleteCategory('${id}')" class="p-1.5 hover:bg-red-50 rounded-lg transition" title="Delete">
+                <svg class="w-4 h-4 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                </svg>
+              </button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // ===== TOGGLE CATEGORY =====
+    async function toggleCategory(id, isActive) {
+      if (!tokenManager.hasValidToken()) {
+        showToast('Please log in to make changes', 'error');
+        return;
+      }
+      try {
+        const response = await fetch(`${FOOD_CATS_ADMIN}/${id}/toggle`, {
+          method: 'PATCH',
+          headers: getAuthHeaders(),
+          body: JSON.stringify({ isActive })
+        });
+        const json = await safeParseJSON(response);
+        if (json.success || response.ok) {
+          const cat = allCategories.find(c => (c.id || c._id) === id);
+          if (cat) {
+            cat.isActive = isActive;
+            cat.is_active = isActive;
+          }
+          renderCategories();
+          showToast(`Category ${isActive ? 'enabled' : 'disabled'}`);
+        } else {
+          showToast(json.message || json.error || 'Failed to toggle', 'error');
+          loadCategories();
+        }
+      } catch (error) {
+        console.error('Toggle error:', error);
+        showToast('Failed to toggle category', 'error');
+        loadCategories();
+      }
+    }
+
+    // ===== SHOW ADD MODAL =====
+    function showAddModal() {
+      document.getElementById('formMode').value = 'add';
+      document.getElementById('formCategoryId').value = '';
+      document.getElementById('modalTitle').textContent = 'Add Category';
+      document.getElementById('formName').value = '';
+      document.getElementById('formIcon').value = '🍽️';
+      document.getElementById('selectedIconPreview').textContent = '🍽️';
+      document.getElementById('categoryModal').classList.remove('hidden');
+    }
+
+    // ===== EDIT CATEGORY =====
+    function editCategory(id) {
+      const cat = allCategories.find(c => (c.id || c._id) === id);
+      if (!cat) return;
+
+      document.getElementById('formMode').value = 'edit';
+      document.getElementById('formCategoryId').value = id;
+      document.getElementById('modalTitle').textContent = 'Edit Category';
+      document.getElementById('formName').value = cat.name || '';
+      document.getElementById('formIcon').value = cat.icon || '🍽️';
+      document.getElementById('selectedIconPreview').textContent = cat.icon || '🍽️';
+      document.getElementById('categoryModal').classList.remove('hidden');
+    }
+
+    // ===== CLOSE MODAL =====
+    function closeModal() {
+      document.getElementById('categoryModal').classList.add('hidden');
+    }
+
+    // ===== HANDLE FORM SUBMIT =====
+    async function handleFormSubmit(event) {
+      event.preventDefault();
+
+      if (!tokenManager.hasValidToken()) {
+        showToast('Please log in to save categories', 'error');
+        return;
+      }
+
+      const mode = document.getElementById('formMode').value;
+      const payload = {
+        name: document.getElementById('formName').value.trim(),
+        icon: document.getElementById('formIcon').value.trim() || '🍽️'
+      };
+
+      try {
+        let url, method;
+        if (mode === 'add') {
+          url = FOOD_CATS_ADMIN;
+          method = 'POST';
+        } else {
+          const catId = document.getElementById('formCategoryId').value;
+          url = `${FOOD_CATS_ADMIN}/${catId}`;
+          method = 'PUT';
+        }
+
+        const response = await fetch(url, {
+          method,
+          headers: getAuthHeaders(),
+          body: JSON.stringify(payload)
+        });
+
+        if (!response.ok) {
+          const json = await safeParseJSON(response);
+          throw new Error(json.message || json.error || `Request failed (${response.status})`);
+        }
+
+        const json = await safeParseJSON(response);
+        if (json.success || response.ok || json.id || json._id) {
+          showToast(mode === 'add' ? 'Category created!' : 'Category updated!');
+          closeModal();
+          loadCategories();
+        } else {
+          showToast(json.message || json.error || 'Failed to save', 'error');
+        }
+      } catch (error) {
+        console.error('Save error:', error);
+        showToast(error.message || 'Failed to save category', 'error');
+      }
+    }
+
+    // ===== DELETE CATEGORY =====
+    async function deleteCategory(id) {
+      if (!tokenManager.hasValidToken()) {
+        showToast('Please log in to delete categories', 'error');
+        return;
+      }
+
+      const cat = allCategories.find(c => (c.id || c._id) === id);
+      const name = cat ? cat.name : id;
+      if (!confirm(`Delete "${name}"? This cannot be undone.`)) return;
+
+      try {
+        const response = await fetch(`${FOOD_CATS_ADMIN}/${id}`, {
+          method: 'DELETE',
+          headers: getAuthHeaders()
+        });
+
+        if (!response.ok) {
+          const json = await safeParseJSON(response);
+          throw new Error(json.message || json.error || `Delete failed (${response.status})`);
+        }
+
+        const json = await safeParseJSON(response);
+        if (json.success || response.ok) {
+          showToast('Category deleted');
+          loadCategories();
+        } else {
+          showToast(json.message || json.error || 'Failed to delete', 'error');
+        }
+      } catch (error) {
+        console.error('Delete error:', error);
+        showToast(error.message || 'Failed to delete category', 'error');
+      }
+    }
+
+    // ===== MODAL BACKDROP CLICK & ESCAPE =====
+    document.getElementById('categoryModal').addEventListener('click', (e) => {
+      if (e.target === document.getElementById('categoryModal')) closeModal();
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeModal();
+    });
+
+    // ===== INIT =====
+    document.addEventListener('DOMContentLoaded', loadCategories);
+  </script>
+</body>
+</html>
