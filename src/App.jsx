@@ -1,9 +1,9 @@
 import { Routes, Route } from 'react-router-dom'
-import HomePage from './pages/HomePage'
-import LoginPage from './pages/LoginPage'
-import SignupPage from './pages/SignupPage'
-import VerifyOtpPage from './pages/VerifyOtpPage'
-import SettingsPage from './pages/SettingsPage'
+import Home from './pages/Home'
+import Login from './pages/Login'
+import Signup from './pages/Signup'
+import VerifyOtp from './pages/VerifyOtp'
+import Settings from './pages/Settings'
 import ProSettings from './pages/ProSettings'
 import Admin from './pages/Admin'
 import AdminRestaurantOwners from './pages/AdminRestaurantOwners'
@@ -13,11 +13,11 @@ function App() {
   return (
     <div className="min-h-screen flex flex-col">
       <Routes>
-        <Route path="/" element={<HomePage />} />
-        <Route path="/login/" element={<LoginPage />} />
-        <Route path="/signup/" element={<SignupPage />} />
-        <Route path="/verifyOtp" element={<VerifyOtpPage />} />
-        <Route path="/settings/" element={<SettingsPage />} />
+        <Route path="/" element={<Home />} />
+        <Route path="/login/" element={<Login />} />
+        <Route path="/signup/" element={<Signup />} />
+        <Route path="/verifyOtp" element={<VerifyOtp />} />
+        <Route path="/settings/" element={<Settings />} />
         <Route path="/pro-settings/" element={<ProSettings />} />
         <Route path="/admin/" element={<Admin />} />
         <Route path="/admin/restaurant-owners/" element={<AdminRestaurantOwners />} />
