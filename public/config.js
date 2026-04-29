@@ -3,10 +3,11 @@
 
 
 // Base API URL
-// const API_BASE = 'https://tcdlm857gf.execute-api.us-east-1.amazonaws.com/dev/';
 
 
-const API_BASE = 'http://localhost:3030/';
+const API_BASE = 'https://tcdlm857gf.execute-api.us-east-1.amazonaws.com/dev/';
+
+// const API_BASE = 'http://localhost:3030/';
 
 // Restaurant Menu Endpoints (for AddFood feature)
 const RESTAURANT_API = {
