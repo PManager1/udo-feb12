@@ -57,6 +57,9 @@ function staticHtmlDirectories() {
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [react(), staticHtmlDirectories()],
+  build: {
+    outDir: 'build',
+  },
   server: {
     port: 3001,
     strictPort: true,
