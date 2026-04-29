@@ -208,10 +208,10 @@ export default function Admin() {
               badge="PAGE" badgeColor="text-orange-600" badgeBg="bg-orange-50"
               icon={<svg className="w-6 h-6 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" /></svg>}
               iconBg="bg-orange-100">
-              <Link to="/AddFoodItem/" className="inline-flex items-center gap-2 text-sm font-medium text-orange-600 hover:text-orange-700 mb-3">
+              <a href="/AddFoodItem/" className="inline-flex items-center gap-2 text-sm font-medium text-orange-600 hover:text-orange-700 mb-3">
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
                 Open Page →
-              </Link>
+              </a>
             </AdminCard>
 
             <AdminCard id="food-categories" title="Food Categories" description="Manage shared food categories that appear on /addfooditem. Edit, delete, and toggle on/off."
@@ -246,10 +246,10 @@ export default function Admin() {
               badge="PAGE" badgeColor="text-green-600" badgeBg="bg-green-50"
               icon={<svg className="w-6 h-6 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z" /></svg>}
               iconBg="bg-green-100">
-              <Link to="/merchant/" className="inline-flex items-center gap-2 text-sm font-medium text-orange-600 hover:text-orange-700 mb-3">
+              <a href="/merchant/" className="inline-flex items-center gap-2 text-sm font-medium text-orange-600 hover:text-orange-700 mb-3">
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
                 Open Page →
-              </Link>
+              </a>
             </AdminCard>
           </div>
         </div>

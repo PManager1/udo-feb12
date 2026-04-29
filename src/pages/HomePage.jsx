@@ -1,5 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
+import tokenManager from '../utils/tokenManager'
+import { USER_API } from '../config/api'
 
 function HomePage() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
@@ -14,6 +16,38 @@ function HomePage() {
 
   const mobileDropdownRef = useRef(null)
   const desktopDropdownRef = useRef(null)
+
+  // Fetch user profile on mount
+  useEffect(() => {
+    async function loadProfile() {
+      const headers = tokenManager.getHeaders()
+      if (!headers.Authorization) return
+
+      try {
+        const response = await fetch(USER_API.getProfile, { headers })
+        if (!response.ok) return
+        const data = await response.json()
+        const user = data.user || data
+
+        const first = user.firstName || ''
+        const last = user.lastName || ''
+        const fullName = [first, last].filter(Boolean).join(' ') || 'User'
+
+        setUserName(fullName)
+        if (user.email) setUserEmail(user.email)
+
+        // Compute initials from fetched name
+        const initials = [first, last]
+          .filter(Boolean)
+          .map(n => n.charAt(0).toUpperCase())
+          .join('')
+        if (initials) setUserInitials(initials)
+      } catch (error) {
+        console.error('Error loading profile:', error)
+      }
+    }
+    loadProfile()
+  }, [])
 
   // Close dropdowns on outside click
   useEffect(() => {
@@ -49,15 +83,23 @@ function HomePage() {
     return () => { document.body.style.overflow = '' }
   }, [mobileMenuOpen])
 
-  const handleSignOut = (e) => {
-    e.preventDefault()
+  const handleSignOut = () => {
+    // Close any open dropdowns
+    setMobileDropdownOpen(false)
+    setDesktopDropdownOpen(false)
+    
+    // Clear all auth data
+    tokenManager.clearToken()
     localStorage.removeItem('jwt_token')
     localStorage.removeItem('user')
     localStorage.removeItem('loginEmail')
     localStorage.removeItem('userPhone')
     localStorage.removeItem('signupStep1')
     localStorage.removeItem('signupStep2')
-    window.location.href = '/login/'
+    localStorage.removeItem('phoneNumber')
+    
+    // Force full page redirect to login (most reliable)
+    window.location.replace('/login/')
   }
 
   return (

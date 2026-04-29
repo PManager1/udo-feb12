@@ -9,7 +9,7 @@ export default function AdminRestaurantOwners() {
   const [searchQuery, setSearchQuery] = useState('')
   const [expandedCard, setExpandedCard] = useState(null)
 
-  
+
   useEffect(() => { loadData() }, [])
 
   async function loadData() {
