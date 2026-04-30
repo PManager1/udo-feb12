@@ -177,6 +177,50 @@ export default function ItemDrawer({ itemId, onClose }) {
           </div>
         ) : (
           <form onSubmit={handleSave} className="p-6 space-y-6">
+            {/* Images — TOP */}
+            <div>
+              <label className="block text-sm font-semibold text-gray-700 mb-2">Food Images <span className="text-gray-400 font-normal">(multiple allowed)</span></label>
+
+              {/* Gallery */}
+              {itemImages.length > 0 && (
+                <div className="grid grid-cols-3 gap-2 mb-3">
+                  {itemImages.map((url, idx) => (
+                    <div key={idx} className="relative group">
+                      <img src={url} alt="" className="w-full h-24 object-cover rounded-lg border border-gray-200" />
+                      {idx === 0 && <span className="absolute bottom-1 left-1 bg-orange-500 text-white text-[9px] px-1.5 py-0.5 rounded font-bold">MAIN</span>}
+                      <div className="absolute top-1 right-1 flex gap-0.5 opacity-0 group-hover:opacity-100 transition">
+                        {idx > 0 && (
+                          <button type="button" onClick={() => setAsMain(idx)} className="w-6 h-6 bg-white rounded-full shadow text-xs text-orange-500 hover:bg-orange-50">⭐</button>
+                        )}
+                        {idx > 0 && (
+                          <button type="button" onClick={() => moveImageLeft(idx)} className="w-6 h-6 bg-white rounded-full shadow text-xs hover:bg-gray-100">◀</button>
+                        )}
+                        {idx < itemImages.length - 1 && (
+                          <button type="button" onClick={() => moveImageRight(idx)} className="w-6 h-6 bg-white rounded-full shadow text-xs hover:bg-gray-100">▶</button>
+                        )}
+                        <button type="button" onClick={() => removeImage(idx)} className="w-6 h-6 bg-white rounded-full shadow text-xs text-red-500 hover:bg-red-50">✕</button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              {/* Upload */}
+              <label className="flex items-center justify-center gap-2 p-3 border-2 border-dashed border-gray-300 rounded-lg hover:border-orange-400 cursor-pointer transition">
+                <input type="file" accept="image/*" multiple className="hidden" onChange={handleFileUpload} />
+                <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" /></svg>
+                <span className="text-sm text-gray-500 font-medium">Upload images</span>
+              </label>
+
+              {/* URL input */}
+              <div className="flex gap-2 mt-2">
+                <input type="url" value={form.imageUrl} onChange={e => handleChange('imageUrl', e.target.value)}
+                  className="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
+                  placeholder="Paste image URL..." />
+                <button type="button" onClick={addImageUrl} className="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg text-sm font-medium transition">Add</button>
+              </div>
+            </div>
+
             {/* Item Name */}
             <div>
               <label className="block text-sm font-semibold text-gray-700 mb-1">Item Name *</label>
@@ -219,50 +263,6 @@ export default function ItemDrawer({ itemId, onClose }) {
               <input type="text" value={form.promoText} onChange={e => handleChange('promoText', e.target.value)}
                 className="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
                 placeholder="e.g., Best Seller, New!" />
-            </div>
-
-            {/* Images */}
-            <div>
-              <label className="block text-sm font-semibold text-gray-700 mb-2">Images</label>
-
-              {/* Gallery */}
-              {itemImages.length > 0 && (
-                <div className="grid grid-cols-3 gap-2 mb-3">
-                  {itemImages.map((url, idx) => (
-                    <div key={idx} className="relative group">
-                      <img src={url} alt="" className="w-full h-20 object-cover rounded-lg border border-gray-200" />
-                      {idx === 0 && <span className="absolute bottom-1 left-1 bg-orange-500 text-white text-[9px] px-1 py-0.5 rounded font-bold">MAIN</span>}
-                      <div className="absolute top-1 right-1 flex gap-0.5 opacity-0 group-hover:opacity-100 transition">
-                        {idx > 0 && (
-                          <button type="button" onClick={() => setAsMain(idx)} className="w-5 h-5 bg-white rounded-full shadow text-[10px] text-orange-500 hover:bg-orange-50">⭐</button>
-                        )}
-                        {idx > 0 && (
-                          <button type="button" onClick={() => moveImageLeft(idx)} className="w-5 h-5 bg-white rounded-full shadow text-[10px] hover:bg-gray-100">◀</button>
-                        )}
-                        {idx < itemImages.length - 1 && (
-                          <button type="button" onClick={() => moveImageRight(idx)} className="w-5 h-5 bg-white rounded-full shadow text-[10px] hover:bg-gray-100">▶</button>
-                        )}
-                        <button type="button" onClick={() => removeImage(idx)} className="w-5 h-5 bg-white rounded-full shadow text-[10px] text-red-500 hover:bg-red-50">✕</button>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              )}
-
-              {/* Upload */}
-              <label className="flex items-center justify-center gap-2 p-3 border-2 border-dashed border-gray-300 rounded-lg hover:border-orange-400 cursor-pointer transition">
-                <input type="file" accept="image/*" multiple className="hidden" onChange={handleFileUpload} />
-                <svg className="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" /></svg>
-                <span className="text-sm text-gray-500 font-medium">Upload images</span>
-              </label>
-
-              {/* URL input */}
-              <div className="flex gap-2 mt-2">
-                <input type="url" value={form.imageUrl} onChange={e => handleChange('imageUrl', e.target.value)}
-                  className="flex-1 px-3 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-orange-500"
-                  placeholder="Paste image URL..." />
-                <button type="button" onClick={addImageUrl} className="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg text-sm font-medium transition">Add</button>
-              </div>
             </div>
 
             {/* Modifier Groups */}

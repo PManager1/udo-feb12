@@ -215,16 +215,33 @@ export default function StoreInfoPage() {
 
           {/* Day grid */}
           <div className="space-y-4">
-            {DAYS.map(day => (
+            {DAYS.map(day => {
+              const isClosed = hours[day]?.closed || false;
+              return (
               <div key={day} className="flex items-center gap-4 py-2">
                 <span className="w-28 text-base font-semibold text-gray-700 flex-shrink-0">{day}</span>
-                <input type="time" value={hours[day]?.open || ''} onChange={e => updateHour(day, 'open', e.target.value)}
-                  className="flex-1 max-w-[180px] px-4 py-2.5 border border-gray-300 rounded-lg text-base focus:ring-2 focus:ring-orange-500/50" />
+                <input type="time" value={hours[day]?.open || ''} onChange={e => updateHour(day, 'open', e.target.value)} disabled={isClosed}
+                  className={`flex-1 max-w-[180px] px-4 py-2.5 border border-gray-300 rounded-lg text-base focus:ring-2 focus:ring-orange-500/50 ${isClosed ? 'opacity-30 bg-gray-50' : ''}`} />
                 <span className="text-gray-400 text-sm">to</span>
-                <input type="time" value={hours[day]?.close || ''} onChange={e => updateHour(day, 'close', e.target.value)}
-                  className="flex-1 max-w-[180px] px-4 py-2.5 border border-gray-300 rounded-lg text-base focus:ring-2 focus:ring-orange-500/50" />
+                <input type="time" value={hours[day]?.close || ''} onChange={e => updateHour(day, 'close', e.target.value)} disabled={isClosed}
+                  className={`flex-1 max-w-[180px] px-4 py-2.5 border border-gray-300 rounded-lg text-base focus:ring-2 focus:ring-orange-500/50 ${isClosed ? 'opacity-30 bg-gray-50' : ''}`} />
+                {/* Closed toggle */}
+                <button type="button" onClick={() => updateHour(day, 'closed', !isClosed)}
+                  className={`flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium transition border ${
+                    isClosed
+                      ? 'bg-red-50 border-red-300 text-red-600'
+                      : 'bg-gray-50 border-gray-200 text-gray-400 hover:text-red-500 hover:border-red-200'
+                  }`}>
+                  <span className={`w-3.5 h-3.5 rounded-full border-2 flex items-center justify-center transition ${
+                    isClosed ? 'border-red-500 bg-red-500' : 'border-gray-300 bg-white'
+                  }`}>
+                    {isClosed && <span className="block w-1.5 h-1.5 bg-white rounded-full" />}
+                  </span>
+                  Closed
+                </button>
               </div>
-            ))}
+              );
+            })}
           </div>
         </div>
 

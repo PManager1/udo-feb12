@@ -441,8 +441,9 @@ export default function MyStore() {
   );
 }
 
-// Item Card component
+// Item Card component with image carousel
 function ItemCard({ item, onEdit, onDelete, onToggle }) {
+  const [slideIdx, setSlideIdx] = useState(0);
   const images = (() => {
     try {
       const parsed = JSON.parse(item.imageUrl || item.image_url || '[]');
@@ -450,17 +451,45 @@ function ItemCard({ item, onEdit, onDelete, onToggle }) {
     } catch { return [item.imageUrl || item.image_url].filter(Boolean); }
   })();
 
-  const mainImage = images[0] || '';
   const isAvailable = item.isAvailable !== undefined ? item.isAvailable : (item.available !== false);
   const price = item.basePrice || item.base_price || 0;
   const name = item.name || 'Untitled';
   const promo = item.promoText || item.promo_text || '';
 
+  const prevSlide = (e) => { e.stopPropagation(); setSlideIdx(i => (i - 1 + images.length) % images.length); };
+  const nextSlide = (e) => { e.stopPropagation(); setSlideIdx(i => (i + 1) % images.length); };
+
   return (
     <div className="bg-white rounded-2xl shadow-sm border border-gray-100 hover:shadow-lg hover:-translate-y-0.5 transition-all duration-300 overflow-hidden group">
-      <div className="relative h-40 bg-gray-100">
-        {mainImage ? (
-          <img src={mainImage} alt={name} className="w-full h-full object-cover" />
+      <div className="relative h-40 bg-gray-100 overflow-hidden">
+        {images.length > 0 ? (
+          <div className="relative w-full h-full">
+            <div className="flex transition-transform duration-300 h-full" style={{ transform: `translateX(-${slideIdx * 100}%)` }}>
+              {images.map((url, i) => (
+                <img key={i} src={url} alt={`${name} ${i + 1}`} className="w-full h-full object-cover flex-shrink-0" />
+              ))}
+            </div>
+            {/* Carousel arrows */}
+            {images.length > 1 && (
+              <>
+                <button onClick={prevSlide}
+                  className="carousel-arrow left absolute left-1.5 top-1/2 -translate-y-1/2 w-7 h-7 bg-white/80 hover:bg-white rounded-full shadow flex items-center justify-center opacity-0 group-hover:opacity-100 transition text-gray-600 text-sm">
+                  ‹
+                </button>
+                <button onClick={nextSlide}
+                  className="carousel-arrow right absolute right-1.5 top-1/2 -translate-y-1/2 w-7 h-7 bg-white/80 hover:bg-white rounded-full shadow flex items-center justify-center opacity-0 group-hover:opacity-100 transition text-gray-600 text-sm">
+                  ›
+                </button>
+                {/* Dots */}
+                <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex gap-1">
+                  {images.map((_, i) => (
+                    <button key={i} onClick={(e) => { e.stopPropagation(); setSlideIdx(i); }}
+                      className={`w-2 h-2 rounded-full transition ${i === slideIdx ? 'bg-orange-500 scale-110' : 'bg-white/80'}`} />
+                  ))}
+                </div>
+              </>
+            )}
+          </div>
         ) : (
           <div className="w-full h-full flex items-center justify-center text-gray-300">
             <svg className="w-12 h-12" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -469,8 +498,8 @@ function ItemCard({ item, onEdit, onDelete, onToggle }) {
           </div>
         )}
         {/* Availability toggle */}
-        <button onClick={onToggle}
-          className={`absolute top-2 right-2 w-8 h-8 rounded-full flex items-center justify-center transition shadow ${
+        <button onClick={(e) => { e.stopPropagation(); onToggle(); }}
+          className={`absolute top-2 right-2 w-8 h-8 rounded-full flex items-center justify-center transition shadow z-10 ${
             isAvailable ? 'bg-green-500 text-white' : 'bg-red-500 text-white'}`}>
           {isAvailable ? (
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
@@ -480,11 +509,11 @@ function ItemCard({ item, onEdit, onDelete, onToggle }) {
         </button>
         {/* Promo badge */}
         {promo && (
-          <span className="absolute bottom-2 left-2 bg-orange-500 text-white text-[11px] font-bold px-2 py-0.5 rounded-full shadow">{promo}</span>
+          <span className="absolute bottom-2 left-2 bg-orange-500 text-white text-[11px] font-bold px-2 py-0.5 rounded-full shadow z-10">{promo}</span>
         )}
         {/* Image count badge */}
         {images.length > 1 && (
-          <span className="absolute top-2 left-2 bg-black/50 text-white text-[11px] px-1.5 py-0.5 rounded-full">{images.length} photos</span>
+          <span className="absolute top-2 left-2 bg-black/50 text-white text-[11px] px-1.5 py-0.5 rounded-full z-10">{images.length} photos</span>
         )}
       </div>
       <div className="p-4">
