@@ -10,6 +10,7 @@ import AdminRestaurantOwners from './pages/AdminRestaurantOwners'
 import SearchOverlayAdmin from './pages/SearchOverlayAdmin'
 import MyStore from './pages/MyStore/MyStore'
 import StoreInfoPage from './pages/MyStore/StoreInfoPage'
+import SettingsPage from './pages/MyStore/SettingsPage'
 
 function App() {
   return (
@@ -27,6 +28,7 @@ function App() {
         <Route path="/mystore" element={<MyStore />} />
         <Route path="/mystore/" element={<MyStore />} />
         <Route path="/mystore/store-info" element={<StoreInfoPage />} />
+        <Route path="/mystore/settings" element={<SettingsPage />} />
       </Routes>
     </div>
   )

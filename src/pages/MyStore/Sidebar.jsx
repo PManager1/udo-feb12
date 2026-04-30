@@ -9,7 +9,7 @@ const navItems = [
 
 const sidebarActions = [
   { label: 'Store Information', icon: '🏪', path: '/mystore/store-info' },
-  { label: 'Settings', icon: '⚙️', path: '/settings/' },
+  { label: 'Settings', icon: '⚙️', path: '/mystore/settings' },
 ];
 
 export default function Sidebar({ collapsed, setCollapsed }) {
