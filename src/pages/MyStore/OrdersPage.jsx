@@ -103,7 +103,7 @@ export default function OrdersPage() {
         </div>
 
         {/* Filter Tabs */}
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 pb-3 flex gap-2 overflow-x-auto scrollbar-hide">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-3 flex gap-2 overflow-x-auto scrollbar-hide">
           {FILTER_TABS.map((tab) => {
             const count = statusCounts[tab] || 0;
             const isActive = activeFilter === tab;

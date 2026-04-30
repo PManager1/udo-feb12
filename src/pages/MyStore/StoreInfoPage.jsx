@@ -138,7 +138,7 @@ export default function StoreInfoPage() {
     <div className="min-h-screen bg-[#f9f7f5]">
       {/* Header */}
       <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-200 shadow-sm">
-        <div className="max-w-4xl mx-auto px-6 py-4 flex items-center justify-between">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between gap-4">
           <div className="flex items-center gap-4">
             <button onClick={() => navigate('/mystore')} className="p-2 text-gray-500 hover:text-orange-500 hover:bg-gray-100 rounded-lg transition">
               <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -164,7 +164,7 @@ export default function StoreInfoPage() {
       </header>
 
       {/* Form */}
-      <div className="max-w-4xl mx-auto px-6 py-8 space-y-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
         {/* Basic Info Card */}
         <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-8">
           <h2 className="text-xl font-bold text-gray-800 mb-6">Basic Details</h2>
