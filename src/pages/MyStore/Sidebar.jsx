@@ -2,9 +2,9 @@ import { useNavigate, useLocation } from 'react-router-dom';
 
 const navItems = [
   { label: 'Menu Items', icon: '🍔', path: '/mystore' },
-  { label: 'Orders', icon: '📋', path: '/mystore', disabled: true },
-  { label: 'Analytics', icon: '📊', path: '/mystore', disabled: true },
-  { label: 'Reviews', icon: '⭐', path: '/mystore', disabled: true },
+  { label: 'Orders', icon: '📋', path: '/mystore/orders' },
+  { label: 'Analytics', icon: '📊', path: '/mystore/analytics' },
+  { label: 'Reviews', icon: '⭐', path: '/mystore/reviews' },
 ];
 
 const sidebarActions = [

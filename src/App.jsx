@@ -11,6 +11,9 @@ import SearchOverlayAdmin from './pages/SearchOverlayAdmin'
 import MyStore from './pages/MyStore/MyStore'
 import StoreInfoPage from './pages/MyStore/StoreInfoPage'
 import SettingsPage from './pages/MyStore/SettingsPage'
+import OrdersPage from './pages/MyStore/OrdersPage'
+import AnalyticsPage from './pages/MyStore/AnalyticsPage'
+import ReviewsPage from './pages/MyStore/ReviewsPage'
 
 function App() {
   return (
@@ -29,6 +32,9 @@ function App() {
         <Route path="/mystore/" element={<MyStore />} />
         <Route path="/mystore/store-info" element={<StoreInfoPage />} />
         <Route path="/mystore/settings" element={<SettingsPage />} />
+        <Route path="/mystore/orders" element={<OrdersPage />} />
+        <Route path="/mystore/analytics" element={<AnalyticsPage />} />
+        <Route path="/mystore/reviews" element={<ReviewsPage />} />
       </Routes>
     </div>
   )
