@@ -169,6 +169,20 @@ export async function healthCheck() {
   }
 }
 
+// ===== ORDERS =====
+export async function getOrders(status) {
+  const query = status ? `?status=${status}` : '';
+  const data = await fetchAPI(`${REST_BASE}/orders${query}`, { method: 'GET' });
+  return Array.isArray(data) ? data : [];
+}
+
+export async function updateOrderStatus(orderId, status) {
+  return fetchAPI(`${REST_BASE}/orders/${orderId}/status`, {
+    method: 'PUT',
+    body: JSON.stringify({ status }),
+  });
+}
+
 // ===== MENU UPLOAD =====
 export async function uploadMenu(file) {
   const formData = new FormData();
