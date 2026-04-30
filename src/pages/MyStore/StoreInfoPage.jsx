@@ -28,7 +28,7 @@ export default function StoreInfoPage() {
   });
   const [hours, setHours] = useState(() => {
     const h = {};
-    DAYS.forEach(d => { h[d] = { open: '09:00', close: '21:00' }; });
+    DAYS.forEach(d => { h[d] = { open: '09:00', close: '21:00', closed: false }; });
     return h;
   });
 
@@ -49,11 +49,13 @@ export default function StoreInfoPage() {
           const parsed = {};
           DAYS.forEach(d => {
             const val = data.storeHours[d];
-            if (val && val.includes('-')) {
+            if (val && val === 'closed') {
+              parsed[d] = { open: '', close: '', closed: true };
+            } else if (val && val.includes('-')) {
               const [o, c] = val.split('-');
-              parsed[d] = { open: o, close: c };
+              parsed[d] = { open: o, close: c, closed: false };
             } else {
-              parsed[d] = { open: '09:00', close: '21:00' };
+              parsed[d] = { open: '09:00', close: '21:00', closed: false };
             }
           });
           setHours(parsed);
@@ -61,7 +63,7 @@ export default function StoreInfoPage() {
           const parsed = {};
           DAYS.forEach(d => {
             const h = data.hours[d];
-            parsed[d] = h ? { open: h.open || '09:00', close: h.close || '21:00' } : { open: '09:00', close: '21:00' };
+            parsed[d] = h ? { open: h.open || '09:00', close: h.close || '21:00', closed: h.closed || false } : { open: '09:00', close: '21:00', closed: false };
           });
           setHours(parsed);
         }
@@ -95,7 +97,9 @@ export default function StoreInfoPage() {
       const storeHours = {};
       DAYS.forEach(d => {
         const h = hours[d];
-        if (h && h.open && h.close) {
+        if (h?.closed) {
+          storeHours[d] = 'closed';
+        } else if (h && h.open && h.close) {
           storeHours[d] = `${h.open}-${h.close}`;
         }
       });
@@ -225,20 +229,22 @@ export default function StoreInfoPage() {
                 <span className="text-gray-400 text-sm">to</span>
                 <input type="time" value={hours[day]?.close || ''} onChange={e => updateHour(day, 'close', e.target.value)} disabled={isClosed}
                   className={`flex-1 max-w-[180px] px-4 py-2.5 border border-gray-300 rounded-lg text-base focus:ring-2 focus:ring-orange-500/50 ${isClosed ? 'opacity-30 bg-gray-50' : ''}`} />
-                {/* Closed toggle */}
-                <button type="button" onClick={() => updateHour(day, 'closed', !isClosed)}
-                  className={`flex items-center gap-1.5 px-3 py-2 rounded-lg text-sm font-medium transition border ${
-                    isClosed
-                      ? 'bg-red-50 border-red-300 text-red-600'
-                      : 'bg-gray-50 border-gray-200 text-gray-400 hover:text-red-500 hover:border-red-200'
-                  }`}>
-                  <span className={`w-3.5 h-3.5 rounded-full border-2 flex items-center justify-center transition ${
-                    isClosed ? 'border-red-500 bg-red-500' : 'border-gray-300 bg-white'
-                  }`}>
-                    {isClosed && <span className="block w-1.5 h-1.5 bg-white rounded-full" />}
+                {/* Toggle: checked = open, unchecked = closed */}
+                <label className="flex items-center gap-2 cursor-pointer select-none" title={isClosed ? 'Turn on' : 'Turn off'}>
+                  <div className="relative">
+                    <input
+                      type="checkbox"
+                      checked={!isClosed}
+                      onChange={() => updateHour(day, 'closed', !isClosed)}
+                      className="sr-only peer"
+                    />
+                    <div className="w-9 h-5 bg-red-400 peer-checked:bg-green-500 rounded-full transition-colors"></div>
+                    <div className="absolute top-0.5 left-0.5 w-4 h-4 bg-white rounded-full shadow transition-transform peer-checked:translate-x-4"></div>
+                  </div>
+                  <span className={`text-xs font-semibold ${isClosed ? 'text-red-500' : 'text-green-600'}`}>
+                    {isClosed ? 'Closed' : 'Open'}
                   </span>
-                  Closed
-                </button>
+                </label>
               </div>
               );
             })}

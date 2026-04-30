@@ -20,3 +20,6 @@ On the left side above settings, put a link store information upon clicking it s
 
 
 on link mystore/store-info just on right of close hours. the vertical thing,  put a radio button that will  signify store is closed on this day. 
+
+=== 
+on left side bar the settings link shouldnt take to 
