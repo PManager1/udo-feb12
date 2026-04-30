@@ -24,16 +24,16 @@ and from menu item pictures it was a carousal , you make it back carousal
 
 
 == 
+
 from Store Information modal remove teh select category & its options. 
 
 & make the above modal big so its easy to do stuff. 
 
 why not make it its own page when user clicks so it has more space. 
 
-
 == 
 
-Bring teh sidebar links on top you can put divider ,  bc nobdody looks at botom left .  
+Bring teh sidebar links on top ( below others ) you can put divider ,  bc nobdody looks at botom left .  
 
 
 

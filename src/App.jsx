@@ -9,6 +9,7 @@ import Admin from './pages/Admin'
 import AdminRestaurantOwners from './pages/AdminRestaurantOwners'
 import SearchOverlayAdmin from './pages/SearchOverlayAdmin'
 import MyStore from './pages/MyStore/MyStore'
+import StoreInfoPage from './pages/MyStore/StoreInfoPage'
 
 function App() {
   return (
@@ -25,6 +26,7 @@ function App() {
         <Route path="/searchOverlayAdmin/" element={<SearchOverlayAdmin />} />
         <Route path="/mystore" element={<MyStore />} />
         <Route path="/mystore/" element={<MyStore />} />
+        <Route path="/mystore/store-info" element={<StoreInfoPage />} />
       </Routes>
     </div>
   )
