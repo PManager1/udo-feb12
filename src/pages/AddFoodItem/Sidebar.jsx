@@ -1,0 +1,78 @@
+import { useState } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
+
+const navItems = [
+  { label: 'Menu Items', icon: '🍔', path: '/addfooditem' },
+  { label: 'Orders', icon: '📋', path: '/addfooditem', disabled: true },
+  { label: 'Analytics', icon: '📊', path: '/addfooditem', disabled: true },
+  { label: 'Reviews', icon: '⭐', path: '/addfooditem', disabled: true },
+  { label: 'Settings', icon: '⚙️', path: '/settings/' },
+];
+
+export default function Sidebar({ collapsed, setCollapsed }) {
+  const navigate = useNavigate();
+  const location = useLocation();
+
+  return (
+    <aside
+      className={`${
+        collapsed ? 'w-16' : 'w-56'
+      } bg-white border-r border-gray-200 flex flex-col transition-all duration-300 flex-shrink-0`}
+    >
+      {/* Collapse toggle */}
+      <button
+        onClick={() => setCollapsed(!collapsed)}
+        className="p-3 flex items-center justify-center hover:bg-gray-100 transition border-b border-gray-100"
+        title={collapsed ? 'Expand sidebar' : 'Collapse sidebar'}
+      >
+        <svg className="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2}
+            d={collapsed ? 'M13 5l7 7-7 7M5 5l7 7-7 7' : 'M11 19l-7-7 7-7M19 19l-7-7 7-7'} />
+        </svg>
+      </button>
+
+      {/* Nav links */}
+      <nav className="flex-1 py-2">
+        {navItems.map((item) => {
+          const isActive = !item.disabled && location.pathname === item.path;
+          return (
+            <button
+              key={item.label}
+              onClick={() => !item.disabled && navigate(item.path)}
+              disabled={item.disabled}
+              className={`w-full flex items-center gap-3 px-3 py-2.5 text-sm font-medium transition
+                ${isActive
+                  ? 'bg-orange-50 text-orange-600 border-r-2 border-orange-500'
+                  : item.disabled
+                    ? 'text-gray-300 cursor-not-allowed'
+                    : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+                }
+                ${collapsed ? 'justify-center' : ''}
+              `}
+              title={collapsed ? item.label : undefined}
+            >
+              <span className="text-lg flex-shrink-0">{item.icon}</span>
+              {!collapsed && <span>{item.label}</span>}
+              {!collapsed && item.disabled && (
+                <span className="ml-auto text-[10px] bg-gray-100 text-gray-400 px-1.5 py-0.5 rounded">Soon</span>
+              )}
+            </button>
+          );
+        })}
+      </nav>
+
+      {/* Upload menu section */}
+      {!collapsed && (
+        <div className="p-3 border-t border-gray-100">
+          <label className="flex items-center gap-2 px-3 py-2 text-sm text-gray-500 hover:text-orange-500 hover:bg-orange-50 rounded-lg cursor-pointer transition">
+            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12" />
+            </svg>
+            Upload Menu
+            <input type="file" accept=".pdf,.jpg,.jpeg,.png" className="hidden" />
+          </label>
+        </div>
+      )}
+    </aside>
+  );
+}

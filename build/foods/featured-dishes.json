@@ -1,0 +1,186 @@
+[
+  {
+    "id": 1,
+    "category": "American",
+    "time": "25-30 min",
+    "name": "Grilled Salmon",
+    "rating": "9.4",
+    "ratingText": "Exceptional",
+    "reviews": "48 reviews",
+    "price": "$24.99",
+    "images": [
+      "https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?w=600&h=400&fit=crop",
+      "https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?w=600&h=400&fit=crop"
+    ]
+  },
+  {
+    "id": 2,
+    "category": "Italian",
+    "time": "30-40 min",
+    "name": "Margherita Pizza",
+    "rating": "9.2",
+    "ratingText": "Exceptional",
+    "reviews": "48 reviews",
+    "price": "$18.99",
+    "images": [
+      "https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=600&h=400&fit=crop",
+      "https://cdn.loveandlemons.com/wp-content/uploads/2023/07/margherita-pizza-recipe.jpg?w=600&h=400&fit=crop"
+    ]
+  },
+  {
+    "id": 3,
+    "category": "Mexican",
+    "time": "20-25 min",
+    "name": "Beef Tacos",
+    "rating": "8.9",
+    "ratingText": "Exceptional",
+    "reviews": "48 reviews",
+    "price": "$14.99",
+    "images": [
+      "https://images.unsplash.com/photo-1565299585323-38d6b0865b47?w=600&h=400&fit=crop",
+      "https://sprinkledwithbalance.com/wp-content/uploads/2022/02/beef-taco-bowl-4.jpg?w=600&h=400&fit=crop"
+    ]
+  },
+  {
+    "id": 4,
+    "category": "Indian",
+    "time": "35-45 min",
+    "name": "Butter Chicken",
+    "rating": "9.6",
+    "ratingText": "Exceptional",
+    "reviews": "120 reviews",
+    "price": "$19.99",
+    "images": [
+      "https://thehappyfoodie.co.uk/wp-content/uploads/2023/03/Butter_Chicken-1024x1536.jpg?w=600&h=400&fit=crop",
+      "https://images.unsplash.com/photo-1588166524941-3bf61a9c41db?w=600&h=400&fit=crop"
+    ]
+  },
+  {
+    "id": 5,
+    "category": "Thai",
+    "time": "20-30 min",
+    "name": "Pad Thai",
+    "rating": "9.1",
+    "ratingText": "Exceptional",
+    "reviews": "85 reviews",
+    "price": "$17.50",
+    "images": [
+      "https://tastythriftytimely.com/wp-content/uploads/2021/08/Homemade-Pad-Thai-You-Need-To-Try-3.jpg?w=600&h=400&fit=crop",
+      "https://eatthegains.com/wp-content/uploads/2019/03/Chicken-Pad-Thai-10-1120x1120.jpg?w=600&h=400&fit=crop"
+    ]
+  },
+  {
+    "id": 6,
+    "category": "Chinese",
+    "time": "15-25 min",
+    "name": "Kung Pao Chicken",
+    "rating": "8.8",
+    "ratingText": "Exceptional",
+    "reviews": "62 reviews",
+    "price": "$16.00",
+    "images": [
+      "https://images.unsplash.com/photo-1525755662778-989d0524087e?w=600&h=400&fit=crop",
+      "https://images.unsplash.com/photo-1534422298391-e4f8c172dddb?w=600&h=400&fit=crop"
+    ]
+  },
+  {
+    "id": 7,
+    "category": "Mexican",
+    "time": "15-25 min",
+    "name": "Chicken Enchilada",
+    "rating": "8.8",
+    "ratingText": "Exceptional",
+    "reviews": "62 reviews",
+    "price": "$14.99",
+    "images": [
+      "https://thecozycook.com/wp-content/uploads/2024/03/Chicken-Enchiladas-2.jpg?w=600&h=400&fit=crop",
+      "https://images.unsplash.com/photo-1534422298391-e4f8c172dddb?w=600&h=400&fit=crop"
+    ]
+  },
+  {
+    "id": 8,
+    "category": "Vegan",
+    "time": "15-25 min",
+    "name": "Buddha Bowl",
+    "rating": "8.8",
+    "ratingText": "Exceptional",
+    "reviews": "62 reviews",
+    "price": "$16.99",
+    "images": [
+      "https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=600&h=400&fit=crop",
+      "https://images.unsplash.com/photo-1534422298391-e4f8c172dddb?w=600&h=400&fit=crop"
+    ]
+  },
+  {
+    "id": 9,
+    "category": "Mexican",
+    "time": "15-25 min",
+    "name": "Burrito Bowl",
+    "rating": "8.8",
+    "ratingText": "Exceptional",
+    "reviews": "62 reviews",
+    "price": "$16.99",
+    "images": [
+      "https://thecozycook.com/wp-content/uploads/2024/08/Burrito-Bowls-1-.jpg?w=600&h=400&fit=crop",
+      "https://images.unsplash.com/photo-1534422298391-e4f8c172dddb?w=600&h=400&fit=crop"
+    ]
+  },
+  {
+    "id": 10,
+    "category": "Drinks",
+    "time": "15-25 min",
+    "name": "Strawberry Shake",
+    "rating": "8.8",
+    "ratingText": "Exceptional",
+    "reviews": "62 reviews",
+    "price": "$16.99",
+    "images": [
+      "https://www.thehungrybites.com/wp-content/uploads/2023/06/Strawberry-milkshake-frappuccino-featured.jpg?w=600&h=400&fit=crop",
+      "https://www.thehungrybites.com/wp-content/uploads/2023/06/Strawberry-milkshake-no-ice-cream-blender.jpg?w=600&h=400&fit=crop"
+    ]
+  },
+  {
+    "id": 11,
+    "category": "Japanese",
+    "time": "15-25 min",
+    "name": "Sushi Roll",
+    "rating": "8.8",
+    "ratingText": "Exceptional",
+    "reviews": "62 reviews",
+    "price": "$16.99",
+    "images": [
+      "https://foodbyjonister.com/wp-content/uploads/2018/02/IMG_5906-2.jpg?w=600&h=400&fit=crop",
+      "https://www.thehungrybites.com/wp-content/uploads/2023/06/Strawberry-milkshake-no-ice-cream-blender.jpg?w=600&h=400&fit=crop"
+    ]
+  },
+  {
+    "id": 12,
+    "category": "Japanese",
+    "time": "15-25 min",
+    "name": "Sashimi Platter",
+    "rating": "8.8",
+    "ratingText": "Exceptional",
+    "reviews": "62 reviews",
+    "price": "$16.99",
+    "images": [
+      "https://www.craftycookbook.com/wp-content/uploads/2024/03/tobiko-roll-1200.jpg?w=600&h=400&fit=crop",
+      "https://www.thehungrybites.com/wp-content/uploads/2023/06/Strawberry-milkshake-no-ice-cream-blender.jpg?w=600&h=400&fit=crop"
+    ]
+  },
+  {
+    "id": 12,
+    "category": "American, Burgers",
+    "time": "15-25 min",
+    "name": "Cheese Burger",
+    "rating": "8.8",
+    "ratingText": "Exceptional",
+    "reviews": "62 reviews",
+    "price": "$16.99",
+    "images": [
+      "https://diethood.com/wp-content/uploads/2014/05/american-cheeseburger-7.jpg?w=600&h=400&fit=crop",
+      "https://www.thehungrybites.com/wp-content/uploads/2023/06/Strawberry-milkshake-no-ice-cream-blender.jpg?w=600&h=400&fit=crop"
+    ]
+  }
+]
+
+

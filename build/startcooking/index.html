@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="description" content="Start Cooking - Share your culinary creations with UDO community"/>
+  <title>U-Do: Let someone do it for you.</title>
+  
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2270%22 font-family=%22Arial, sans-serif%22 font-weight=%22900%22 letter-spacing=%22-2%22><tspan fill=%22%23f97316%22>U</tspan><tspan fill=%22%23000000%22>DO</tspan></text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      background-color: #f9f7f5;
+    }
+    .search-overlay {
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      opacity: 0;
+      visibility: hidden;
+    }
+    .search-overlay.active {
+      opacity: 1;
+      visibility: visible;
+    }
+    .wizard-step {
+      display: none;
+      animation: fadeIn 0.3s ease-in-out;
+    }
+    .wizard-step.active {
+      display: block;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .photo-upload-zone {
+      border: 2px dashed #d1d5db;
+      transition: all 0.3s;
+    }
+    .photo-upload-zone:hover {
+      border-color: #f97316;
+      background-color: #fff7ed;
+    }
+    .photo-preview {
+      position: relative;
+      overflow: hidden;
+    }
+    .experience-card {
+      transition: all 0.3s;
+      cursor: pointer;
+    }
+    .experience-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    }
+    .experience-card.selected {
+      border-color: #f97316;
+      background-color: #fff7ed;
+    }
+    .calendar-slot {
+      transition: all 0.2s;
+    }
+    .calendar-slot:hover {
+      background-color: #f97316;
+      color: white;
+    }
+    .calendar-slot.active {
+      background-color: #f97316;
+      color: white;
+    }
+  </style>
+</head>
+<body class="min-h-screen antialiased text-gray-900 flex flex-col" style="font-family: 'Nunito', sans-serif;">
+
+  <!-- Top Search Bar -->
+  <header class="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-200 shadow-sm">
+    <a href="../index.html" class="absolute left-12 top-1/2 -translate-y-1/2 z-[60] hover:opacity-90 transition text-4xl font-bold">
+      <span class="text-orange-500">U <span class="-mx-1"></span>-</span><span class="text-gray-800">DO</span>
+    </a>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between gap-4">
+      <div class="w-40 hidden lg:block"></div>
+      <div class="flex-1 max-w-3xl">
+        <div class="relative">
+          <input
+            id="searchInput"
+            type="text"
+            placeholder="Search"
+            class="w-full pl-5 pr-12 py-3.5 bg-gray-100/80 border border-gray-300 rounded-full text-base focus:outline-none focus:ring-2 focus:ring-gray-400/50 transition shadow-sm cursor-pointer"
+            readonly
+          />
+          <button class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+          </button>
+        </div>
+      </div>
+      <div class="flex items-center gap-3">
+        <a href="../login/" class="text-gray-700 hover:text-orange-500 font-medium text-base transition">Sign in</a>
+        <a href="../signup/" class="bg-orange-500 hover:bg-orange-600 text-white font-semibold py-2.5 px-6 rounded-full text-base transition duration-300 shadow-sm hover:shadow-md">Join</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content - Start Cooking Wizard -->
+  <main class="flex-1 px-4 py-12">
+    <div class="max-w-5xl mx-auto">
+      <div class="bg-white rounded-2xl shadow-xl p-8 md:p-12">
+        
+        <!-- Header -->
+        <div class="text-center mb-10">
+          <h1 class="text-4xl font-bold mb-2">
+            <span class="text-orange-500">Start</span> <span class="text-black">Cooking</span>
+          </h1>
+          <p class="text-gray-600 text-lg mt-2">Share your culinary creations with UDO community</p>
+        </div>
+
+        <!-- Progress Bar -->
+        <div class="mb-10">
+          <div class="flex items-center justify-between mb-2">
+            <span class="text-sm font-medium text-gray-700">Step <span id="currentStepNum">1</span> of 3</span>
+            <span class="text-sm text-gray-500" id="progressPercentage">33%</span>
+          </div>
+          <div class="w-full bg-gray-200 rounded-full h-2">
+            <div id="progressBar" class="bg-orange-500 h-2 rounded-full transition-all duration-300" style="width: 33%"></div>
+          </div>
+          <div class="flex justify-between mt-2 text-xs text-gray-600">
+            <span>Kitchen Identity</span>
+            <span>Today's Menu</span>
+            <span>Availability</span>
+          </div>
+        </div>
+
+        <form id="wizardForm" class="space-y-6">
+          
+          <!-- STEP 1: Kitchen Identity -->
+          <div class="wizard-step active" id="step1">
+            <section>
+              <h2 class="text-2xl font-bold text-gray-900 mb-6 pb-2 border-b-2 border-orange-500">
+                Your Kitchen Identity
+              </h2>
+              <div class="space-y-6">
+                
+                <!-- Why I Host -->
+                <div>
+                  <label for="whyHost" class="block text-sm font-medium text-gray-700 mb-2">
+                    Why I Host <span class="text-orange-500">*</span>
+                  </label>
+                  <textarea
+                    id="whyHost"
+                    name="whyHost"
+                    rows="3"
+                    required
+                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition resize-none"
+                    placeholder="Share your love for cooking, your heritage, or what inspires you to share food with neighbors..."
+                  ></textarea>
+                  <p class="text-xs text-gray-500 mt-1">This helps guests connect with your story</p>
+                </div>
+
+                <!-- Spotify Playlist -->
+                <div>
+                  <label for="spotifyPlaylist" class="block text-sm font-medium text-gray-700 mb-2">
+                    Your Cooking Playlist (Optional)
+                  </label>
+                  <input
+                    type="url"
+                    id="spotifyPlaylist"
+                    name="spotifyPlaylist"
+                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition"
+                    placeholder="https://open.spotify.com/playlist/..."
+                  />
+                  <p class="text-xs text-gray-500 mt-1">Adds a cool vibe to your profile</p>
+                </div>
+
+                <!-- Community Impact Counter -->
+                <div class="bg-orange-50 rounded-lg p-4">
+                  <p class="text-center text-white">
+                    <span class="text-3xl font-bold">127</span>
+                  </p>
+                  <p class="text-sm text-orange-100 text-center mt-2">Neighbors you've fed so far</p>
+                </div>
+
+                <!-- Certifications & ID Verification -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <!-- Certification Upload -->
+                  <div>
+                    <label for="certifications" class="block text-sm font-medium text-gray-700 mb-2">
+                      Upload Food Handler's Permit or Kitchen Safety Certificate
+                    </label>
+                    <input
+                      type="file"
+                      id="certifications"
+                      name="certifications"
+                      accept=".pdf,.jpg,.jpeg,.png"
+                      class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition text-sm"
+                    />
+                    <p class="text-xs text-gray-500 mt-1">Accepted formats: PDF, JPG, PNG (Max 5MB)</p>
+                  </div>
+
+                  <!-- ID Verification -->
+                  <div>
+                    <label for="idVerification" class="block text-sm font-medium text-gray-700 mb-2">
+                      ID Verification
+                    </label>
+                    <input
+                      type="file"
+                      id="idVerification"
+                      name="idVerification"
+                      accept=".pdf,.jpg,.jpeg,.png"
+                      class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition text-sm"
+                    />
+                    <p class="text-xs text-gray-500 mt-1">Secure portal to verify your identity</p>
+                  </div>
+                </div>
+              </div>
+            </section>
+          </div>
+
+          <!-- STEP 2: Today's Menu -->
+          <div class="wizard-step" id="step2">
+            <section>
+              <h2 class="text-2xl font-bold text-gray-900 mb-6 pb-2 border-b-2 border-orange-500">
+                Today's Menu
+              </h2>
+              <div class="space-y-6">
+                
+                <!-- Dish Title & Story -->
+                <div>
+                  <label for="dishTitle" class="block text-sm font-medium text-gray-700 mb-2">
+                    Dish Title & Story <span class="text-orange-500">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    id="dishTitle"
+                    name="dishTitle"
+                    required
+                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition"
+                    placeholder="Instead of 'Tacos', try 'Tia Maria's 3-Generation Carnitas'"
+                  />
+                  <p class="text-xs text-gray-500 mt-1">Make it memorable and personal</p>
+                </div>
+
+                <!-- Photo Uploader -->
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-2">
+                    Food Photos <span class="text-orange-500">*</span>
+                  </label>
+                  <div class="photo-upload-zone rounded-lg p-6 text-center cursor-pointer" onclick="document.getElementById('dishPhotos').click()">
+                    <input
+                      type="file"
+                      id="dishPhotos"
+                      name="dishPhotos"
+                      multiple
+                      accept="image/*"
+                      class="hidden"
+                    />
+                    <svg class="w-12 h-12 text-gray-400 mb-3 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 0-2.828 0-4 4.586L12 7.172 2.828a2 2 0 002.828 0 4 4.586L19 12a2 2 0 002.828 0 4 4.586z" />
+                    </svg>
+                    <p class="text-sm text-gray-600">Click to upload photos</p>
+                    <p class="text-xs text-gray-500 mt-1">Natural light makes food look 2x tastier!</p>
+                  </div>
+                  <div id="photoPreview" class="flex flex-wrap gap-3 mt-3"></div>
+                </div>
+
+                <!-- Ingredient Highlights -->
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-2">
+                    Ingredient Highlights
+                  </label>
+                  <div class="flex flex-wrap gap-4">
+                    <label class="flex items-center gap-2 cursor-pointer">
+                      <input type="checkbox" name="organic" class="w-5 h-5 text-orange-500 focus:ring-orange-500 rounded">
+                      <span class="text-sm text-gray-700">Organic</span>
+                    </label>
+                    <label class="flex items-center gap-2 cursor-pointer">
+                      <input type="checkbox" name="locallySourced" class="w-5 h-5 text-orange-500 focus:ring-orange-500 rounded">
+                      <span class="text-sm text-gray-700">Locally Sourced</span>
+                    </label>
+                    <label class="flex items-center gap-2 cursor-pointer">
+                      <input type="checkbox" name="homeGrown" class="w-5 h-5 text-orange-500 focus:ring-orange-500 rounded">
+                      <span class="text-sm text-gray-700">Home-Grown</span>
+                    </label>
+                  </div>
+                </div>
+
+                <!-- Allergen Disclosure (Mandatory) -->
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-3">
+                    Allergen Disclosure <span class="text-red-500">*</span>
+                  </label>
+                  <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
+                    <label class="flex items-center gap-2 cursor-pointer">
+                      <input type="checkbox" name="allergenNuts" class="w-4 h-4 text-gray-700 focus:ring-orange-500 rounded">
+                      <span class="text-sm text-gray-600">Nuts</span>
+                    </label>
+                    <label class="flex items-center gap-2 cursor-pointer">
+                      <input type="checkbox" name="allergenDairy" class="w-4 h-4 text-gray-700 focus:ring-orange-500 rounded">
+                      <span class="text-sm text-gray-600">Dairy</span>
+                    </label>
+                    <label class="flex items-center gap-2 cursor-pointer">
+                      <input type="checkbox" name="allergenGluten" class="w-4 h-4 text-gray-700 focus:ring-orange-500 rounded">
+                      <span class="text-sm text-gray-600">Gluten</span>
+                    </label>
+                    <label class="flex items-center gap-2 cursor-pointer">
+                      <input type="checkbox" name="allergenShellfish" class="w-4 h-4 text-gray-700 focus:ring-orange-500 rounded">
+                      <span class="text-sm text-gray-600">Shellfish</span>
+                    </label>
+                  </div>
+                  <p class="text-xs text-red-500 mt-2">Must disclose for guest safety</p>
+                </div>
+
+                <!-- Price & Portions -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <label for="dishPrice" class="block text-sm font-medium text-gray-700 mb-2">
+                      Price per Portion <span class="text-orange-500">*</span>
+                    </label>
+                    <input
+                      type="number"
+                      id="dishPrice"
+                      name="dishPrice"
+                      min="0"
+                      step="0.01"
+                      required
+                      class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition"
+                      placeholder="24.99"
+                    />
+                  </div>
+                  <div>
+                    <label for="portions" class="block text-sm font-medium text-gray-700 mb-2">
+                      How Many Portions Available Today? <span class="text-orange-500">*</span>
+                    </label>
+                    <input
+                      type="number"
+                      id="portions"
+                      name="portions"
+                      min="1"
+                      max="50"
+                      required
+                      class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition"
+                      placeholder="12"
+                    />
+                  </div>
+                </div>
+              </div>
+            </section>
+          </div>
+
+          <!-- STEP 3: Availability & Experience -->
+          <div class="wizard-step" id="step3">
+            <section>
+              <h2 class="text-2xl font-bold text-gray-900 mb-6 pb-2 border-b-2 border-orange-500">
+                Availability & Experience
+              </h2>
+              <div class="space-y-6">
+                
+                <!-- Experience Toggle (Crucial for mission) -->
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-3">
+                    How Do You Want to Connect? <span class="text-orange-500">*</span>
+                  </label>
+                  <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <!-- Delivery Only -->
+                    <div class="experience-card border-2 border-gray-200 rounded-xl p-4 text-center" data-experience="delivery">
+                      <div class="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                        <svg class="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2v3h14V7H3z M20 21l-2-2h-2v-2H4v-2h16z" />
+                        </svg>
+                      </div>
+                      <h3 class="text-lg font-semibold text-gray-900 mb-1">Delivery Only</h3>
+                      <p class="text-sm text-gray-600">"I'll cook it, you bring it home."</p>
+                    </div>
+
+                    <!-- Shared Table -->
+                    <div class="experience-card border-2 border-gray-200 rounded-xl p-4 text-center" data-experience="shared">
+                      <div class="w-12 h-12 bg-orange-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                        <svg class="w-6 h-6 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v18a9 9 0 011-11 17H7a9 9 0 00-14 0z" />
+                        </svg>
+                      </div>
+                      <h3 class="text-lg font-semibold text-gray-900 mb-1">Shared Table</h3>
+                      <p class="text-sm text-gray-600">"Join me in my garden/dining room at 7:00 PM."</p>
+                    </div>
+
+                    <!-- Virtual Table -->
+                    <div class="experience-card border-2 border-gray-200 rounded-xl p-4 text-center" data-experience="virtual">
+                      <div class="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-3">
+                        <svg class="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 10l5 5m0 0-5 5m0 0-5 5v10m-7 7l-5-5m0 0-5 5v10" />
+                        </svg>
+                      </div>
+                      <h3 class="text-lg font-semibold text-gray-900 mb-1">Virtual Table</h3>
+                      <p class="text-sm text-gray-600">"I'll host a 15-minute Zoom for my delivery guests to chat while they eat."</p>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Smart Scheduling - Calendar -->
+                <div>
+                  <label class="block text-sm font-medium text-gray-700 mb-3">
+                    Hours of Operation
+                  </label>
+                  <p class="text-xs text-gray-500 mb-2">Drag and drop to select your active hours</p>
+                  <div class="grid grid-cols-8 gap-2 text-center">
+                    <!-- Header row -->
+                    <div></div>
+                    <div class="text-xs font-semibold">Mon</div>
+                    <div class="text-xs font-semibold">Tue</div>
+                    <div class="text-xs font-semibold">Wed</div>
+                    <div class="text-xs font-semibold">Thu</div>
+                    <div class="text-xs font-semibold">Fri</div>
+                    <div class="text-xs font-semibold">Sat</div>
+                    <div class="text-xs font-semibold">Sun</div>
+                    
+                    <!-- Time slots for each day -->
+                    <div class="text-xs text-gray-500">6AM</div>
+                    <div class="calendar-slot rounded p-1 cursor-pointer" data-day="0" data-slot="0">6AM</div>
+                    <div class="calendar-slot rounded p-1 cursor-pointer" data-day="1" data-slot="0">6AM</div>
+                    <div class="calendar-slot rounded p-1 cursor-pointer" data-day="2" data-slot="0">6AM</div>
+                    <div class="calendar-slot rounded p-1 cursor-pointer" data-day="3" data-slot="0">6AM</div>
+                    <div class="calendar-slot rounded p-1 cursor-pointer" data-day="4" data-slot="0">6AM</div>
+                    <div class="calendar-slot rounded p-1 cursor-pointer" data-day="5" data-slot="0">6AM</div>
+                    <div class="calendar-slot rounded p-1 cursor-pointer" data-day="6" data-slot="0">6AM</div>
+                    
+                    <div class="text-xs text-gray-500">8AM</div>
+                    <div class="calendar-slot rounded p-1 cursor-pointer" data-day="0" data-slot="1">8AM</div>
+                    <div class="calendar-slot rounded p-1 cursor-pointer" data-day="1" data-slot="1">8AM</div>
+                    <div class="calendar-slot rounded p-1 cursor-pointer" data-day="2" data-slot="1">8AM</div>
+                    <div class="calendar-slot rounded p-1 cursor-pointer" data-day="3" data-slot="1">8AM</div>
+                    <div class="calendar-slot rounded p-1 cursor-pointer" data-day="4" data-slot="1">8AM</div>
+                    <div class="calendar-slot rounded p-1 cursor-pointer" data-day="5" data-slot="1">8AM</div>
+                    <div class="calendar-slot rounded p-1 cursor-pointer" data-day="6" data-slot="1">8AM</div>
+                    
+                    <div class="text-xs text-gray-500">12PM</div>
+                    <div class="calendar-slot rounded p-1 cursor-pointer" data-day="0" data-slot="2">12PM</div>
+                    <div class="calendar-slot rounded p-1 cursor-pointer" data-day="1" data-slot="2">12PM</div>
+                    <div class="calendar-slot rounded p-1 cursor-pointer" data-day="2" data-slot="2">12PM</div>
+                    <div class="calendar-slot rounded p-1 cursor-pointer" data-day="3" data-slot="2">12PM</div>
+                    <div class="calendar-slot rounded p-1 cursor-pointer" data-day="4" data-slot="2">12PM</div>
+                    <div class="calendar-slot rounded p-1 cursor-pointer" data-day="5" data-slot="2">12PM</div>
+                    <div class="calendar-slot rounded p-1 cursor-pointer" data-day="6" data-slot="2">12PM</div>
+                    
+                    <div class="text-xs text-gray-500">6PM</div>
+                    <div class="calendar-slot rounded p-1 cursor-pointer" data-day="0" data-slot="3">6PM</div>
+                    <div class="calendar-slot rounded p-1 cursor-pointer" data-day="1" data-slot="3">6PM</div>
+                    <div class="calendar-slot rounded p-1 cursor-pointer" data-day="2" data-slot="3">6PM</div>
+                    <div class="calendar-slot rounded p-1 cursor-pointer" data-day="3" data-slot="3">6PM</div>
+                    <div class="calendar-slot rounded p-1 cursor-pointer" data-day="4" data-slot="3">6PM</div>
+                    <div class="calendar-slot rounded p-1 cursor-pointer" data-day="5" data-slot="3">6PM</div>
+                    <div class="calendar-slot rounded p-1 cursor-pointer" data-day="6" data-slot="3">6PM</div>
+                  </div>
+                </div>
+
+                <!-- Portion Limits & Lead Time -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div>
+                    <label for="portionLimit" class="block text-sm font-medium text-gray-700 mb-2">
+                      How Many Plates Can You Handle Today? <span class="text-orange-500">*</span>
+                    </label>
+                    <input
+                      type="number"
+                      id="portionLimit"
+                      name="portionLimit"
+                      min="1"
+                      max="100"
+                      required
+                      class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition"
+                      placeholder="12 servings available"
+                    />
+                  </div>
+                  <div>
+                    <label for="leadTime" class="block text-sm font-medium text-gray-700 mb-2">
+                      Lead Time Required
+                    </label>
+                    <select
+                      id="leadTime"
+                      name="leadTime"
+                      required
+                      class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent transition bg-white"
+                    >
+                      <option value="0.5">30 minutes notice</option>
+                      <option value="1">1 hour notice</option>
+                      <option value="2">2 hours notice</option>
+                      <option value="4">4 hours notice</option>
+                      <option value="24">1 day notice</option>
+                    </select>
+                    <p class="text-xs text-gray-500 mt-1">How much notice do you need before orders?</p>
+                  </div>
+                </div>
+              </div>
+            </section>
+          </div>
+
+          <!-- Navigation Buttons -->
+          <div class="flex justify-between mt-8">
+            <button
+              type="button"
+              id="prevBtn"
+              class="px-6 py-3 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition hidden"
+            >
+              Previous
+            </button>
+            <button
+              type="button"
+              id="nextBtn"
+              class="px-8 py-3 bg-orange-500 hover:bg-orange-600 text-white font-semibold rounded-lg transition duration-300 shadow-md hover:shadow-lg"
+            >
+              Next
+            </button>
+            <button
+              type="submit"
+              id="submitBtn"
+              class="hidden px-8 py-3 bg-green-500 hover:bg-green-600 text-white font-semibold rounded-lg transition duration-300 shadow-md hover:shadow-lg"
+            >
+              Start Cooking
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-[#b0b0a8] text-gray-800 mt-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
+        <div>
+          <h3 class="text-2xl font-bold mb-4">
+            <span class="text-orange-500">U <span class="-mx-1"></span>-</span><span class="text-gray-800">DO</span>
+          </h3>
+          <p class="text-gray-700 text-sm leading-relaxed">UDO Let someone else do it for you.</p>
+        </div>
+
+        <div>
+          <h4 class="text-lg font-semibold mb-4 text-gray-800">Quick Links</h4>
+          <ul class="space-y-2">
+            <li><a href="../index.html" class="text-gray-700 hover:text-orange-500 transition">Home</a></li>
+            <li><a href="../profiles-list/" class="text-gray-700 hover:text-orange-500 transition">Services</a></li>
+            <li><a href="../join-as-professional/" class="text-gray-700 hover:text-orange-500 transition">Join as Pro</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="text-lg font-semibold mb-4 text-gray-800">Support</h4>
+          <ul class="space-y-2">
+            <li><a href="#" class="text-gray-700 hover:text-orange-500 transition">Help Center</a></li>
+            <li><a href="#" class="text-gray-700 hover:text-orange-500 transition">Safety</a></li>
+            <li><a href="../contact-us/" class="text-gray-700 hover:text-orange-500 transition">Contact Us</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="text-lg font-semibold mb-4 text-gray-800">Legal</h4>
+          <ul class="space-y-2">
+            <li><a href="../terms/" class="text-gray-700 hover:text-orange-500 transition">Terms of Service</a></li>
+            <li><a href="../privacy/" class="text-gray-700 hover:text-orange-500 transition">Privacy Policy</a></li>
+            <li><a href="../trademark/" class="text-gray-700 hover:text-orange-500 transition">Trademark</a></li>
+          </ul>
+        </div>
+
+        <div>
+          <h4 class="text-lg font-semibold mb-4 text-gray-800">Language</h4>
+          <select id="languageSelector" class="w-full bg-white text-gray-800 border border-gray-400 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-orange-500 cursor-pointer">
+            <option value="en" selected>English</option>
+            <option value="es">Español</option>
+            <option value="fr">Français</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="border-t border-gray-400 mt-10 pt-8 text-center">
+        <p class="text-gray-700 text-sm">© 2026 UDo, Inc. All rights reserved.</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="/config.js"></script>
+  <script src="/static/js/search-overlay.js"></script>
+  <script>
+    // Wizard Navigation
+    let currentStep = 1;
+    const totalSteps = 3;
+    
+    const progressBar = document.getElementById('progressBar');
+    const currentStepNum = document.getElementById('currentStepNum');
+    const progressPercentage = document.getElementById('progressPercentage');
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    const submitBtn = document.getElementById('submitBtn');
+    
+    function updateProgress() {
+      const percentage = Math.round((currentStep / totalSteps) * 100);
+      progressBar.style.width = percentage + '%';
+      currentStepNum.textContent = currentStep;
+      progressPercentage.textContent = percentage + '%';
+    }
+    
+    function showStep(step) {
+      // Hide all steps
+      document.querySelectorAll('.wizard-step').forEach(el => {
+        el.classList.remove('active');
+      });
+      
+      // Show target step
+      document.getElementById(`step${step}`).classList.add('active');
+      
+      // Update buttons
+      if (step === 1) {
+        prevBtn.classList.add('hidden');
+        nextBtn.classList.remove('hidden');
+        submitBtn.classList.add('hidden');
+      } else if (step === totalSteps) {
+        prevBtn.classList.remove('hidden');
+        nextBtn.classList.add('hidden');
+        submitBtn.classList.remove('hidden');
+        nextBtn.textContent = 'Review';
+      } else {
+        prevBtn.classList.remove('hidden');
+        nextBtn.classList.remove('hidden');
+        submitBtn.classList.add('hidden');
+      }
+      
+      updateProgress();
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+    
+    nextBtn.addEventListener('click', () => {
+      if (currentStep < totalSteps) {
+        currentStep++;
+        showStep(currentStep);
+      }
+    });
+    
+    prevBtn.addEventListener('click', () => {
+      if (currentStep > 1) {
+        currentStep--;
+        showStep(currentStep);
+      }
+    });
+    
+    // Experience Card Selection
+    document.querySelectorAll('.experience-card').forEach(card => {
+      card.addEventListener('click', () => {
+        document.querySelectorAll('.experience-card').forEach(c => c.classList.remove('selected'));
+        card.classList.add('selected');
+      });
+    });
+    
+    // Calendar Slot Selection
+    document.querySelectorAll('.calendar-slot').forEach(slot => {
+      slot.addEventListener('click', () => {
+        slot.classList.toggle('active');
+      });
+    });
+    
+    // Photo Upload Preview
+    document.getElementById('dishPhotos').addEventListener('change', function(e) {
+      const preview = document.getElementById('photoPreview');
+      preview.innerHTML = '';
+      
+      Array.from(e.target.files).forEach(file => {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          const div = document.createElement('div');
+          div.className = 'photo-preview w-24 h-24 rounded-lg overflow-hidden border-2 border-gray-200';
+          div.innerHTML = `
+            <img src="${e.target.result}" class="w-full h-full object-cover" alt="${file.name}">
+            <button type="button" class="absolute top-1 right-1 w-6 h-6 bg-red-500 text-white rounded-full text-xs hover:bg-red-600">&times;</button>
+          `;
+          div.querySelector('button').addEventListener('click', function() {
+            div.remove();
+          });
+          preview.appendChild(div);
+        };
+        reader.readAsDataURL(file);
+      });
+    });
+    
+    // Form Submission
+    document.getElementById('wizardForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      alert('Profile created successfully! Welcome to UDO cooking community.');
+      window.location.href = '../index.html';
+    });
+  </script>
+
+</body>
+</html>

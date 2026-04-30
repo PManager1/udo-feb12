@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="description" content="UDO - Let somebody else do it for you."/>
+  <title>U-Do: Let someone do it for you.</title>
+
+  
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2270%22 font-family=%22Arial, sans-serif%22 font-weight=%22900%22 letter-spacing=%22-2%22><tspan fill=%22%23f97316%22>U</tspan><tspan fill=%22%23000000%22>DO</tspan></text></svg>">
+
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      background-color: #f9f7f5;
+    } 
+    .card-hover:hover img {
+      transform: scale(1.06);
+    }
+    .search-overlay {
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      opacity: 0;
+      pointer-events: none;
+    }
+    .search-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    /* Mobile Menu Overlay */
+    #mobileMenuOverlay {
+      display: none; 
+      position: fixed;
+      inset: 0;
+      background-color: white;
+      z-index: 9999;
+      flex-direction: column;
+      /* padding: 2rem; */
+      padding: 1rem 2rem 2rem 2rem;
+    }
+    .overflow-hidden {
+      overflow: hidden;
+    }
+
+  </style>
+</head>
+  <body class="min-h-screen antialiased text-gray-900" style="font-family: 'Nunito', sans-serif;">
+
+    <div id="mobileMenuOverlay" class="flex lg:hidden">
+    <div class="w-full flex justify-between items-center mb-12">
+      <div class="text-3xl font-bold">
+        <span class="text-orange-500">U <span class="-mx-1"></span>-</span><span class="text-gray-800">DO</span>
+        <!-- <p class="text-sm text-gray-600 font-medium -mt-1">let someone do it for you</p> -->
+      </div>
+      <!-- <button id="closeMobileBtn" class="p-2 text-gray-800">
+        <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button> -->
+
+      
+    <button id="closeMobileBtn" class="p-2 text-gray-800 -mt-1 -mr-4">
+      <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+      </svg>
+    </button>
+
+    </div>
+    <nav class="flex flex-col gap-6 w-full">
+      <a href="../login/" class="text-2xl font-bold text-gray-800 border-b border-gray-100 pb-4 w-full">Sign in</a>
+      <a href="../signup/" class="bg-orange-500 text-white text-xl font-bold py-4 px-8 rounded-full shadow-md text-center mt-4">Join</a>
+    </nav>
+  </div>
+
+  <!-- Top Search Bar -->
+<header class="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-200 shadow-sm">
+  <div class="absolute left-6 sm:left-12 top-1/2 -translate-y-1/2 z-[60] hover:opacity-90 transition">
+    <a href="../index.html" class="text-3xl sm:text-4xl font-bold">
+      <span class="text-orange-500">U <span class="-mx-1"></span>-</span><span class="text-gray-800">DO</span>
+      <p class="text-sm text-gray-600 font-medium -mt-1">let someone do it for you</p>
+    </a>
+    <!-- <p class="hidden md:block text-sm text-gray-600 font-medium -mt-1">let someone do it for you</p> -->
+  </div>
+
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between gap-4">
+    <div class="w-48 hidden lg:block"></div>
+    
+    <div class="flex-1 max-w-3xl hidden lg:block">
+      <div class="relative">
+        <input
+          id="searchInput"
+          type="text"
+          placeholder="Search"
+          class="w-full pl-5 pr-12 py-3.5 bg-[#DADAD3] border border-gray-300 rounded-full text-base focus:outline-none focus:ring-2 focus:ring-gray-400/50 transition shadow-sm cursor-pointer"
+          readonly
+        />
+        <button class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700">
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+          </svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="flex items-center gap-2 lg:hidden ml-auto">
+      <button id="mobileSearchBtn" class="p-3 rounded-full hover:bg-gray-100 transition-colors">
+        <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+        </svg>
+      </button>
+      <button id="openMobileBtn" class="p-2 rounded-lg hover:bg-gray-100 transition">
+        <svg class="w-8 h-8 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+        </svg>
+      </button>
+    </div>
+
+    <div class="hidden lg:flex items-center gap-6">
+      <a href="../login/" class="text-gray-700 hover:text-orange-500 font-medium text-base transition">Sign in</a>
+      <a href="../signup/" class="bg-orange-500 hover:bg-orange-600 text-white font-semibold py-2.5 px-6 rounded-full text-base transition shadow-sm">Join</a>
+    </div>
+  </div>
+</header>
+
+
+     <!-- App Download Banner -->
+ <section class="bg-[#fed7aa] py-12 lg:py-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex flex-col lg:flex-row items-center gap-8 lg:gap-12">
+            <div class="flex-1 text-center lg:text-left">
+                
+                <h2 class="text-2xl lg:text-3xl font-bold text-gray-900 mb-6">
+                     Why does everything has to be about corporate greed? 
+                </h2>
+                
+                <div class="text-gray-800 space-y-4">
+                    <p class="text-lg lg:text-xl leading-relaxed"> 
+                        A huge part of today's workforce are navigating the gig economy —relying on app-based tasks and freelance 'gigs' instead of traditional 9-to-5 jobs—  often facing unpredictable income and a constant struggle.
+                    </p>
+                    <p class="text-lg lg:text-xl leading-relaxed"> 
+                        We believe everyone deserves financial stability and the dignity of putting food on their table, which is why we built U Do to level the playing field and empower gig workers to build sustainable livelihoods, free from corporate pressures.
+                    </p>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+   <!-- App Download Banner -->
+    <section class="bg-gradient-to-br from-orange-500 to-orange-600 py-12 lg:py-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-col lg:flex-row items-center gap-8 lg:gap-12">
+                <!-- Left: Content -->
+                <div class="flex-1 text-center lg:text-left">
+                    <!-- Badge -->
+                    <div class="inline-flex items-center gap-2 bg-white/20 backdrop-blur-sm px-4 py-2 rounded-full text-sm font-semibold text-white mb-6">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8m-8-6h.01M15 14h.01M9 14h.01M5 6l7-7m0 0l7 7M5 6v6m7-6v6"/>
+                        </svg>
+                        <span>Download App, Delete Google Tax</span>
+                    </div>
+                    
+                    <!-- Main Title -->
+                    <h2 class="text-3xl lg:text-4xl font-extrabold text-white mb-6 leading-tight">
+                        📱 Why use the App?
+                    </h2>
+                    
+                    <!-- Description -->
+                    <!-- <p class="text-orange-50 leading-relaxed mb-8">
+                        <span class="text-2xl lg:text-3xl font-semibold block mb-4">When you find a pro through a Google search, big tech takes a cut.</span>
+                        <span class="text-lg lg:text-xl">When you use <span class="font-bold text-white">UDo App</span>, that money stays with <span class="font-bold text-white">you</span> and the <span class="font-bold text-white">worker</span>.  </span>
+                    </p> -->
+
+
+                     <p class="text-lg leading-relaxed">
+                      When you find a pro through Google, big tech takes a cut.  
+                      <strong>With UDo, that money stays with you and the worker.</strong><br><br>
+                      Lets bypass expensive Google ads and middleman fees — so pros keep <span class="font-bold text-orange-600">100%</span> of what they earn, and you skip the hidden premium just to find help.
+                    </p>
+                    
+                    <!-- CTA Button -->
+                    <a href="#" class="inline-flex items-center gap-3 bg-white text-orange-600 px-8 py-4 rounded-full font-bold text-lg hover:bg-gray-100 transition-all shadow-lg hover:shadow-xl hover:-translate-y-1 duration-300">
+                        <svg class="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+                        </svg>
+                        Download App Now
+                    </a>
+
+
+                     <p class="text-orange-50 leading-relaxed mb-8">
+                        
+                        <!-- <span class="text-lg lg:text-xl">When you use <span class="font-bold text-white">UDo App</span>, that money stays with <span class="font-bold text-white">you</span> and the <span class="font-bold text-white">worker</span>. Download now to keep your local economy direct.</span> -->
+
+                            <br/><br/>
+                        <!-- <span class="text-lg lg:text-xl"> We believe you shouldn't pay a premium just to find help. By using the <span class="font-bold text-white">UDo App</span>, directly, we bypass expensive Google ads and middleman fees—passing 100% of the savings to you and the pro.</span> -->
+                    </p>
+                </div>
+
+                
+
+
+                
+                <!-- Right: Visual Element -->
+                <div class="flex-shrink-0">
+                    <div class="relative">
+                        <!-- Phone mockup -->
+                        <div class="bg-white rounded-[2.5rem] p-3 shadow-2xl transform rotate-[-3deg] hover:rotate-0 transition-transform duration-500">
+                            <div class="bg-gradient-to-br from-orange-100 to-orange-200 rounded-[2rem] w-64 h-[400px] flex flex-col items-center justify-center p-6">
+                                <svg class="w-24 h-24 text-orange-500 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                </svg>
+                                <div class="text-center">
+                                    <p class="text-2xl font-bold text-gray-800 mb-2">
+                                        <span class="text-orange-500">U <span class="-mx-1"></span>-</span><span class="text-gray-800">DO</span>
+                                    </p>
+                                    <p class="text-sm text-gray-600 font-medium">Let somebody<br/>else do it<br/>for you.</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Floating badge -->
+                        <div class="absolute -bottom-4 -right-4 bg-green-500 text-white rounded-full p-3 shadow-lg animate-bounce">
+                            <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+
+
+
+
+    <section class="bg-white py-16 md:py-24">
+  <div class="max-w-5xl mx-auto px-6 lg:px-8 text-center">
+
+     <div class="mt-10">
+        <p class="text-3xl font-bold text-gray-800 mb-4">
+          Don’t stress it. <span class="text-orange-500">UDo</span> it.
+        </p>
+        <p class="text-xl text-gray-600">
+          Too busy? UDo it. Need help? UDo it.
+        </p>
+      </div>
+      </div>
+      </section>
+
+
+
+ 
+ 
+ 
+
+  <script src="/config.js"></script>
+  <script src="/search-overlay/search-overlay.js"></script>
+
+  <!-- Footer -->
+  <footer class="bg-[#b0b0a8] text-gray-800">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
+        <!-- Company Info -->
+        <div>
+          <h3 class="text-2xl font-bold mb-4">
+            <span class="text-orange-500">U <span class="-mx-1"></span>-</span><span class="text-gray-800">DO</span>
+          </h3>
+          <p class="text-gray-700 text-sm leading-relaxed">
+            <h1 class="text-base font-normal text-gray-700">
+              UDO: Let somebody else do it for you.
+          </h1>
+            
+          </p>
+        </div>
+
+        <!-- Quick Links -->
+        <div>
+          <h4 class="text-lg font-semibold mb-4 text-gray-800">Quick Links</h4>
+          <ul class="space-y-2">
+            <li><a href="#" class="text-gray-700 hover:text-orange-500 transition">Home</a></li>
+            <li><a href="profiles-list/" class="text-gray-700 hover:text-orange-500 transition">Services</a></li>
+            <li><a href="join-as-professional/" class="text-gray-700 hover:text-orange-500 transition">Join as Pro</a></li>
+            <li><a href="#" class="text-gray-700 hover:text-orange-500 transition">How It Works</a></li>
+          </ul>
+        </div>
+
+        <!-- Support -->
+        <div>
+          <h4 class="text-lg font-semibold mb-4 text-gray-800">Support</h4>
+          <ul class="space-y-2">
+            <li><a href="#" class="text-gray-700 hover:text-orange-500 transition">Help Center</a></li>
+            <li><a href="../safety/" class="text-gray-700 hover:text-orange-500 transition">Safety</a></li>
+            <li><a href="contact-us/" class="text-gray-700 hover:text-orange-500 transition">Contact Us</a></li>
+            <li><a href="#" class="text-gray-700 hover:text-orange-500 transition">FAQs</a></li>
+          </ul>
+        </div>
+
+        <!-- Legal -->
+        <div>
+          <h4 class="text-lg font-semibold mb-4 text-gray-800">Legal</h4>
+          <ul class="space-y-2">
+            <li><a href="../terms/" class="text-gray-700 hover:text-orange-500 transition">Terms of Service</a></li>
+            <li><a href="../privacy/" class="text-gray-700 hover:text-orange-500 transition">Privacy Policy</a></li>
+            <li><a href="#" class="text-gray-700 hover:text-orange-500 transition">Cookie Policy</a></li>
+            <li><a href="trademark/" class="text-gray-700 hover:text-orange-500 transition">Trademark</a></li>
+          </ul>
+        </div>
+
+        <!-- Language Selector -->
+        <div>
+          <h4 class="text-lg font-semibold mb-4 text-gray-800">Language</h4>
+          <div class="relative">
+            <select id="languageSelector" class="w-full bg-white text-gray-800 border border-gray-400 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-orange-500 cursor-pointer appearance-none pr-8">
+              <option value="en" selected>English</option>
+              <option value="es">Español</option>
+              <option value="fr">Français</option>
+            </select>
+            <div class="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none">
+              <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+              </svg>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Social Media & Copyright -->
+      <div class="border-t border-gray-400 mt-10 pt-8 flex flex-col md:flex-row justify-between items-center">
+        <p class="text-gray-700 text-sm mb-4 md:mb-0">
+          © 2026 UDo, Inc. All rights reserved.
+        </p>
+        <div class="flex space-x-6">
+          <a href="#" class="text-gray-600 hover:text-orange-500 transition">
+            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z"/>
+            </svg>
+          </a>
+          <a href="#" class="text-gray-600 hover:text-orange-500 transition">
+            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12 2.163c3.204 0 3.584.012 4.85.072 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+            </svg>
+          </a>
+          <a href="#" class="text-gray-600 hover:text-orange-500 transition">
+            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M22.675 0h-21.35c-.732 0-1.325.593-1.325 1.325v21.351c0 .731.593 1.324 1.325 1.324h11.495v-9.294h-3.128v-3.622h3.128v-2.671c0-3.1 1.893-4.788 4.659-4.788 1.325 0 2.463.099 2.795.143v3.24l-1.918.001c-1.504 0-1.795.715-1.795 1.763v2.313h3.587l-.467 3.622h-3.12v9.293h6.116c.73 0 1.323-.593 1.323-1.325v-21.35c0-.732-.593-1.325-1.325-1.325z"/>
+            </svg>
+          </a>
+          <a href="#" class="text-gray-600 hover:text-orange-500 transition">
+            <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667h-3.554v-11.452h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286nm-15.11-13.019c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019h-3.564v-11.452h3.564v11.452zm15.106-20.452h-20.454c-.979 0-1.771.774-1.771 1.729v20.542c0 .956.792 1.729 1.771 1.729h20.451c.978 0 1.778-.773 1.778-1.729v-20.542c0-.955-.8-1.729-1.778-1.729z"/>
+            </svg>
+          </a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+<script>
+  // Hooks into your existing search overlay/input logic
+  const desktopSearch = document.getElementById('searchInput');
+  const mobileSearchBtn = document.getElementById('mobileSearchBtn');
+  
+  mobileSearchBtn.addEventListener('click', () => {
+    // Triggers the same click effect as the desktop search bar
+    desktopSearch.click();
+  });
+
+  // Mobile Menu Overlay Logic
+  const openBtn = document.getElementById('openMobileBtn');
+  const closeBtn = document.getElementById('closeMobileBtn');
+  const overlay = document.getElementById('mobileMenuOverlay');
+
+  openBtn.addEventListener('click', () => {
+    overlay.style.display = 'flex';
+    document.body.classList.add('overflow-hidden');
+  });
+
+  closeBtn.addEventListener('click', () => {
+    overlay.style.display = 'none';
+    document.body.classList.remove('overflow-hidden');
+  });
+</script>
+
+</body>
+</html>

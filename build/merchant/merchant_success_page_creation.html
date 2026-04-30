@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Store Created Successfully - UDo Merchant">
+  <title>Store Created Successfully - UDo Merchant</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2270%22 font-family=%22Arial, sans-serif%22 font-weight=%22900%22 letter-spacing=%22-2%22><tspan fill=%22%23f97316%22>U</tspan><tspan fill=%23000000%22>DO</tspan></text></svg>">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      font-family: 'Nunito', sans-serif;
+    }
+    
+    /* Confetti Animation */
+    @keyframes confetti-fall {
+      0% {
+        transform: translateY(-100vh) rotate(0deg);
+        opacity: 1;
+      }
+      100% {
+        transform: translateY(100vh) rotate(720deg);
+        opacity: 0;
+      }
+    }
+    
+    .confetti {
+      position: fixed;
+      width: 10px;
+      height: 10px;
+      top: -10px;
+      animation: confetti-fall 3s linear forwards;
+    }
+    
+    /* Success Animation */
+    @keyframes scale-in {
+      0% {
+        transform: scale(0);
+        opacity: 0;
+      }
+      50% {
+        transform: scale(1.1);
+      }
+      100% {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+    
+    @keyframes float {
+      0%, 100% {
+        transform: translateY(0);
+      }
+      50% {
+        transform: translateY(-10px);
+      }
+    }
+    
+    .success-icon {
+      animation: scale-in 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+    
+    .float-animation {
+      animation: float 2s ease-in-out infinite;
+    }
+    
+    /* Pulse Ring Animation */
+    @keyframes pulse-ring {
+      0% {
+        transform: scale(0.8);
+        opacity: 1;
+      }
+      100% {
+        transform: scale(1.5);
+        opacity: 0;
+      }
+    }
+    
+    .pulse-ring {
+      animation: pulse-ring 1.5s cubic-bezier(0.215, 0.61, 0.355, 1) infinite;
+    }
+  </style>
+</head>
+<body class="min-h-screen bg-gradient-to-br from-orange-50 via-white to-green-50 flex items-center justify-center p-4">
+  
+  <!-- Confetti Container -->
+  <div id="confettiContainer"></div>
+  
+  <!-- Success Card -->
+  <div class="bg-white rounded-3xl shadow-2xl max-w-lg w-full p-8 text-center relative overflow-hidden">
+    <!-- Background Decoration -->
+    <div class="absolute top-0 left-0 w-full h-2 bg-gradient-to-r from-green-500 to-orange-500"></div>
+    
+    <!-- Success Icon with Pulse Effect -->
+    <div class="relative inline-block mb-6">
+      <div class="absolute inset-0 bg-green-500 rounded-full pulse-ring opacity-20"></div>
+      <div class="relative w-24 h-24 bg-green-500 rounded-full flex items-center justify-center success-icon float-animation">
+        <svg class="w-12 h-12 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"/>
+        </svg>
+      </div>
+    </div>
+    
+    <!-- Success Message -->
+    <h1 class="text-3xl font-extrabold text-gray-900 mb-3">
+      Store Created Successfully! 🎉
+    </h1>
+    
+    <p class="text-gray-600 text-lg mb-8">
+      Congratulations! Your store is now live and ready to start accepting orders from customers.
+    </p>
+    
+    <!-- Store Info Box -->
+    <div class="bg-gradient-to-r from-orange-50 to-green-50 rounded-2xl p-6 mb-8">
+      <p class="text-sm text-gray-600 mb-2">Your Store Link</p>
+      <p id="storeNameDisplay" class="text-xl font-bold text-gray-900 mb-4"></p>
+      
+      <a href="#" id="storeLink" target="_blank" class="inline-flex items-center gap-2 bg-white border-2 border-orange-500 text-orange-500 hover:bg-orange-500 hover:text-white font-semibold py-3 px-6 rounded-full transition-all duration-300 shadow-md hover:shadow-lg">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/>
+        </svg>
+        Visit Your Store
+      </a>
+    </div>
+    
+    <!-- Next Steps -->
+    <div class="text-left bg-gray-50 rounded-xl p-5 mb-8">
+      <h3 class="font-bold text-gray-800 mb-3 flex items-center gap-2">
+        <svg class="w-5 h-5 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+        </svg>
+        Quick Tips
+      </h3>
+      <ul class="space-y-2 text-sm text-gray-600">
+        <li class="flex items-start gap-2">
+          <svg class="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+          </svg>
+          <span>Share your store link with customers on social media</span>
+        </li>
+        <li class="flex items-start gap-2">
+          <svg class="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+          </svg>
+          <span>Add more products to attract more customers</span>
+        </li>
+        <li class="flex items-start gap-2">
+          <svg class="w-4 h-4 text-green-500 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+          </svg>
+          <span>Manage orders and track your sales from the dashboard</span>
+        </li>
+      </ul>
+    </div>
+    
+    <!-- Action Buttons -->
+    <div class="flex flex-col sm:flex-row gap-3">
+      <a href="index.html" class="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold py-3 px-6 rounded-full transition duration-300 text-center">
+        Back to Editor
+      </a>
+      <a href="../index.html" class="flex-1 bg-orange-500 hover:bg-orange-600 text-white font-semibold py-3 px-6 rounded-full transition duration-300 shadow-md hover:shadow-lg text-center">
+        Go to Home
+      </a>
+    </div>
+  </div>
+
+  <script>
+    // Get store name from URL parameter
+    const urlParams = new URLSearchParams(window.location.search);
+    const storeName = urlParams.get('storeName') || 'My Store';
+    
+    // Display store name
+    document.getElementById('storeNameDisplay').textContent = storeName;
+    
+    // Generate store link (this would be dynamic in production)
+    const storeSlug = storeName.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, '');
+    const storeLink = `../food-delivery/?store=${storeSlug}`;
+    document.getElementById('storeLink').href = storeLink;
+    
+    // Confetti colors
+    const colors = ['#f97316', '#22c55e', '#3b82f6', '#eab308', '#ef4444', '#8b5cf6'];
+    
+    // Create confetti particles
+    function createConfetti() {
+      const confettiContainer = document.getElementById('confettiContainer');
+      
+      for (let i = 0; i < 100; i++) {
+        setTimeout(() => {
+          const confetti = document.createElement('div');
+          confetti.className = 'confetti';
+          confetti.style.left = Math.random() * 100 + 'vw';
+          confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+          confetti.style.width = Math.random() * 10 + 5 + 'px';
+          confetti.style.height = Math.random() * 10 + 5 + 'px';
+          confetti.style.animationDuration = Math.random() * 2 + 2 + 's';
+          confetti.style.borderRadius = Math.random() > 0.5 ? '50%' : '0';
+          confetti.style.transform = `rotate(${Math.random() * 360}deg)`;
+          
+          confettiContainer.appendChild(confetti);
+          
+          // Remove confetti after animation
+          setTimeout(() => {
+            confetti.remove();
+          }, 5000);
+        }, i * 30);
+      }
+    }
+    
+    // Start confetti animation on page load
+    window.addEventListener('load', () => {
+      createConfetti();
+    });
+  </script>
+</body>
+</html>

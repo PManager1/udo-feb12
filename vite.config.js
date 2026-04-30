@@ -11,6 +11,12 @@ function staticHtmlDirectories() {
       server.middlewares.use((req, res, next) => {
         const urlPath = req.url.split('?')[0] // strip query params
 
+        // Skip React routes — let React Router handle them instead of serving static HTML
+        const reactRoutes = ['/addfooditem', '/addfooditem/', '/AddFoodItem', '/AddFoodItem/']
+        if (reactRoutes.includes(urlPath)) {
+          return next()
+        }
+
         // 1) Serve any static file that exists in public/ (JS, CSS, images, etc.)
         const staticPath = path.join(process.cwd(), 'public', urlPath)
         if (fs.existsSync(staticPath) && fs.statSync(staticPath).isFile()) {
@@ -60,6 +66,7 @@ export default defineConfig({
   build: {
     outDir: 'build',
   },
+  cacheDir: 'node_modules/.vite2',
   server: {
     port: 3001,
     strictPort: true,

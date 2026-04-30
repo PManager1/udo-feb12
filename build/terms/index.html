@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>U-Do: Let someone do it for you.</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2270%22 font-family=%22Arial, sans-serif%22 font-weight=%22900%22 letter-spacing=%22-2%22><tspan fill=%22%23f97316%22>U</tspan><tspan fill=%22%23000000%22>DO</tspan></text></svg">  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      background-color: #f9f7f5;
+    }
+  </style>
+</head>
+  <body class="min-h-screen antialiased text-gray-900" style="font-family: 'Nunito', sans-serif;">
+
+  <!-- Top Search Bar -->
+  <header class="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-200 shadow-sm">
+    <a href="../index.html" class="absolute left-12 top-1/2 -translate-y-1/2 z-[60] hover:opacity-90 transition">
+      <img src="../UDO-6.jpg" alt="UDO" class="h-32 w-auto max-w-none shadow-lg rounded-lg" />
+    </a>
+
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between gap-4">
+      <div class="w-40 hidden lg:block"></div>
+      <div class="flex-1 max-w-3xl">
+        <div class="relative">
+          <input
+            type="text"
+            placeholder="Search"
+            class="w-full pl-5 pr-12 py-3.5 bg-gray-100/80 border border-gray-300 rounded-full text-base focus:outline-none focus:ring-2 focus:ring-gray-400/50 transition shadow-sm cursor-pointer"
+          />
+          <button class="absolute right-4 top-1/2 -translate-y-1/2 text-gray-500 hover:text-gray-700">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+            </svg>
+          </button>
+        </div>
+      </div>
+      <div class="flex items-center gap-3">
+        <a href="../login/" class="text-gray-700 hover:text-orange-500 font-medium text-base transition">Sign in</a>
+        <a href="../signup/" class="bg-orange-500 hover:bg-orange-600 text-white font-semibold py-2.5 px-6 rounded-full text-base transition duration-300 shadow-sm hover:shadow-md">Join</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div class="bg-white rounded-2xl shadow-xl p-8 md:p-12">
+      <h1 class="text-4xl font-bold text-gray-900 mb-2">
+        <span class="text-orange-500">Terms of Service</span>
+      </h1>
+      <p class="text-gray-600 text-lg mb-8">Last updated: March 2026</p>
+
+      <div class="prose prose-lg max-w-none space-y-6">
+        <section>
+          <h2 class="text-2xl font-bold text-gray-900 mb-3">1. Acceptance of Terms</h2>
+          <p class="text-gray-700 leading-relaxed">
+            By accessing and using UDo, you accept and agree to be bound by the terms and provision of this agreement. If you do not agree to abide by the above, please do not use this service.
+          </p>
+        </section>
+
+        <section>
+          <h2 class="text-2xl font-bold text-gray-900 mb-3">2. Description of Service</h2>
+          <p class="text-gray-700 leading-relaxed">
+            UDo is a platform that connects users with professionals for various services including home improvement, furniture assembly, moving, plumbing, electrical work, cleaning, and more. We do not provide the services directly; we facilitate the connection between users and independent service providers.
+          </p>
+        </section>
+
+        <section>
+          <h2 class="text-2xl font-bold text-gray-900 mb-3">3. User Responsibilities</h2>
+          <p class="text-gray-700 leading-relaxed mb-3">As a user of UDo, you agree to:</p>
+          <ul class="list-disc list-inside text-gray-700 space-y-2 ml-4">
+            <li>Provide accurate and complete information when creating an account</li>
+            <li>Maintain the security of your account and password</li>
+            <li>Be respectful and professional in all communications</li>
+            <li>Pay for services rendered as agreed upon with the service provider</li>
+            <li>Not use the platform for illegal or harmful activities</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2 class="text-2xl font-bold text-gray-900 mb-3">4. Service Provider Responsibilities</h2>
+          <p class="text-gray-700 leading-relaxed mb-3">Service providers on UDo agree to:</p>
+          <ul class="list-disc list-inside text-gray-700 space-y-2 ml-4">
+            <li>Provide accurate information about their services and qualifications</li>
+            <li>Deliver services with reasonable care and skill</li>
+            <li>Communicate clearly and professionally with users</li>
+            <li>Adhere to all applicable laws and regulations</li>
+            <li>Honor agreed-upon pricing and timelines</li>
+          </ul>
+        </section>
+
+        <section>
+          <h2 class="text-2xl font-bold text-gray-900 mb-3">5. Payments and Fees</h2>
+          <p class="text-gray-700 leading-relaxed">
+            UDo may charge fees for certain services. Users are responsible for paying service providers directly for the services received, unless otherwise specified. All payments are subject to our refund policy.
+          </p>
+        </section>
+
+        <section>
+          <h2 class="text-2xl font-bold text-gray-900 mb-3">6. Limitation of Liability</h2>
+          <p class="text-gray-700 leading-relaxed">
+            UDo is not responsible for the quality, safety, or legality of any services provided by users or service providers. We do not guarantee the accuracy of user profiles or the completion of any job. Use of the service is at your own risk.
+          </p>
+        </section>
+
+        <section>
+          <h2 class="text-2xl font-bold text-gray-900 mb-3">7. Termination</h2>
+          <p class="text-gray-700 leading-relaxed">
+            UDo reserves the right to terminate or suspend access to our service immediately, without prior notice, for any reason whatsoever, including but not limited to breach of these Terms.
+          </p>
+        </section>
+
+        <section>
+          <h2 class="text-2xl font-bold text-gray-900 mb-3">8. Changes to Terms</h2>
+          <p class="text-gray-700 leading-relaxed">
+            UDo reserves the right to modify these terms at any time. We will notify users of any changes by posting the new Terms on this page. Your continued use of the service after such modifications constitutes your acceptance of the new Terms.
+          </p>
+        </section>
+
+        <section>
+          <h2 class="text-2xl font-bold text-gray-900 mb-3">9. Contact Us</h2>
+          <p class="text-gray-700 leading-relaxed">
+            If you have any questions about these Terms of Service, please contact us at support@udonow.com.
+          </p>
+        </section>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-gray-900 text-white py-8 mt-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <p class="text-gray-400">© 2026 UDo, Inc. All rights reserved.</p>
+    </div>
+  </footer>
+
+</body>
+</html>

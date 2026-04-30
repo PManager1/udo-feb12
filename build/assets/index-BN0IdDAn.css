@@ -1,0 +1,1 @@
+body{background-color:#f9f7f5;margin:0;font-family:Nunito,sans-serif}#root{width:100%;min-height:100svh}.card-hover:hover img{transform:scale(1.06)}.search-overlay{opacity:0;pointer-events:none;transition:all .3s cubic-bezier(.4,0,.2,1)}.search-overlay.active{opacity:1;pointer-events:auto}

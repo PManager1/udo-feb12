@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profit & Cost Calculator</title>
+    <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-lite@5"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+            background-color: #f4f4f9;
+            color: #333;
+        }
+        .container {
+            max-width: 900px;
+            margin: auto;
+            background: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            color: #007bff;
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        .input-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        .input-item {
+            flex: 1;
+            min-width: 250px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input[type=number], input[type=range] {
+            width: 95%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .result-box {
+            background-color: #e9f7e9;
+            border: 1px solid #c8e6c9;
+            padding: 15px;
+            border-radius: 4px;
+            margin-top: 20px;
+        }
+        .result-box p {
+            margin: 5px 0;
+            font-size: 1.1em;
+        }
+        .result-box strong {
+            color: #28a745;
+        }
+        #chart {
+            margin-top: 30px;
+            background-color: #fff;
+            padding: 20px 0;
+            border-radius: 8px;
+        }
+        .red-text {
+            color: #dc3545; /* Bootstrap danger red */
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Profit & Cost Calculator</h2>
+
+    <div class="input-group">
+        <div class="input-item">
+            <label for="drivers">Number of Drivers:</label>
+            <input type="range" id="drivers_range" min="50" max="10000" value="1000" step="50" oninput="updateAll()">
+            <input type="number" id="drivers_input" min="50" max="10000" value="1000" oninput="updateAll()">
+        </div>
+        <div class="input-item">
+            <label for="riders_per_driver">Riders per Driver (Daily):</label>
+            <input type="number" id="riders_per_driver" value="20" min="1" oninput="updateAll()">
+        </div>
+        <div class="input-item">
+            <label for="complaint_rate">Rider Complaint Rate (%):</label>
+            <input type="number" id="complaint_rate" value="2" min="0" max="100" step="0.1" oninput="updateAll()">
+        </div>
+        <div class="input-item">
+            <label for="tickets_per_worker_per_day">Tickets Solved per Worker (Daily):</label>
+            <input type="number" id="tickets_per_worker_per_day" value="160" min="1" oninput="updateAll()">
+        </div>
+        <div class="input-item">
+            <label for="wage_per_hour_worker">Worker Wage per Hour (USD):</label>
+            <input type="number" id="wage_per_hour_worker" value="8" min="0.01" step="0.01" oninput="updateAll()">
+        </div>
+        <div class="input-item">
+            <label for="hours_per_day_worker">Worker Hours per Day:</label>
+            <input type="number" id="hours_per_day_worker" value="8" min="1" max="24" oninput="updateAll()">
+        </div>
+        <div class="input-item">
+            <label for="booking_cost_per_rider">Booking Cost per Rider (USD, e.g., platform fees):</label>
+            <input type="number" id="booking_cost_per_rider" value="0.5" min="0" step="0.01" oninput="updateAll()">
+        </div>
+        <div class="input-item">
+            <label for="profit_per_rider">Revenue/Profit Generated per Rider (USD):</label>
+            <input type="number" id="profit_per_rider" value="1" min="0" step="0.01" oninput="updateAll()">
+        </div>
+    </div>
+
+    <div class="result-box">
+        <h3>Current Scenario (Daily):</h3>
+        <p>Total Riders: <strong id="total_riders">0</strong></p>
+        <p>Expected Daily Tickets: <strong id="daily_tickets">0</strong></p>
+        <p>Workers Needed (FTE): <strong id="workers_needed">0.00</strong> people</p>
+        <p>Total Customer Service Cost: <strong id="daily_cs_cost">$0.00</strong></p>
+        <p>Total Booking Costs: <strong id="daily_booking_costs">$0.00</strong></p>
+        <p>Total Revenue: <strong id="daily_revenue">$0.00</strong></p>
+        <p>Total Expenses: <strong id="total_expenses">$0.00</strong></p>
+        <p>Net Profit/Loss: <strong id="net_profit">$0.00</strong></p>
+    </div>
+
+    <h3>Profit Trend as Drivers Increase:</h3>
+    <div id="chart"></div>
+</div>
+
+<script>
+    // Initial parameter values (can be overridden by user input)
+    let RIDERS_PER_DRIVER = 20;
+    let COMPLAINT_RATE_PERCENT = 2;
+    let TICKETS_PER_WORKER_PER_DAY = 160;
+    let WAGE_PER_HOUR_WORKER = 8;
+    let HOURS_PER_DAY_WORKER = 8;
+    let BOOKING_COST_PER_RIDER = 0.5;
+    let PROFIT_PER_RIDER = 1;
+
+    function getParam(id) {
+        return parseFloat(document.getElementById(id).value);
+    }
+
+    function updateAll() {
+        // Sync drivers input/range
+        const drivers_range = document.getElementById('drivers_range');
+        const drivers_input = document.getElementById('drivers_input');
+        if (event && event.target.id === 'drivers_input') {
+            drivers_range.value = drivers_input.value;
+        } else {
+            drivers_input.value = drivers_range.value;
+        }
+        let currentDrivers = parseInt(drivers_input.value);
+
+        // Update parameters from input fields
+        RIDERS_PER_DRIVER = getParam('riders_per_driver');
+        COMPLAINT_RATE_PERCENT = getParam('complaint_rate');
+        TICKETS_PER_WORKER_PER_DAY = getParam('tickets_per_worker_per_day');
+        WAGE_PER_HOUR_WORKER = getParam('wage_per_hour_worker');
+        HOURS_PER_DAY_WORKER = getParam('hours_per_day_worker');
+        BOOKING_COST_PER_RIDER = getParam('booking_cost_per_rider');
+        PROFIT_PER_RIDER = getParam('profit_per_rider');
+
+        // Derived calculations
+        const actual_complaint_rate = COMPLAINT_RATE_PERCENT / 100;
+        const daily_wage_per_worker = WAGE_PER_HOUR_WORKER * HOURS_PER_DAY_WORKER;
+
+        // --- Calculate for Current Drivers ---
+        const total_riders_current = currentDrivers * RIDERS_PER_DRIVER;
+        const daily_tickets_current = total_riders_current * actual_complaint_rate;
+        // Ensure workers needed is at least 1 if there are tickets, to avoid 0 cost for actual work
+        const workers_needed_current = (daily_tickets_current > 0 && TICKETS_PER_WORKER_PER_DAY > 0) ? Math.max(1, daily_tickets_current / TICKETS_PER_WORKER_PER_DAY) : 0;
+        const daily_cs_cost_current = workers_needed_current * daily_wage_per_worker;
+        const daily_booking_costs_current = total_riders_current * BOOKING_COST_PER_RIDER;
+        const daily_revenue_current = total_riders_current * PROFIT_PER_RIDER;
+        const total_expenses_current = daily_cs_cost_current + daily_booking_costs_current;
+        const net_profit_current = daily_revenue_current - total_expenses_current;
+
+        // Update current scenario display
+        document.getElementById('total_riders').textContent = total_riders_current.toLocaleString();
+        document.getElementById('daily_tickets').textContent = daily_tickets_current.toLocaleString(undefined, {minimumFractionDigits: 0, maximumFractionDigits: 0});
+        document.getElementById('workers_needed').textContent = workers_needed_current.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
+        document.getElementById('daily_cs_cost').textContent = '$' + daily_cs_cost_current.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
+        document.getElementById('daily_booking_costs').textContent = '$' + daily_booking_costs_current.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
+        document.getElementById('daily_revenue').textContent = '$' + daily_revenue_current.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
+        document.getElementById('total_expenses').textContent = '$' + total_expenses_current.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
+        
+        const netProfitElement = document.getElementById('net_profit');
+        netProfitElement.textContent = '$' + net_profit_current.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
+        netProfitElement.className = net_profit_current < 0 ? 'red-text' : ''; // Apply red text for loss
+
+        // --- Generate data for the graph ---
+        let plotData = [];
+        const maxDriversForPlot = 5000; // Define a consistent max for plot X-axis
+        for (let d = 50; d <= maxDriversForPlot; d += 50) {
+            const total_riders_plot = d * RIDERS_PER_DRIVER;
+            const daily_tickets_plot = total_riders_plot * actual_complaint_rate;
+            const workers_needed_plot = (daily_tickets_plot > 0 && TICKETS_PER_WORKER_PER_DAY > 0) ? Math.max(1, daily_tickets_plot / TICKETS_PER_WORKER_PER_DAY) : 0;
+            const daily_cs_cost_plot = workers_needed_plot * daily_wage_per_worker;
+            const daily_booking_costs_plot = total_riders_plot * BOOKING_COST_PER_RIDER;
+            const daily_revenue_plot = total_riders_plot * PROFIT_PER_RIDER;
+            const total_expenses_plot = daily_cs_cost_plot + daily_booking_costs_plot;
+            const net_profit_plot = daily_revenue_plot - total_expenses_plot;
+
+            plotData.push({
+                Drivers: d,
+                TotalRiders: total_riders_plot,
+                DailyTickets: daily_tickets_plot,
+                WorkersNeeded: workers_needed_plot,
+                DailyCSCost: daily_cs_cost_plot,
+                DailyBookingCosts: daily_booking_costs_plot,
+                DailyRevenue: daily_revenue_plot,
+                TotalExpenses: total_expenses_plot,
+                NetProfit: net_profit_plot
+            });
+        }
+        renderChart(plotData);
+    }
+
+    function renderChart(data) {
+        const spec = {
+            "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+            "description": "Profit/Loss vs. Number of Drivers",
+            "data": { "values": data },
+            "mark": "line",
+            "encoding": {
+                "x": { "field": "Drivers", "type": "quantitative", "title": "Number of Drivers" },
+                "y": { "field": "NetProfit", "type": "quantitative", "title": "Daily Net Profit (USD)", "axis": { "format": "$,.0f" } },
+                "color": {
+                    "condition": {
+                        "test": "datum.NetProfit < 0",
+                        "value": "red"
+                    },
+                    "value": "green"
+                },
+                "tooltip": [
+                    {"field": "Drivers", "title": "Drivers"},
+                    {"field": "TotalRiders", "title": "Total Riders", "format": ","},
+                    {"field": "DailyTickets", "title": "Daily Tickets", "format": ","},
+                    {"field": "WorkersNeeded", "title": "Workers Needed", "format": ".1f"},
+                    {"field": "DailyCSCost", "title": "CS Cost", "format": "$,.2f"},
+                    {"field": "DailyBookingCosts", "title": "Booking Costs", "format": "$,.2f"},
+                    {"field": "DailyRevenue", "title": "Revenue", "format": "$,.2f"},
+                    {"field": "TotalExpenses", "title": "Total Expenses", "format": "$,.2f"},
+                    {"field": "NetProfit", "title": "Net Profit/Loss", "format": "$,.2f"}
+                ]
+            }
+        };
+        vegaEmbed("#chart", spec);
+    }
+
+    // Initial load
+    window.onload = updateAll;
+</script>
+
+</body>
+</html>

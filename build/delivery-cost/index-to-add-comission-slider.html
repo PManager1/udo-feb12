@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profit & Cost Calculator V9 (Direct CS Cost)</title>
+    <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-lite@5"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+            background-color: #f4f4f9;
+            color: #333;
+        }
+        .container {
+            max-width: 900px;
+            margin: auto;
+            background: #fff;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            color: #007bff;
+            border-bottom: 2px solid #007bff;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        .input-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        .input-item {
+            flex: 1;
+            min-width: 250px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input[type=number], input[type=range] {
+            width: 95%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .result-box {
+            background-color: #e9f7e9;
+            border: 1px solid #c8e6c9;
+            padding: 15px;
+            border-radius: 4px;
+            margin-top: 20px;
+        }
+        .result-box h3 {
+            margin-top: 0;
+            color: #007bff;
+        }
+        .result-box p {
+            margin: 5px 0;
+            font-size: 1.1em;
+        }
+        .result-box strong {
+            color: #28a745;
+        }
+        #chart, #monthly_chart {
+            margin-top: 30px;
+            background-color: #fff;
+            padding: 20px 0;
+            border-radius: 8px;
+        }
+        .red-text {
+            color: #dc3545;
+        }
+        .monthly-profit-box {
+            background-color: #fff3cd;
+            border: 1px solid #ffc107;
+            padding: 0px;
+            border-radius: 4px;
+            margin-top: 8px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>Profit & Cost Calculator (Direct Variable CS Cost)</h2>
+
+    <div class="input-group">
+        <div class="input-item">
+            <label for="drivers">Number of Drivers:</label>
+            <input type="range" id="drivers_range" min="50" max="10000" value="1000" step="50" oninput="updateAll()">
+            <input type="number" id="drivers_input" min="50" max="10000" value="1000" oninput="updateAll()">
+        </div>
+        <div class="input-item">
+            <label for="riders_per_driver">Rides per Driver (Daily):</label>
+            <input type="number" id="riders_per_driver" value="20" min="1" oninput="updateAll()">
+        </div>
+        <div class="input-item">
+            <label for="profit_per_rider">Your Commission/Fee per Ride (USD):</label>
+            <input type="number" id="profit_per_rider" value="1.00" min="0" step="0.01" oninput="updateAll()">
+        </div>
+        <div class="input-item">
+            <label for="complaint_rate">Rider Complaint Rate (%):</label>
+            <input type="number" id="complaint_rate" value="2" min="0" max="100" step="0.1" oninput="updateAll()">
+        </div>
+        
+        <div class="input-item">
+            <label for="cs_cost_per_ticket">Customer Service Cost per Ticket (USD):</label>
+            <input type="number" id="cs_cost_per_ticket" value="0.67" min="0" step="0.01" oninput="updateAll()">
+        </div>
+        
+        <div class="input-item">
+            <label for="booking_cost_per_rider">Other Variable Cost per Ride (USD, e.g., API Fee):</label>
+            <input type="number" id="booking_cost_per_rider" value="0.00" min="0" step="0.01" oninput="updateAll()">
+        </div>
+        <div class="input-item">
+            <label for="aws_cost_per_50_drivers">AWS Cost per 50 Drivers (Daily USD):</label>
+            <input type="number" id="aws_cost_per_50_drivers" value="10" min="0" step="1" oninput="updateAll()">
+        </div>
+    </div>
+
+    <div class="result-box">
+        <h3>Current Scenario (Daily):</h3>
+        <p>Total Rides: <strong id="total_riders">0</strong></p>
+        <p>Expected Daily Tickets: <strong id="daily_tickets">0</strong></p>
+        <p>Workers Needed (FTE) based on Tickets: <strong id="workers_needed">0.00</strong> people</p>
+        <hr>
+        <p>Total Revenue (from Commission): <strong id="daily_revenue">$0.00</strong></p>
+        <p>Total CS Cost: <strong id="daily_cs_cost">$0.00</strong></p>
+        <p>Other Variable Costs: <strong id="daily_booking_costs">$0.00</strong></p>
+        <p>AWS Service Cost: <strong id="daily_aws_cost">$0.00</strong></p>
+        <p>Total Expenses: <strong id="total_expenses">$0.00</strong></p>
+        <hr>
+        <p>Net Profit/Loss (Daily): <strong id="net_profit">$0.00</strong></p>
+        <p>Daily Profit Margin: <strong id="daily_profit_margin">0.00%</strong></p>
+    </div>
+
+    <div class="monthly-profit-box">
+        <h3>Projected Monthly Profit/Loss (30 days):</h3>
+        <p>Monthly Profit/Loss: <strong id="monthly_profit">$0.00</strong></p>
+    </div>
+
+    <h3>Daily Profit Trend as Drivers Increase:</h3>
+    <div id="chart"></div>
+    
+    <h3>Monthly Profit Trend as Drivers Increase:</h3>
+    <div id="monthly_chart"></div>
+</div>
+
+<script>
+    // Initial parameter values
+    let RIDERS_PER_DRIVER = 20;
+    let COMPLAINT_RATE_PERCENT = 2;
+    let CS_COST_PER_TICKET = 0.67; // NEW DIRECT INPUT VARIABLE
+    let OTHER_VARIABLE_COST_PER_RIDE = 0.00;
+    let DRIVER_COMMISSION_PER_RIDE = 1.00; 
+    let AWS_COST_PER_50_DRIVERS = 10;
+    const AWS_DRIVER_GROUP_SIZE = 50;
+    const DAYS_PER_MONTH = 30;
+    
+    // Constants for FTE calculation reference (no longer inputs)
+    const WAGE_PER_HOUR_WORKER_REF = 8;
+    const HOURS_PER_DAY_WORKER_REF = 8;
+    const MINUTES_PER_TICKET_REF = 5; // Assuming 5 minutes per ticket for a reference worker
+
+    function getParam(id) {
+        return parseFloat(document.getElementById(id).value);
+    }
+
+    function calculateAWSCost(drivers, costPerGroup) {
+        if (drivers <= 0) return 0;
+        const groups = Math.ceil(drivers / AWS_DRIVER_GROUP_SIZE);
+        return groups * costPerGroup;
+    }
+
+    function updateAll() {
+        // Sync drivers input/range
+        const drivers_range = document.getElementById('drivers_range');
+        const drivers_input = document.getElementById('drivers_input');
+        if (event && event.target.id === 'drivers_input') {
+            drivers_range.value = drivers_input.value;
+        } else {
+            drivers_input.value = drivers_range.value;
+        }
+        let currentDrivers = parseInt(drivers_input.value);
+
+        // Update parameters from input fields
+        RIDERS_PER_DRIVER = getParam('riders_per_driver');
+        COMPLAINT_RATE_PERCENT = getParam('complaint_rate');
+        CS_COST_PER_TICKET = getParam('cs_cost_per_ticket'); // Fetch NEW variable
+        OTHER_VARIABLE_COST_PER_RIDE = getParam('booking_cost_per_rider');
+        DRIVER_COMMISSION_PER_RIDE = getParam('profit_per_rider');
+        AWS_COST_PER_50_DRIVERS = getParam('aws_cost_per_50_drivers');
+
+        // Derived constants
+        const actual_complaint_rate = COMPLAINT_RATE_PERCENT / 100;
+        const total_rides_current = currentDrivers * RIDERS_PER_DRIVER;
+        const daily_tickets_current = total_rides_current * actual_complaint_rate;
+        
+        // Workers needed (FTE) - RECALCULATED for reference only
+        let workers_needed_current = 0;
+        if (CS_COST_PER_TICKET > 0) {
+            // Reverse-calculate: If worker costs $64/day (8h*$8) and cost per ticket is $0.67, they solve 95.5 tickets.
+            // Workers Needed = (Total Tickets * Cost per Ticket) / Daily Worker Wage ($64)
+            const daily_worker_wage_ref = WAGE_PER_HOUR_WORKER_REF * HOURS_PER_DAY_WORKER_REF;
+            const total_cs_budget_needed = daily_tickets_current * CS_COST_PER_TICKET;
+            workers_needed_current = (daily_worker_wage_ref > 0) ? total_cs_budget_needed / daily_worker_wage_ref : 0;
+            // Ensure minimum 1 worker if costs exist
+            if (daily_tickets_current > 0) {
+                workers_needed_current = Math.max(1, workers_needed_current);
+            }
+        }
+        
+        // DAILY EXPENSES
+        // CS COST: Simply Tickets * Cost_Per_Ticket
+        const daily_cs_cost_current = daily_tickets_current * CS_COST_PER_TICKET;
+
+        const daily_other_variable_costs = total_rides_current * OTHER_VARIABLE_COST_PER_RIDE;
+        const daily_aws_cost_current = calculateAWSCost(currentDrivers, AWS_COST_PER_50_DRIVERS);
+        
+        // TOTAL EXPENSE CALCULATION: CS + Other Variable Cost + AWS Cost
+        const total_expenses_current = daily_cs_cost_current + daily_other_variable_costs + daily_aws_cost_current;
+        
+        // DAILY REVENUE & PROFIT
+        const daily_revenue_current = total_rides_current * DRIVER_COMMISSION_PER_RIDE;
+        const net_profit_current = daily_revenue_current - total_expenses_current;
+        
+        // DAILY PROFIT MARGIN
+        const daily_profit_margin = daily_revenue_current > 0 ? (net_profit_current / daily_revenue_current) * 100 : 0;
+
+        // MONTHLY PROFIT
+        const monthly_profit_current = net_profit_current * DAYS_PER_MONTH;
+
+        // Update current scenario display (DAILY)
+        document.getElementById('total_riders').textContent = total_rides_current.toLocaleString();
+        document.getElementById('daily_tickets').textContent = daily_tickets_current.toLocaleString(undefined, {minimumFractionDigits: 0, maximumFractionDigits: 0});
+        
+        document.getElementById('workers_needed').textContent = workers_needed_current.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
+        
+        document.getElementById('daily_cs_cost').textContent = '$' + daily_cs_cost_current.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
+        document.getElementById('daily_booking_costs').textContent = '$' + daily_other_variable_costs.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
+        document.getElementById('daily_aws_cost').textContent = '$' + daily_aws_cost_current.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
+        
+        document.getElementById('daily_revenue').textContent = '$' + daily_revenue_current.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
+        document.getElementById('total_expenses').textContent = '$' + total_expenses_current.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
+        
+        const netProfitElement = document.getElementById('net_profit');
+        netProfitElement.textContent = '$' + net_profit_current.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
+        netProfitElement.className = net_profit_current < 0 ? 'red-text' : '';
+
+        // Update profit margin display
+        const marginElement = document.getElementById('daily_profit_margin');
+        marginElement.textContent = daily_profit_margin.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2}) + '%';
+        marginElement.className = daily_profit_margin < 0 ? 'red-text' : '';
+
+
+        // Update monthly profit display
+        const monthlyProfitElement = document.getElementById('monthly_profit');
+        monthlyProfitElement.textContent = '$' + monthly_profit_current.toLocaleString(undefined, {minimumFractionDigits: 2, maximumFractionDigits: 2});
+        monthlyProfitElement.className = monthly_profit_current < 0 ? 'red-text' : '';
+
+
+        // --- Generate data for the graphs ---
+        let plotData = [];
+        const maxDriversForPlot = 5000;
+        for (let d = 50; d <= maxDriversForPlot; d += 50) {
+            const total_rides_plot = d * RIDERS_PER_DRIVER;
+            const daily_tickets_plot = total_rides_plot * actual_complaint_rate;
+            
+            // Plot Expenses
+            const daily_cs_cost_plot = daily_tickets_plot * CS_COST_PER_TICKET;
+            const daily_other_variable_costs_plot = total_rides_plot * OTHER_VARIABLE_COST_PER_RIDE;
+            const daily_aws_cost_plot = calculateAWSCost(d, AWS_COST_PER_50_DRIVERS);
+            
+            const total_expenses_plot = daily_cs_cost_plot + daily_other_variable_costs_plot + daily_aws_cost_plot;
+
+            // Plot Revenue and Profit
+            const daily_revenue_plot = total_rides_plot * DRIVER_COMMISSION_PER_RIDE;
+            const net_profit_daily_plot = daily_revenue_plot - total_expenses_plot;
+            const net_profit_monthly_plot = net_profit_daily_plot * DAYS_PER_MONTH;
+
+            plotData.push({
+                Drivers: d,
+                NetProfitDaily: net_profit_daily_plot,
+                NetProfitMonthly: net_profit_monthly_plot,
+                TotalRides: total_rides_plot,
+                DailyTickets: daily_tickets_plot
+            });
+        }
+        renderChart(plotData, 'NetProfitDaily', '#chart', 'Daily Net Profit (USD)');
+        renderChart(plotData, 'NetProfitMonthly', '#monthly_chart', 'Monthly Net Profit (USD)');
+    }
+
+    function renderChart(data, fieldName, targetDiv, title) {
+        const spec = {
+            "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+            "description": title,
+            "data": { "values": data },
+            "mark": "line",
+            "encoding": {
+                "x": { "field": "Drivers", "type": "quantitative", "title": "Number of Drivers" },
+                "y": { "field": fieldName, "type": "quantitative", "title": title, "axis": { "format": "$,.0f" } },
+                "color": {
+                    "condition": {
+                        "test": `datum.${fieldName} < 0`,
+                        "value": "red"
+                    },
+                    "value": "green"
+                },
+                "tooltip": [
+                    {"field": "Drivers", "title": "Drivers"},
+                    {"field": "TotalRides", "title": "Total Rides", "format": ","},
+                    {"field": "DailyTickets", "title": "Daily Tickets", "format": ","},
+                    {"field": "NetProfitDaily", "title": "Daily Profit/Loss", "format": "$,.2f"},
+                    {"field": "NetProfitMonthly", "title": "Monthly Profit/Loss", "format": "$,.2f"}
+                ]
+            }
+        };
+        vegaEmbed(targetDiv, spec);
+    }
+
+    // Initial load
+    window.onload = updateAll;
+</script>
+
+</body>
+</html>

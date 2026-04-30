@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>U-Do: Let someone do it for you.</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2270%22 font-family=%22Arial, sans-serif%22 font-weight=%22900%22 letter-spacing=%22-2%22><tspan fill=%22%23f97316%22>U</tspan><tspan fill=%22%23000000%22>DO</tspan></text></svg">  
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Nunito', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <!-- Navigation -->
+    <nav class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <a href="../index.html" class="text-2xl font-bold">
+                    <span class="text-orange-500">U <span class="-mx-1"></span>-</span><span class="text-gray-800">DO</span>
+                </a>
+                
+                <div class="flex items-center space-x-4">
+                    <a href="../foods/" class="text-gray-700 hover:text-orange-500 transition-colors">Foods</a>
+                    <a href="../settings/" class="text-gray-700 hover:text-orange-500 transition-colors">Settings</a>
+                    <button class="bg-orange-500 text-white px-4 py-2 rounded-full font-semibold hover:bg-orange-600 transition-colors">
+                        Book Now
+                    </button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Page Header -->
+        <div class="mb-8">
+            <h1 class="text-4xl font-bold text-gray-900 mb-2">Explore Delicious Foods</h1>
+            <p class="text-gray-600 text-lg">Discover authentic home-cooked meals from local hosts</p>
+        </div>
+
+        <!-- Search & Filters -->
+        <div class="bg-white rounded-2xl shadow-sm p-6 mb-8">
+            <!-- Search Bar -->
+            <div class="relative mb-6">
+                <input type="text" 
+                       placeholder="Search for dishes, cuisines, or hosts..." 
+                       class="w-full pl-12 pr-4 py-4 border border-gray-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-orange-500 focus:border-transparent text-lg">
+                <svg class="absolute left-4 top-1/2 -translate-y-1/2 w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
+                </svg>
+            </div>
+
+            <!-- Filter Buttons -->
+            <div class="flex flex-wrap gap-3">
+                <button class="px-5 py-2.5 bg-orange-500 text-white rounded-full font-medium hover:bg-orange-600 transition-colors">
+                    All Foods
+                </button>
+                <button class="px-5 py-2.5 bg-gray-100 text-gray-700 rounded-full font-medium hover:bg-gray-200 transition-colors">
+                    American
+                </button>
+                <button class="px-5 py-2.5 bg-gray-100 text-gray-700 rounded-full font-medium hover:bg-gray-200 transition-colors">
+                    Italian
+                </button>
+                <button class="px-5 py-2.5 bg-gray-100 text-gray-700 rounded-full font-medium hover:bg-gray-200 transition-colors">
+                    Mexican
+                </button>
+                <button class="px-5 py-2.5 bg-gray-100 text-gray-700 rounded-full font-medium hover:bg-gray-200 transition-colors">
+                    Asian
+                </button>
+                <button class="px-5 py-2.5 bg-gray-100 text-gray-700 rounded-full font-medium hover:bg-gray-200 transition-colors">
+                    Mediterranean
+                </button>
+                <button class="px-5 py-2.5 bg-gray-100 text-gray-700 rounded-full font-medium hover:bg-gray-200 transition-colors">
+                    Vegetarian
+                </button>
+            </div>
+        </div>
+
+        <!-- Food Cards Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            
+            <!-- Food Card 1 -->
+            <div class="bg-white rounded-2xl shadow-sm overflow-hidden hover:shadow-lg transition-shadow cursor-pointer group">
+                <div class="relative">
+                    <img src="https://images.unsplash.com/photo-1626082927389-6cd097cdc6ec?w=600&h=400&fit=crop" 
+                         alt="Grilled Salmon" 
+                         class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300">
+                    <div class="absolute top-4 left-4">
+                        <span class="bg-orange-500 text-white text-sm font-bold px-3 py-1 rounded-full">9.4</span>
+                    </div>
+                    <button class="absolute top-4 right-4 bg-white rounded-full p-2 shadow-lg hover:bg-gray-100 transition-colors">
+                        <svg class="w-5 h-5 text-red-500" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
+                        </svg>
+                    </button>
+                </div>
+                <div class="p-5">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-xs text-gray-500 font-medium">American Cuisine</span>
+                        <span class="text-xs text-gray-500">25-30 min</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-2 group-hover:text-orange-500 transition-colors">Grilled Salmon</h3>
+                    <p class="text-gray-600 text-sm mb-3 line-clamp-2">Perfectly grilled Atlantic salmon with herbs, served with seasonal vegetables and lemon butter sauce.</p>
+                    <div class="flex items-center justify-between">
+                        <span class="text-2xl font-bold text-gray-900">$24.99</span>
+                        <button class="bg-orange-500 text-white px-4 py-2 rounded-full text-sm font-semibold hover:bg-orange-600 transition-colors">
+                            Book Now
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Food Card 2 -->
+            <div class="bg-white rounded-2xl shadow-sm overflow-hidden hover:shadow-lg transition-shadow cursor-pointer group">
+                <div class="relative">
+                    <img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=600&h=400&fit=crop" 
+                         alt="Margherita Pizza" 
+                         class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300">
+                    <div class="absolute top-4 left-4">
+                        <span class="bg-orange-500 text-white text-sm font-bold px-3 py-1 rounded-full">9.2</span>
+                    </div>
+                    <button class="absolute top-4 right-4 bg-white rounded-full p-2 shadow-lg hover:bg-gray-100 transition-colors">
+                        <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
+                        </svg>
+                    </button>
+                </div>
+                <div class="p-5">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-xs text-gray-500 font-medium">Italian Cuisine</span>
+                        <span class="text-xs text-gray-500">30-40 min</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-2 group-hover:text-orange-500 transition-colors">Margherita Pizza</h3>
+                    <p class="text-gray-600 text-sm mb-3 line-clamp-2">Classic homemade pizza with fresh mozzarella, tomatoes, and basil on a crispy crust.</p>
+                    <div class="flex items-center justify-between">
+                        <span class="text-2xl font-bold text-gray-900">$18.99</span>
+                        <button class="bg-orange-500 text-white px-4 py-2 rounded-full text-sm font-semibold hover:bg-orange-600 transition-colors">
+                            Book Now
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Food Card 3 -->
+            <div class="bg-white rounded-2xl shadow-sm overflow-hidden hover:shadow-lg transition-shadow cursor-pointer group">
+                <div class="relative">
+                    <img src="https://images.unsplash.com/photo-1565299585323-38d6b0865b47?w=600&h=400&fit=crop" 
+                         alt="Beef Tacos" 
+                         class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300">
+                    <div class="absolute top-4 left-4">
+                        <span class="bg-orange-500 text-white text-sm font-bold px-3 py-1 rounded-full">9.6</span>
+                    </div>
+                    <button class="absolute top-4 right-4 bg-white rounded-full p-2 shadow-lg hover:bg-gray-100 transition-colors">
+                        <svg class="w-5 h-5 text-red-500" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
+                        </svg>
+                    </button>
+                </div>
+                <div class="p-5">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-xs text-gray-500 font-medium">Mexican Cuisine</span>
+                        <span class="text-xs text-gray-500">20-25 min</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-2 group-hover:text-orange-500 transition-colors">Beef Tacos</h3>
+                    <p class="text-gray-600 text-sm mb-3 line-clamp-2">Authentic street-style tacos with seasoned beef, fresh salsa, and homemade guacamole.</p>
+                    <div class="flex items-center justify-between">
+                        <span class="text-2xl font-bold text-gray-900">$14.99</span>
+                        <button class="bg-orange-500 text-white px-4 py-2 rounded-full text-sm font-semibold hover:bg-orange-600 transition-colors">
+                            Book Now
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Food Card 4 -->
+            <div class="bg-white rounded-2xl shadow-sm overflow-hidden hover:shadow-lg transition-shadow cursor-pointer group">
+                <div class="relative">
+                    <img src="https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=600&h=400&fit=crop" 
+                         alt="Vegetable Bowl" 
+                         class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300">
+                    <div class="absolute top-4 left-4">
+                        <span class="bg-orange-500 text-white text-sm font-bold px-3 py-1 rounded-full">9.0</span>
+                    </div>
+                    <button class="absolute top-4 right-4 bg-white rounded-full p-2 shadow-lg hover:bg-gray-100 transition-colors">
+                        <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
+                        </svg>
+                    </button>
+                </div>
+                <div class="p-5">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-xs text-gray-500 font-medium">Vegetarian</span>
+                        <span class="text-xs text-gray-500">15-20 min</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-2 group-hover:text-orange-500 transition-colors">Buddha Bowl</h3>
+                    <p class="text-gray-600 text-sm mb-3 line-clamp-2">Nutritious grain bowl with roasted vegetables, quinoa, and tahini dressing.</p>
+                    <div class="flex items-center justify-between">
+                        <span class="text-2xl font-bold text-gray-900">$16.99</span>
+                        <button class="bg-orange-500 text-white px-4 py-2 rounded-full text-sm font-semibold hover:bg-orange-600 transition-colors">
+                            Book Now
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Food Card 5 -->
+            <div class="bg-white rounded-2xl shadow-sm overflow-hidden hover:shadow-lg transition-shadow cursor-pointer group">
+                <div class="relative">
+                    <img src="https://images.unsplash.com/photo-1600891964092-4316c288032e?w=600&h=400&fit=crop" 
+                         alt="Pad Thai" 
+                         class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300">
+                    <div class="absolute top-4 left-4">
+                        <span class="bg-orange-500 text-white text-sm font-bold px-3 py-1 rounded-full">9.3</span>
+                    </div>
+                    <button class="absolute top-4 right-4 bg-white rounded-full p-2 shadow-lg hover:bg-gray-100 transition-colors">
+                        <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
+                        </svg>
+                    </button>
+                </div>
+                <div class="p-5">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-xs text-gray-500 font-medium">Thai Cuisine</span>
+                        <span class="text-xs text-gray-500">25-30 min</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-2 group-hover:text-orange-500 transition-colors">Pad Thai</h3>
+                    <p class="text-gray-600 text-sm mb-3 line-clamp-2">Traditional Thai stir-fried rice noodles with shrimp, peanuts, and fresh herbs.</p>
+                    <div class="flex items-center justify-between">
+                        <span class="text-2xl font-bold text-gray-900">$19.99</span>
+                        <button class="bg-orange-500 text-white px-4 py-2 rounded-full text-sm font-semibold hover:bg-orange-600 transition-colors">
+                            Book Now
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Food Card 6 -->
+            <div class="bg-white rounded-2xl shadow-sm overflow-hidden hover:shadow-lg transition-shadow cursor-pointer group">
+                <div class="relative">
+                    <img src="https://images.unsplash.com/photo-1603894584373-5ac82b2ae398?w=600&h=400&fit=crop" 
+                         alt="Chicken Parmesan" 
+                         class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300">
+                    <div class="absolute top-4 left-4">
+                        <span class="bg-orange-500 text-white text-sm font-bold px-3 py-1 rounded-full">9.5</span>
+                    </div>
+                    <button class="absolute top-4 right-4 bg-white rounded-full p-2 shadow-lg hover:bg-gray-100 transition-colors">
+                        <svg class="w-5 h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
+                        </svg>
+                    </button>
+                </div>
+                <div class="p-5">
+                    <div class="flex items-center justify-between mb-2">
+                        <span class="text-xs text-gray-500 font-medium">Italian Cuisine</span>
+                        <span class="text-xs text-gray-500">30-35 min</span>
+                    </div>
+                    <h3 class="text-xl font-bold text-gray-900 mb-2 group-hover:text-orange-500 transition-colors">Chicken Parmesan</h3>
+                    <p class="text-gray-600 text-sm mb-3 line-clamp-2">Breaded chicken breast topped with marinara sauce and melted mozzarella cheese.</p>
+                    <div class="flex items-center justify-between">
+                        <span class="text-2xl font-bold text-gray-900">$22.99</span>
+                        <button class="bg-orange-500 text-white px-4 py-2 rounded-full text-sm font-semibold hover:bg-orange-600 transition-colors">
+                            Book Now
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Load More Button -->
+        <div class="mt-12 text-center">
+            <button class="bg-white border-2 border-orange-500 text-orange-500 px-8 py-3 rounded-full font-semibold hover:bg-orange-500 hover:text-white transition-all">
+                Load More Foods
+            </button>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-[#b0b0a8] text-gray-800 mt-16">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
+                <!-- Company Info -->
+                <div>
+                    <h3 class="text-2xl font-bold mb-4">
+                        <span class="text-orange-500">U <span class="-mx-1"></span>-</span><span class="text-gray-800">DO</span>
+                    </h3>
+                    <p class="text-gray-700 text-sm leading-relaxed">
+                        Connect with verified professionals for any task. No middleman, no hidden fees, just quality service you can trust.
+                    </p>
+                </div>
+
+                <!-- Quick Links -->
+                <div>
+                    <h4 class="text-lg font-semibold mb-4 text-gray-800">Quick Links</h4>
+                    <ul class="space-y-2">
+                        <li><a href="../index.html" class="text-gray-700 hover:text-orange-500 transition">Home</a></li>
+                        <li><a href="../foods/" class="text-gray-700 hover:text-orange-500 transition">Services</a></li>
+                        <li><a href="../join-as-professional/" class="text-gray-700 hover:text-orange-500 transition">Join as Pro</a></li>
+                        <li><a href="#" class="text-gray-700 hover:text-orange-500 transition">How It Works</a></li>
+                    </ul>
+                </div>
+
+                <!-- Support -->
+                <div>
+                    <h4 class="text-lg font-semibold mb-4 text-gray-800">Support</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-700 hover:text-orange-500 transition">Help Center</a></li>
+                        <li><a href="#" class="text-gray-700 hover:text-orange-500 transition">Safety</a></li>
+                        <li><a href="../contact-us/" class="text-gray-700 hover:text-orange-500 transition">Contact Us</a></li>
+                        <li><a href="#" class="text-gray-700 hover:text-orange-500 transition">FAQs</a></li>
+                    </ul>
+                </div>
+
+                <!-- Legal -->
+                <div>
+                    <h4 class="text-lg font-semibold mb-4 text-gray-800">Legal</h4>
+                    <ul class="space-y-2">
+                        <li><a href="#" class="text-gray-700 hover:text-orange-500 transition">Terms of Service</a></li>
+                        <li><a href="#" class="text-gray-700 hover:text-orange-500 transition">Privacy Policy</a></li>
+                        <li><a href="#" class="text-gray-700 hover:text-orange-500 transition">Cookie Policy</a></li>
+                        <li><a href="../trademark/" class="text-gray-700 hover:text-orange-500 transition">Trademark</a></li>
+                    </ul>
+                </div>
+
+                <!-- Language Selector -->
+                <div>
+                    <h4 class="text-lg font-semibold mb-4 text-gray-800">Language</h4>
+                    <div class="relative">
+                        <select id="languageSelector" class="w-full bg-white text-gray-800 border border-gray-400 rounded-lg px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-orange-500 cursor-pointer appearance-none pr-8">
+                            <option value="en" selected>English</option>
+                            <option value="es">Español</option>
+                            <option value="fr">Français</option>
+                        </select>
+                        <div class="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none">
+                            <svg class="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                            </svg>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Social Media & Copyright -->
+            <div class="border-t border-gray-400 mt-10 pt-8 flex flex-col md:flex-row justify-between items-center">
+                <p class="text-gray-700 text-sm mb-4 md:mb-0">
+                    © 2026 UDo, Inc. All rights reserved.
+                </p>
+                <div class="flex space-x-6">
+                    <a href="#" class="text-gray-600 hover:text-orange-500 transition">
+                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z"/>
+                        </svg>
+                    </a>
+                    <a href="#" class="text-gray-600 hover:text-orange-500 transition">
+                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M12 2.163c3.204 0 3.584.012 4.85.072 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/>
+                        </svg>
+                    </a>
+                    <a href="#" class="text-gray-600 hover:text-orange-500 transition">
+                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M22.675 0h-21.35c-.732 0-1.325.593-1.325 1.325v21.351c0 .731.593 1.324 1.325 1.324h11.495v-9.294h-3.128v-3.622h3.128v-2.671c0-3.1 1.893-4.788 4.659-4.788 1.325 0 2.463.099 2.795.143v3.24l-1.918.001c-1.504 0-1.795.715-1.795 1.763v2.313h3.587l-.467 3.622h-3.12v9.293h6.116c.73 0 1.323-.593 1.323-1.325v-21.35c0-.732-.593-1.325-1.325-1.325z"/>
+                        </svg>
+                    </a>
+                    <a href="#" class="text-gray-600 hover:text-orange-500 transition">
+                        <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667h-3.554v-11.452h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286nm-15.11-13.019c-1.144 0-2.063-.926-2.063-2.065 0-1.138.92-2.063 2.063-2.063 1.14 0 2.064.925 2.064 2.063 0 1.139-.925 2.065-2.064 2.065zm1.782 13.019h-3.564v-11.452h3.564v11.452zm15.106-20.452h-20.454c-.979 0-1.771.774-1.771 1.729v20.542c0 .956.792 1.729 1.771 1.729h20.451c.978 0 1.778-.773 1.778-1.729v-20.542c0-.955-.8-1.729-1.778-1.729z"/>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Filter button functionality
+        const filterButtons = document.querySelectorAll('.bg-gray-100, .bg-orange-500');
+        
+        filterButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                // Remove active state from all buttons
+                filterButtons.forEach(btn => {
+                    btn.classList.remove('bg-orange-500', 'text-white');
+                    btn.classList.add('bg-gray-100', 'text-gray-700');
+                });
+                
+                // Add active state to clicked button
+                this.classList.remove('bg-gray-100', 'text-gray-700');
+                this.classList.add('bg-orange-500', 'text-white');
+            });
+        });
+
+        // Save/favorite button toggle
+        const favoriteButtons = document.querySelectorAll('[class*="w-5 h-5"][class*="text"]');
+        
+        favoriteButtons.forEach(button => {
+            button.addEventListener('click', function(e) {
+                e.stopPropagation();
+                
+                if (this.classList.contains('text-gray-400')) {
+                    this.classList.remove('text-gray-400');
+                    this.classList.add('text-red-500');
+                    this.setAttribute('fill', 'currentColor');
+                } else {
+                    this.classList.remove('text-red-500');
+                    this.classList.add('text-gray-400');
+                    this.setAttribute('fill', 'none');
+                }
+            });
+        });
+
+        // Search functionality
+        const searchInput = document.querySelector('input[type="text"]');
+        
+        searchInput.addEventListener('keyup', function(e) {
+            const searchTerm = e.target.value.toLowerCase();
+            const foodCards = document.querySelectorAll('.group');
+            
+            foodCards.forEach(card => {
+                const title = card.querySelector('h3').textContent.toLowerCase();
+                const description = card.querySelector('p').textContent.toLowerCase();
+                
+                if (title.includes(searchTerm) || description.includes(searchTerm)) {
+                    card.style.display = 'block';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

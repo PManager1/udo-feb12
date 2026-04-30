@@ -1,0 +1,18 @@
+{
+  "id": 8,
+  "name": "Maria Garcia",
+  "title": "Electrical Engineer",
+  "image": "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=600&q=80",
+  "category": "electrical",
+  "rating": 5.0,
+  "reviewCount": 42,
+  "experience": 18,
+  "location": "Miami",
+  "price": 135,
+  "priceType": "hourly",
+  "distance": 9.2,
+  "bio": "Electrical engineer with expertise in residential and commercial electrical systems. Specializing in smart home installations, electrical panel upgrades, and complete rewiring projects.",
+  "skills": ["Smart Home", "Panel Upgrades", "Rewiring", "Circuit Installation", "Safety Compliance"],
+  "available": true,
+  "verified": true
+}
