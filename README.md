@@ -1,4 +1,11 @@
-sudo npm 
+
+
+
+
+sudo npm run dev 
+
+LOCAL=true go run main.go
+
 
 # React + Vite
 
