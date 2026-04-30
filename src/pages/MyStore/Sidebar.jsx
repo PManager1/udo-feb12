@@ -24,8 +24,8 @@ export default function Sidebar({ collapsed, setCollapsed }) {
         className="fixed top-0 left-0 z-[100] p-3 bg-white hover:bg-gray-100 border-r border-b border-gray-200 transition"
         title="Open sidebar"
       >
-        <svg className="w-5 h-5 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+        <svg className="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 5l7 7-7 7M5 5l7 7-7 7" />
         </svg>
       </button>
     );
