@@ -7,6 +7,7 @@ import CategoryModal from './CategoryModal';
 import ModifierGroupModal from './ModifierGroupModal';
 import ProfitCalculator from './ProfitCalculator';
 import Toast from './Toast';
+import StoreInfoModal from './StoreInfoModal';
 import { hasValidToken, handleSignOut } from './tokenHelper';
 import * as api from './api';
 
@@ -14,7 +15,7 @@ import * as api from './api';
 const AppContext = createContext(null);
 export const useApp = () => useContext(AppContext);
 
-export default function AddFoodItem() {
+export default function MyStore() {
   const navigate = useNavigate();
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -42,6 +43,7 @@ export default function AddFoodItem() {
   const [editingCategory, setEditingCategory] = useState(null);
   const [modifierModalOpen, setModifierModalOpen] = useState(false);
   const [editingModifierGroup, setEditingModifierGroup] = useState(null);
+  const [storeInfoModalOpen, setStoreInfoModalOpen] = useState(false);
 
   const showToast = useCallback((message, type = 'success') => {
     setToast({ show: true, message, type });
@@ -214,7 +216,7 @@ export default function AddFoodItem() {
     <AppContext.Provider value={contextValue}>
       <div className="min-h-screen flex bg-[#f9f7f5]">
         {/* Sidebar */}
-        <Sidebar collapsed={sidebarCollapsed} setCollapsed={setSidebarCollapsed} />
+        <Sidebar collapsed={sidebarCollapsed} setCollapsed={setSidebarCollapsed} onAction={(action) => { if (action === 'storeInfo') setStoreInfoModalOpen(true); }} />
 
         {/* Main content area */}
         <div className="flex-1 flex flex-col min-w-0">
@@ -308,7 +310,7 @@ export default function AddFoodItem() {
                 {/* Title bar */}
                 <div className="flex flex-col sm:flex-row sm:justify-between items-start sm:items-center mb-8 gap-4">
                   <div>
-                    <h1 className="text-3xl font-bold text-gray-900">Restaurant Menu</h1>
+                    <h1 className="text-3xl font-bold text-gray-900">My Store</h1>
                     <p className="text-gray-600 mt-1">Manage your menu items and modifiers</p>
                   </div>
                   <div className="flex gap-3">
@@ -432,6 +434,11 @@ export default function AddFoodItem() {
         )}
         {modifierModalOpen && (
           <ModifierGroupModal groupId={editingModifierGroup} onClose={closeModifierModal} />
+        )}
+
+        {/* Store Info Modal */}
+        {storeInfoModalOpen && (
+          <StoreInfoModal onClose={() => setStoreInfoModalOpen(false)} />
         )}
 
         {/* Toast */}

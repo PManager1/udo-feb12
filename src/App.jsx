@@ -8,7 +8,7 @@ import ProSettings from './pages/ProSettings'
 import Admin from './pages/Admin'
 import AdminRestaurantOwners from './pages/AdminRestaurantOwners'
 import SearchOverlayAdmin from './pages/SearchOverlayAdmin'
-import AddFoodItem from './pages/AddFoodItem/AddFoodItem'
+import MyStore from './pages/MyStore/MyStore'
 
 function App() {
   return (
@@ -23,10 +23,8 @@ function App() {
         <Route path="/admin/" element={<Admin />} />
         <Route path="/admin/restaurant-owners/" element={<AdminRestaurantOwners />} />
         <Route path="/searchOverlayAdmin/" element={<SearchOverlayAdmin />} />
-        <Route path="/addfooditem" element={<AddFoodItem />} />
-        <Route path="/addfooditem/" element={<AddFoodItem />} />
-        <Route path="/AddFoodItem" element={<AddFoodItem />} />
-        <Route path="/AddFoodItem/" element={<AddFoodItem />} />
+        <Route path="/mystore" element={<MyStore />} />
+        <Route path="/mystore/" element={<MyStore />} />
       </Routes>
     </div>
   )

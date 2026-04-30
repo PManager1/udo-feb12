@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useApp } from './AddFoodItem';
+import { useApp } from './MyStore';
 import * as api from './api';
 
 export default function ModifierGroupModal({ groupId, onClose }) {

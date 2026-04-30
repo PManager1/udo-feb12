@@ -1,15 +1,18 @@
-import { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 
 const navItems = [
-  { label: 'Menu Items', icon: '🍔', path: '/addfooditem' },
-  { label: 'Orders', icon: '📋', path: '/addfooditem', disabled: true },
-  { label: 'Analytics', icon: '📊', path: '/addfooditem', disabled: true },
-  { label: 'Reviews', icon: '⭐', path: '/addfooditem', disabled: true },
+  { label: 'Menu Items', icon: '🍔', path: '/mystore' },
+  { label: 'Orders', icon: '📋', path: '/mystore', disabled: true },
+  { label: 'Analytics', icon: '📊', path: '/mystore', disabled: true },
+  { label: 'Reviews', icon: '⭐', path: '/mystore', disabled: true },
+];
+
+const sidebarActions = [
+  { label: 'Store Information', icon: '🏪', action: 'storeInfo' },
   { label: 'Settings', icon: '⚙️', path: '/settings/' },
 ];
 
-export default function Sidebar({ collapsed, setCollapsed }) {
+export default function Sidebar({ collapsed, setCollapsed, onAction }) {
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -60,6 +63,24 @@ export default function Sidebar({ collapsed, setCollapsed }) {
           );
         })}
       </nav>
+
+      {/* Actions section */}
+      <div className="py-2 border-t border-gray-100">
+        {sidebarActions.map((item) => (
+          <button
+            key={item.label}
+            onClick={() => {
+              if (item.path) navigate(item.path);
+              else if (item.action && onAction) onAction(item.action);
+            }}
+            className={`w-full flex items-center gap-3 px-3 py-2.5 text-sm font-medium transition text-gray-600 hover:bg-gray-50 hover:text-gray-900 ${collapsed ? 'justify-center' : ''}`}
+            title={collapsed ? item.label : undefined}
+          >
+            <span className="text-lg flex-shrink-0">{item.icon}</span>
+            {!collapsed && <span>{item.label}</span>}
+          </button>
+        ))}
+      </div>
 
       {/* Upload menu section */}
       {!collapsed && (
