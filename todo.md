@@ -1,3 +1,7 @@
+> on the approved restaurant owner will have link to mystore page. 
+Or else our model will be known to other coders/ devleopers 
+
+
 > make teh search on order - search done on backend in real time. 
 
 > as a new order comes  in the backend it should show up on the order screen. 

@@ -15,6 +15,7 @@ import OrdersPage from './pages/MyStore/OrdersPage'
 import SearchOrders from './pages/MyStore/SearchOrders'
 import AnalyticsPage from './pages/MyStore/AnalyticsPage'
 import ReviewsPage from './pages/MyStore/ReviewsPage'
+import ProfitCalculator from './pages/MyStore/ProfitCalculator'
 
 function App() {
   return (
@@ -37,6 +38,7 @@ function App() {
         <Route path="/mystore/orders" element={<OrdersPage />} />
         <Route path="/mystore/analytics" element={<AnalyticsPage />} />
         <Route path="/mystore/reviews" element={<ReviewsPage />} />
+        <Route path="/mystore/profit-calculator" element={<ProfitCalculator />} />
       </Routes>
     </div>
   )

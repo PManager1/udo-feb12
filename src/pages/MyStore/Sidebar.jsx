@@ -5,6 +5,7 @@ const navItems = [
   { label: 'Orders', icon: '📋', path: '/mystore/orders' },
   { label: 'Analytics', icon: '📊', path: '/mystore/analytics' },
   { label: 'Reviews', icon: '⭐', path: '/mystore/reviews' },
+  { label: 'Profit Calculator', icon: '💰', path: '/mystore/profit-calculator' },
 ];
 
 const sidebarActions = [
