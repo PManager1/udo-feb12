@@ -12,6 +12,7 @@ const BENCHMARK_DATA = [
 ];
 
 const DEFAULT_ORDER_VALUE = 46;
+const BENCHMARK_ORDER_VALUE = 30;
 
 function formatCurrency(num) {
   return num.toLocaleString('en-US', { style: 'currency', currency: 'USD', minimumFractionDigits: 2 });
@@ -34,7 +35,7 @@ export default function ProfitCalculator() {
   const yearlySavings = dailySavings * 365;
 
   // For benchmark table
-  const benchmarkOrderValue = orderVal || DEFAULT_ORDER_VALUE;
+  const benchmarkOrderValue = BENCHMARK_ORDER_VALUE;
   const benchmarkSavingsRate = savingsRate > 0 ? savingsRate : 0;
 
   return (
@@ -210,7 +211,7 @@ export default function ProfitCalculator() {
           <div className="px-6 py-4 border-b border-gray-100">
             <h3 className="text-xl font-bold text-gray-900">📋 Savings by Restaurant Category</h3>
             <p className="text-sm text-gray-500 mt-1">
-              Based on {formatCurrency(benchmarkOrderValue)} average order value • Competitors take 30% vs U-DO's 15%
+              Based on {formatCurrency(benchmarkOrderValue)} average pizza order value • Competitors take 30% vs U-DO's 15%
             </p>
           </div>
 
