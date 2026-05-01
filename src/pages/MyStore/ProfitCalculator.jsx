@@ -11,7 +11,7 @@ const BENCHMARK_DATA = [
   { category: 'High Volume', icon: '🚀', dailyOrders: 80 },
 ];
 
-const DEFAULT_ORDER_VALUE = 40;
+const DEFAULT_ORDER_VALUE = 45;
 
 function formatCurrency(num) {
   return num.toLocaleString('en-US', { style: 'currency', currency: 'USD', minimumFractionDigits: 2 });
