@@ -29,10 +29,10 @@ export default function AdminRestaurantOwners() {
   }
 
   function enterStoreView(userId, storeName) {
-    if (!confirm(`Enter store manager view for "${storeName}"?\n\nThis will open the merchant dashboard acting as this restaurant owner.`)) return
+    if (!confirm(`Enter store manager view for "${storeName}"?\n\nThis will open the store manager acting as this restaurant owner.`)) return
     localStorage.setItem('adminMode', 'true')
     localStorage.setItem('adminTargetUserId', userId)
-    window.open('/merchant/', '_blank')
+    window.open('/mystore', '_blank')
   }
 
   const stats = allRestaurants.reduce((acc, r) => ({

@@ -245,7 +245,7 @@ export default function MyStore() {
                   )}
                 </label>
                 <div className="min-w-0">
-                  <a href="/merchant/" className="text-sm font-bold text-orange-500 hover:text-orange-600 transition truncate block">{restaurantName}</a>
+                  <span className="text-sm font-bold text-orange-500 truncate block">{restaurantName}</span>
                 </div>
 
                 {/* Right side controls — mobile: inline with logo */}
