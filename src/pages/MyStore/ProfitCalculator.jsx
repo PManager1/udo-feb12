@@ -211,7 +211,7 @@ export default function ProfitCalculator() {
           <div className="px-6 py-4 border-b border-gray-100">
             <h3 className="text-xl font-bold text-gray-900">📋 Savings by Restaurant Category</h3>
             <p className="text-sm text-gray-500 mt-1">
-              Based on {formatCurrency(benchmarkOrderValue)} average pizza order value • Competitors take 30% vs U-DO's 15%
+              Based on {formatCurrency(benchmarkOrderValue)} average pizza order value in DC • Competitors take 30% vs U-DO's 15%
             </p>
           </div>
 
