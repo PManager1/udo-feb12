@@ -3,13 +3,13 @@ import { useNavigate } from 'react-router-dom';
 import { getOrders, updateOrderStatus } from './api';
 
 const STATUS_CONFIG = {
-  pending:    { label: 'Pending',    color: 'bg-yellow-100 text-yellow-800',   dot: 'bg-yellow-500',   next: ['confirmed', 'cancelled'], prev: [] },
-  confirmed:  { label: 'Confirmed',  color: 'bg-blue-100 text-blue-800',       dot: 'bg-blue-500',     next: ['preparing', 'cancelled'], prev: ['pending'] },
-  preparing:  { label: 'Preparing',  color: 'bg-orange-100 text-orange-800',   dot: 'bg-orange-500',   next: ['ready', 'cancelled'], prev: ['confirmed'] },
-  ready:      { label: 'Ready',      color: 'bg-green-100 text-green-800',     dot: 'bg-green-500',    next: ['picked_up'], prev: ['preparing'] },
-  picked_up:  { label: 'Picked Up',  color: 'bg-purple-100 text-purple-800',   dot: 'bg-purple-500',   next: ['delivered'], prev: ['ready'] },
-  delivered:  { label: 'Delivered',  color: 'bg-gray-100 text-gray-800',       dot: 'bg-gray-500',     next: [], prev: ['picked_up'] },
-  cancelled:  { label: 'Cancelled',  color: 'bg-red-100 text-red-800',         dot: 'bg-red-500',      next: [], prev: ['pending'] },
+  pending:    { label: 'Pending',    color: 'bg-yellow-100 text-yellow-800',   dot: 'bg-yellow-500',   next: ['confirmed', 'cancelled'] },
+  confirmed:  { label: 'Confirmed',  color: 'bg-blue-100 text-blue-800',       dot: 'bg-blue-500',     next: ['preparing', 'cancelled'] },
+  preparing:  { label: 'Preparing',  color: 'bg-orange-100 text-orange-800',   dot: 'bg-orange-500',   next: ['ready', 'cancelled'] },
+  ready:      { label: 'Ready',      color: 'bg-green-100 text-green-800',     dot: 'bg-green-500',    next: ['picked_up'] },
+  picked_up:  { label: 'Picked Up',  color: 'bg-purple-100 text-purple-800',   dot: 'bg-purple-500',   next: ['delivered'] },
+  delivered:  { label: 'Delivered',  color: 'bg-gray-100 text-gray-800',       dot: 'bg-gray-500',     next: [] },
+  cancelled:  { label: 'Cancelled',  color: 'bg-red-100 text-red-800',         dot: 'bg-red-500',      next: [] },
 };
 
 const PROGRESS_STAGES = ['pending', 'confirmed', 'preparing', 'ready', 'picked_up', 'delivered'];
@@ -37,17 +37,24 @@ function formatTime(dateStr) {
   return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
 }
 
-function ProgressBar({ status }) {
+function ClickableProgressBar({ status, isUpdating, onStatusClick }) {
   const isCancelled = status === 'cancelled';
   const currentIdx = PROGRESS_STAGES.indexOf(status);
 
   if (isCancelled) {
     return (
-      <div className="flex items-center gap-1 mt-2">
+      <div className="flex items-center justify-between gap-1 px-4 py-3 bg-red-50/50 border-t border-red-100">
         <div className="h-1.5 flex-1 rounded-full bg-red-200 overflow-hidden">
           <div className="h-full w-full bg-red-500 rounded-full" />
         </div>
         <span className="text-[10px] font-bold text-red-500 uppercase tracking-wide">Cancelled</span>
+        <button
+          disabled={isUpdating}
+          onClick={() => onStatusClick('pending')}
+          className="ml-2 text-xs font-semibold text-red-500 hover:text-red-700 underline disabled:opacity-50"
+        >
+          Reopen
+        </button>
       </div>
     );
   }
@@ -57,21 +64,36 @@ function ProgressBar({ status }) {
   const progress = (currentIdx / (PROGRESS_STAGES.length - 1)) * 100;
 
   return (
-    <div className="mt-2">
+    <div className="px-4 py-3 border-t border-gray-100 bg-gray-50/30">
       <div className="flex items-center justify-between mb-1">
         {PROGRESS_STAGES.map((stage, idx) => {
           const stageCfg = STATUS_CONFIG[stage];
           const isComplete = idx <= currentIdx;
           const isCurrent = idx === currentIdx;
+          const isClickable = stage !== status;
           return (
-            <div key={stage} className="flex flex-col items-center" style={{ flex: 1 }}>
-              <div className={`w-2.5 h-2.5 rounded-full transition-colors ${
+            <button
+              key={stage}
+              disabled={isUpdating || !isClickable}
+              onClick={() => onStatusClick(stage)}
+              className="flex flex-col items-center group disabled:cursor-default"
+              style={{ flex: 1 }}
+              title={isClickable ? `Move to ${stageCfg.label}` : undefined}
+            >
+              <div className={`w-3 h-3 rounded-full transition-all ${
                 isComplete ? stageCfg.dot : 'bg-gray-200'
-              } ${isCurrent ? 'ring-2 ring-offset-1 ring-orange-300' : ''}`} />
-              <span className={`text-[9px] mt-0.5 font-medium ${isCurrent ? 'text-orange-600' : isComplete ? 'text-gray-500' : 'text-gray-300'}`}>
+              } ${isCurrent ? 'ring-2 ring-offset-1 ring-orange-400 scale-125' : ''} ${
+                isClickable && !isUpdating ? 'group-hover:scale-125 group-hover:ring-2 group-hover:ring-offset-1 group-hover:ring-orange-300 cursor-pointer' : ''
+              }`} />
+              <span className={`text-[9px] mt-1 font-medium transition-colors ${
+                isCurrent ? 'text-orange-600 font-bold' :
+                isClickable && !isUpdating ? 'text-gray-400 group-hover:text-orange-500' :
+                isComplete ? 'text-gray-500' :
+                'text-gray-300'
+              }`}>
                 {stageCfg.label}
               </span>
-            </div>
+            </button>
           );
         })}
       </div>
@@ -93,7 +115,6 @@ export default function OrdersPage() {
   const [activeFilter, setActiveFilter] = useState('all');
   const [expandedOrder, setExpandedOrder] = useState(null);
   const [updating, setUpdating] = useState({});
-  const [confirmRevert, setConfirmRevert] = useState({ orderId: null, status: null });
 
   const fetchOrders = useCallback(async () => {
     try {
@@ -231,8 +252,11 @@ export default function OrdersPage() {
                     'border-gray-200 hover:shadow-md'
                   }`}
                 >
-                  {/* Order Card — top section */}
-                  <div className="px-4 py-3">
+                  {/* Order Card — top section (clickable to expand) */}
+                  <div
+                    className="px-4 py-3 cursor-pointer"
+                    onClick={() => setExpandedOrder(isExpanded ? null : orderId)}
+                  >
                     {/* Row 1: Order info */}
                     <div className="flex items-center gap-3">
                       {/* Status dot */}
@@ -251,22 +275,22 @@ export default function OrdersPage() {
                         </p>
                       </div>
 
-                      {/* Price + time */}
+                      {/* Price + time + expand chevron */}
                       <div className="text-right flex-shrink-0">
                         <p className="font-bold text-gray-900">${order.total?.toFixed(2) || '0.00'}</p>
                         <p className="text-xs text-gray-400">{formatTime(order.createdAt)}</p>
+                        <span className="text-xs text-gray-300 mt-0.5 inline-block">
+                          {isExpanded ? '▲' : '▼'}
+                        </span>
                       </div>
                     </div>
 
-                    {/* Progress bar */}
-                    <ProgressBar status={order.status} />
-
                     {/* Quick action button — visible inline */}
                     {canAdvance && nextPrimary && (
-                      <div className="mt-3 flex items-center gap-2">
+                      <div className="mt-3 flex items-center gap-2" onClick={(e) => e.stopPropagation()}>
                         <button
                           disabled={isUpdating}
-                          onClick={(e) => { e.stopPropagation(); handleStatusUpdate(orderId, nextPrimary); }}
+                          onClick={() => handleStatusUpdate(orderId, nextPrimary)}
                           className="flex-1 py-2.5 rounded-xl text-sm font-bold transition bg-orange-500 text-white hover:bg-orange-600 shadow-sm disabled:opacity-50 disabled:cursor-not-allowed"
                         >
                           {isUpdating ? (
@@ -280,25 +304,6 @@ export default function OrdersPage() {
                           ) : (
                             nextPrimaryCfg?.text || `→ ${STATUS_CONFIG[nextPrimary]?.label}`
                           )}
-                        </button>
-                        <button
-                          onClick={() => setExpandedOrder(isExpanded ? null : orderId)}
-                          className="px-3 py-2.5 rounded-xl text-sm font-medium text-gray-500 hover:bg-gray-100 transition border border-gray-200"
-                          title="View details"
-                        >
-                          {isExpanded ? '▲ Less' : '▼ More'}
-                        </button>
-                      </div>
-                    )}
-
-                    {/* Completed / cancelled — just show expand toggle */}
-                    {!canAdvance && (
-                      <div className="mt-2 flex justify-end">
-                        <button
-                          onClick={() => setExpandedOrder(isExpanded ? null : orderId)}
-                          className="text-xs text-gray-400 hover:text-orange-500 transition"
-                        >
-                          {isExpanded ? '▲ Hide details' : '▼ View details'}
                         </button>
                       </div>
                     )}
@@ -375,88 +380,25 @@ export default function OrdersPage() {
                         </div>
                       </div>
 
-                      {/* Revert / Back to previous status */}
-                      {cfg.prev.length > 0 && (
-                        <div className="flex flex-wrap gap-2 mb-3">
-                          <span className="text-xs text-gray-400 font-medium self-center mr-1">← Back to:</span>
-                          {cfg.prev.map((prevStatus) => {
-                            const prevCfg = STATUS_CONFIG[prevStatus];
-                            const isConfirming = confirmRevert.orderId === orderId && confirmRevert.status === prevStatus;
-                            return (
-                              <div key={prevStatus} className="flex items-center gap-1">
-                                {isConfirming ? (
-                                  <>
-                                    <span className="text-xs text-amber-600 font-medium">Revert to {prevCfg?.label}?</span>
-                                    <button
-                                      disabled={isUpdating}
-                                      onClick={() => {
-                                        setConfirmRevert({ orderId: null, status: null });
-                                        handleStatusUpdate(orderId, prevStatus);
-                                      }}
-                                      className="px-3 py-1.5 rounded-lg text-xs font-bold bg-amber-500 text-white hover:bg-amber-600 transition disabled:opacity-50"
-                                    >
-                                      ✓ Yes
-                                    </button>
-                                    <button
-                                      onClick={() => setConfirmRevert({ orderId: null, status: null })}
-                                      className="px-3 py-1.5 rounded-lg text-xs font-medium bg-gray-100 text-gray-600 hover:bg-gray-200 border border-gray-200 transition"
-                                    >
-                                      ✗ No
-                                    </button>
-                                  </>
-                                ) : (
-                                  <button
-                                    disabled={isUpdating}
-                                    onClick={() => setConfirmRevert({ orderId, status: prevStatus })}
-                                    className="px-4 py-2 rounded-xl text-sm font-medium transition disabled:opacity-50 disabled:cursor-not-allowed bg-white text-gray-600 hover:bg-amber-50 hover:text-amber-700 border border-dashed border-gray-300 hover:border-amber-300"
-                                  >
-                                    ← {prevCfg?.label || prevStatus}
-                                  </button>
-                                )}
-                              </div>
-                            );
-                          })}
-                        </div>
-                      )}
-
-                      {/* All status action buttons (in expanded view) */}
-                      {cfg.next.length > 0 && (
-                        <div className="flex flex-wrap gap-2">
-                          <span className="text-xs text-gray-400 font-medium self-center mr-1">Move to:</span>
-                          {cfg.next.map((nextStatus) => {
-                            const nextCfg = STATUS_CONFIG[nextStatus];
-                            const isPrimary = nextStatus !== 'cancelled';
-                            return (
-                              <button
-                                key={nextStatus}
-                                disabled={isUpdating}
-                                onClick={() => handleStatusUpdate(orderId, nextStatus)}
-                                className={`px-4 py-2 rounded-xl text-sm font-semibold transition disabled:opacity-50 disabled:cursor-not-allowed ${
-                                  nextStatus === 'cancelled'
-                                    ? 'bg-red-50 text-red-600 hover:bg-red-100 border border-red-200'
-                                    : isPrimary
-                                      ? 'bg-orange-500 text-white hover:bg-orange-600 shadow-sm'
-                                      : 'bg-white text-gray-700 hover:bg-gray-100 border border-gray-200'
-                                }`}
-                              >
-                                {isUpdating ? (
-                                  <span className="inline-flex items-center gap-1">
-                                    <svg className="animate-spin h-4 w-4" viewBox="0 0 24 24">
-                                      <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
-                                      <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
-                                    </svg>
-                                    Updating...
-                                  </span>
-                                ) : (
-                                  nextStatus === 'cancelled' ? '❌ Cancel Order' : `→ ${nextCfg?.label || nextStatus}`
-                                )}
-                              </button>
-                            );
-                          })}
-                        </div>
+                      {/* Cancel button (only for active orders) */}
+                      {order.status !== 'cancelled' && order.status !== 'delivered' && (
+                        <button
+                          disabled={isUpdating}
+                          onClick={() => handleStatusUpdate(orderId, 'cancelled')}
+                          className="text-sm font-semibold text-red-500 hover:text-red-700 disabled:opacity-50"
+                        >
+                          ❌ Cancel Order
+                        </button>
                       )}
                     </div>
                   )}
+
+                  {/* Clickable Progress Bar — at the bottom */}
+                  <ClickableProgressBar
+                    status={order.status}
+                    isUpdating={isUpdating}
+                    onStatusClick={(newStatus) => handleStatusUpdate(orderId, newStatus)}
+                  />
                 </div>
               );
             })}
