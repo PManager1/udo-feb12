@@ -232,7 +232,7 @@ export default function OrdersPage() {
                           {order.items?.map((item, idx) => (
                             <div key={idx} className="px-3 py-2 flex justify-between">
                               <div>
-                                <span className="font-medium text-gray-900">{item.quantity}× {item.name}</span>
+                                <span className="font-medium text-gray-900">{item.quantity}× {item.itemName || item.name}</span>
                                 {item.selectedOptions?.length > 0 && (
                                   <p className="text-xs text-gray-400">{item.selectedOptions.join(' • ')}</p>
                                 )}
