@@ -29,7 +29,7 @@ export default function CategoryModal({ categoryId, onClose }) {
             icon: cat.icon || '🍽️',
             color: cat.color || '#f97316',
           });
-          setSelectedModifiers(cat.inheritedModifierGroupIds || cat.localModifierGroupIds || []);
+          setSelectedModifiers(cat.inheritedModifierGroupIds || cat.localModifierGroupIds || cat.modifier_group_ids || cat.modifierGroupIds || []);
         }
         setLoadingCat(false);
       }).catch(() => setLoadingCat(false));

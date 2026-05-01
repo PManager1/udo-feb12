@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Thiel Fellowship</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+  <script>
+    tailwind.config = {
+      content: [],
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body { font-feature-settings: "ss01"; }
+  </style>
+</head>
+<body class="bg-black text-white">
+
+  <!-- Navbar -->
+  <nav class="fixed top-0 w-full bg-black/90 backdrop-blur-md z-50 border-b border-white/10">
+    <div class="max-w-7xl mx-auto px-6 py-5 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <span class="text-2xl font-bold tracking-tighter">THIEL FELLOWSHIP</span>
+      </div>
+      
+      <div class="hidden md:flex items-center gap-10 text-sm font-medium">
+        <a href="#" class="hover:text-gray-400 transition">The Program</a>
+        <a href="#" class="hover:text-gray-400 transition">Fellows</a>
+        <a href="#" class="hover:text-gray-400 transition">Stories</a>
+        <a href="#" class="hover:text-gray-400 transition">About</a>
+      </div>
+
+      <a href="#" 
+         class="bg-white text-black px-6 py-3 text-sm font-semibold rounded-full hover:bg-gray-200 transition">
+        Apply Now
+      </a>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="min-h-screen flex items-center pt-20 bg-black">
+    <div class="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-12 items-center">
+      <div class="space-y-8">
+        <h1 class="text-7xl md:text-8xl font-bold leading-none tracking-tighter">
+          Build the<br>future.<br>
+          <span class="text-gray-400">Skip college.</span>
+        </h1>
+        
+        <p class="text-xl text-gray-400 max-w-lg">
+          The Thiel Fellowship gives young people $100,000 to drop out of college and pursue their boldest ideas.
+        </p>
+
+        <div class="flex flex-wrap gap-4">
+          <a href="#" 
+             class="bg-white text-black px-8 py-4 rounded-full font-semibold text-lg hover:bg-gray-200 transition">
+            Apply to the Fellowship
+          </a>
+          <a href="#" 
+             class="border border-white/30 px-8 py-4 rounded-full font-medium text-lg hover:bg-white/10 transition">
+            Learn More
+          </a>
+        </div>
+
+        <div class="pt-8 text-sm text-gray-500">
+          Next deadline: <span class="text-white">June 2026</span>
+        </div>
+      </div>
+
+      <div class="relative">
+        <img src="https://picsum.photos/id/1015/800/900" 
+             alt="Thiel Fellow" 
+             class="rounded-3xl shadow-2xl">
+      </div>
+    </div>
+  </section>
+
+  <!-- Trust Bar -->
+  <div class="border-b border-white/10 py-6">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="flex flex-wrap justify-center md:justify-between items-center gap-8 md:gap-12 opacity-75">
+        <p class="text-sm font-medium">Featured in</p>
+        <p class="text-xl font-semibold">The New York Times</p>
+        <p class="text-xl font-semibold">Forbes</p>
+        <p class="text-xl font-semibold">Wall Street Journal</p>
+        <p class="text-xl font-semibold">Wired</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- What is the Thiel Fellowship -->
+  <section class="py-24 border-b border-white/10">
+    <div class="max-w-4xl mx-auto px-6 text-center">
+      <h2 class="text-5xl font-bold tracking-tight mb-8">
+        We support exceptional young people who want to build instead of learn.
+      </h2>
+      <p class="text-xl text-gray-400 leading-relaxed">
+        Every year, we award $100,000 to a small group of young founders, inventors, and creators to skip or stop out of college and pursue their work full-time.
+      </p>
+    </div>
+  </section>
+
+  <!-- Stats / Highlights -->
+  <section class="py-20 bg-zinc-950">
+    <div class="max-w-7xl mx-auto px-6 grid md:grid-cols-3 gap-12">
+      <div class="text-center">
+        <div class="text-6xl font-bold mb-3">$100K</div>
+        <p class="text-gray-400">Stipend per fellow</p>
+      </div>
+      <div class="text-center">
+        <div class="text-6xl font-bold mb-3">2 years</div>
+        <p class="text-gray-400">Commitment</p>
+      </div>
+      <div class="text-center">
+        <div class="text-6xl font-bold mb-3">200+</div>
+        <p class="text-gray-400">Fellows since 2010</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="bg-black border-t border-white/10 py-16">
+    <div class="max-w-7xl mx-auto px-6">
+      <div class="flex flex-col md:flex-row justify-between gap-12">
+        <div>
+          <h3 class="text-2xl font-bold tracking-tighter mb-4">Thiel Fellowship</h3>
+          <p class="text-gray-500">Supporting young builders since 2010.</p>
+        </div>
+        
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-10">
+          <div>
+            <p class="font-medium mb-4">Program</p>
+            <ul class="space-y-2 text-gray-400 text-sm">
+              <li><a href="#" class="hover:text-white">How it Works</a></li>
+              <li><a href="#" class="hover:text-white">Eligibility</a></li>
+              <li><a href="#" class="hover:text-white">Application</a></li>
+            </ul>
+          </div>
+          <div>
+            <p class="font-medium mb-4">Community</p>
+            <ul class="space-y-2 text-gray-400 text-sm">
+              <li><a href="#" class="hover:text-white">Fellows</a></li>
+              <li><a href="#" class="hover:text-white">Alumni</a></li>
+              <li><a href="#" class="hover:text-white">Stories</a></li>
+            </ul>
+          </div>
+          <div>
+            <p class="font-medium mb-4">Company</p>
+            <ul class="space-y-2 text-gray-400 text-sm">
+              <li><a href="#" class="hover:text-white">About Us</a></li>
+              <li><a href="#" class="hover:text-white">Blog</a></li>
+              <li><a href="#" class="hover:text-white">Contact</a></li>
+            </ul>
+          </div>
+          <div>
+            <p class="font-medium mb-4">Legal</p>
+            <ul class="space-y-2 text-gray-400 text-sm">
+              <li><a href="#" class="hover:text-white">Privacy</a></li>
+              <li><a href="#" class="hover:text-white">Terms</a></li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-16 pt-8 border-t border-white/10 text-center text-sm text-gray-500">
+        © 2026 Thiel Fellowship. All rights reserved.
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>

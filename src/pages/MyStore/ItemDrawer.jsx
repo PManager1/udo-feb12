@@ -3,7 +3,7 @@ import { useApp } from './MyStore';
 import * as api from './api';
 
 export default function ItemDrawer({ itemId, onClose }) {
-  const { categories, modifierGroups, showToast, loadAllData, currentCategory, openCategoryDetail, showDashboard } = useApp();
+  const { categories, modifierGroups, showToast, loadAllData, currentCategory, openCategoryDetail, showDashboard, openModifierModal } = useApp();
 
   const [form, setForm] = useState({
     name: '', categoryId: '', basePrice: '', description: '', promoText: '', imageUrl: '',
@@ -36,8 +36,8 @@ export default function ItemDrawer({ itemId, onClose }) {
           } catch {
             setItemImages([item.imageUrl || item.image_url].filter(Boolean));
           }
-          // Set modifier IDs
-          setSelectedModifiers(item.localModifierGroupIds || []);
+          // Set modifier IDs (check multiple possible field names like old app)
+          setSelectedModifiers(item.localModifierGroupIds || item.modifier_group_ids || item.inheritedModifierGroupIds || item.modifierGroupIds || []);
         }
         setLoadingItem(false);
       }).catch(() => setLoadingItem(false));
@@ -266,30 +266,72 @@ export default function ItemDrawer({ itemId, onClose }) {
             </div>
 
             {/* Modifier Groups */}
-            {availableModifiers.length > 0 && (
-              <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">Modifier Groups</label>
-                <div className="space-y-2 max-h-60 overflow-y-auto">
-                  {availableModifiers.map(group => (
-                    <label key={group.id} className="flex items-center gap-3 p-3 bg-gray-50 rounded-lg hover:bg-gray-100 cursor-pointer transition">
-                      <input type="checkbox" checked={selectedModifiers.includes(group.id)}
-                        onChange={(e) => {
-                          if (e.target.checked) {
-                            setSelectedModifiers(prev => [...prev, group.id]);
-                          } else {
-                            setSelectedModifiers(prev => prev.filter(id => id !== group.id));
-                          }
-                        }}
-                        className="w-4 h-4 text-orange-500 rounded border-gray-300 focus:ring-orange-500" />
-                      <div className="flex-1">
-                        <span className="text-sm font-medium text-gray-900">{group.name}</span>
-                        <span className="text-xs text-gray-500 ml-2">({group.options?.length || 0} options)</span>
-                      </div>
-                    </label>
-                  ))}
-                </div>
+            <div>
+              <div className="flex items-center justify-between mb-2">
+                <label className="block text-sm font-semibold text-gray-700">Modifier Groups</label>
+                <button type="button" onClick={() => openModifierModal(null)}
+                  className="text-xs text-orange-500 hover:text-orange-600 font-semibold flex items-center gap-1">
+                  <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" /></svg>
+                  Create New Group
+                </button>
               </div>
-            )}
+              {availableModifiers.length > 0 ? (
+                <div className="space-y-2 max-h-60 overflow-y-auto">
+                  {availableModifiers.map(group => {
+                    const isCatMod = form.categoryId
+                      ? (categories.find(c => c.id === form.categoryId)?.inheritedModifierGroupIds || categories.find(c => c.id === form.categoryId)?.localModifierGroupIds || []).includes(group.id)
+                      : false;
+                    return (
+                      <div key={group.id} className="p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition">
+                        <div className="flex items-center gap-3">
+                          <input type="checkbox" checked={selectedModifiers.includes(group.id)}
+                            onChange={(e) => {
+                              if (e.target.checked) {
+                                setSelectedModifiers(prev => [...prev, group.id]);
+                              } else {
+                                setSelectedModifiers(prev => prev.filter(id => id !== group.id));
+                              }
+                            }}
+                            className="w-4 h-4 text-orange-500 rounded border-gray-300 focus:ring-orange-500" />
+                          <div className="flex-1 min-w-0">
+                            <div className="flex items-center gap-2">
+                              <span className="text-sm font-medium text-gray-900">{group.name}</span>
+                              {group.isRequired && <span className="text-[10px] bg-red-100 text-red-600 px-1.5 py-0.5 rounded font-semibold">Required</span>}
+                              {group.minSelection === 1 && group.maxSelection === 1
+                                ? <span className="text-[10px] bg-blue-100 text-blue-600 px-1.5 py-0.5 rounded font-semibold">Single</span>
+                                : <span className="text-[10px] bg-purple-100 text-purple-600 px-1.5 py-0.5 rounded font-semibold">Multi</span>
+                              }
+                              {isCatMod && <span className="text-[10px] bg-green-100 text-green-600 px-1.5 py-0.5 rounded font-semibold">Category</span>}
+                            </div>
+                            {/* Options preview */}
+                            {group.options && group.options.length > 0 && (
+                              <div className="flex flex-wrap gap-1 mt-1.5">
+                                {group.options.slice(0, 4).map(opt => (
+                                  <span key={opt.id} className="text-[11px] bg-white text-gray-600 px-1.5 py-0.5 rounded border border-gray-200">
+                                    {opt.name}{opt.extraPrice > 0 ? ` +$${opt.extraPrice}` : ''}
+                                  </span>
+                                ))}
+                                {group.options.length > 4 && <span className="text-[11px] text-gray-400">+{group.options.length - 4} more</span>}
+                              </div>
+                            )}
+                          </div>
+                          {/* Edit button */}
+                          <button type="button" onClick={(e) => { e.preventDefault(); openModifierModal(group.id); }}
+                            className="p-1.5 text-gray-400 hover:text-orange-500 hover:bg-orange-50 rounded-lg transition flex-shrink-0"
+                            title="Edit modifier group">
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                            </svg>
+                          </button>
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              ) : (
+                <p className="text-sm text-gray-400 text-center py-4">No modifier groups yet. Create one to add options like sizes, toppings, etc.</p>
+              )}
+            </div>
 
             {/* Submit */}
             <div className="sticky bottom-0 bg-white pt-4 pb-2 border-t border-gray-100">
