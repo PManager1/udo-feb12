@@ -39,4 +39,10 @@ export const SEARCH_OVERLAY_API = {
   adminItems: `${API_BASE}admin/search-overlay-items`
 };
 
+// Google Maps / Places Endpoints (proxied through backend)
+export const MAPS_API = {
+  autocomplete: `${API_BASE}autocomplete`,
+  geocoordinates: `${API_BASE}geocoordinates`,
+};
+
 export default API_BASE;

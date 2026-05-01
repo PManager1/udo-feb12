@@ -1,6 +1,7 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import * as api from './api';
+import { MAPS_API } from '../../config/api';
 
 const DAYS = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
 const STORE_TYPES = [
@@ -16,10 +17,99 @@ export default function StoreInfoPage() {
   const [saving, setSaving] = useState(false);
   const [toast, setToast] = useState({ show: false, message: '', type: 'success' });
 
+  // Address autocomplete state
+  const [suggestions, setSuggestions] = useState([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
+  const [isFetchingSuggestions, setIsFetchingSuggestions] = useState(false);
+  const addressRef = useRef(null);
+  const suggestionsRef = useRef(null);
+  const debounceTimer = useRef(null);
+
   const showToast = useCallback((message, type = 'success') => {
     setToast({ show: true, message, type });
     setTimeout(() => setToast({ show: false, message: '', type: 'success' }), 3000);
   }, []);
+
+  // Click outside to close suggestions dropdown
+  useEffect(() => {
+    const handleClickOutside = (e) => {
+      if (
+        suggestionsRef.current && !suggestionsRef.current.contains(e.target) &&
+        addressRef.current && !addressRef.current.contains(e.target)
+      ) {
+        setShowSuggestions(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  // Fetch autocomplete suggestions from backend
+  const fetchSuggestions = useCallback(async (input) => {
+    if (!input || input.length < 3) {
+      setSuggestions([]);
+      setShowSuggestions(false);
+      return;
+    }
+    setIsFetchingSuggestions(true);
+    try {
+      const res = await fetch(MAPS_API.autocomplete, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ input }),
+      });
+      const data = await res.json();
+      const list = data.suggestions || [];
+      setSuggestions(list);
+      setShowSuggestions(list.length > 0);
+    } catch (err) {
+      console.error('Autocomplete error:', err);
+      setSuggestions([]);
+    } finally {
+      setIsFetchingSuggestions(false);
+    }
+  }, []);
+
+  // Geocode the selected address to get lat/lng
+  const geocodeAddress = useCallback(async (address) => {
+    try {
+      const res = await fetch(MAPS_API.geocoordinates, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ address }),
+      });
+      const data = await res.json();
+      if (data.coordinates) {
+        return { lat: data.coordinates.lat, lng: data.coordinates.lng };
+      }
+    } catch (err) {
+      console.error('Geocode error:', err);
+    }
+    return null;
+  }, []);
+
+  const handleAddressChange = (value) => {
+    updateField('storeAddress', value);
+    // Debounce autocomplete: wait 300ms after user stops typing
+    if (debounceTimer.current) clearTimeout(debounceTimer.current);
+    debounceTimer.current = setTimeout(() => {
+      fetchSuggestions(value);
+    }, 300);
+  };
+
+  const handleSuggestionSelect = async (suggestion) => {
+    updateField('storeAddress', suggestion.description);
+    setShowSuggestions(false);
+    setSuggestions([]);
+    // Geocode the selected address
+    const coords = await geocodeAddress(suggestion.description);
+    if (coords) {
+      // Store lat/lng for saving later
+      setForm(prev => ({ ...prev, _lat: coords.lat, _lng: coords.lng }));
+      showToast('Address selected with coordinates', 'success');
+    }
+  };
+
   const [form, setForm] = useState({
     restaurantName: '',
     storeType: '',
@@ -121,8 +211,8 @@ export default function StoreInfoPage() {
         deliveryTime: existing.deliveryTime || 0,
         deliveryFee: existing.deliveryFee || 0,
         promoText: existing.promoText || '',
-        latitude: existing.latitude || 0,
-        longitude: existing.longitude || 0,
+        latitude: form._lat || existing.latitude || 0,
+        longitude: form._lng || existing.longitude || 0,
         isSponsored: existing.isSponsored || false,
       });
       showToast('Store information saved!');
@@ -184,11 +274,40 @@ export default function StoreInfoPage() {
             </div>
           </div>
 
-          <div className="mt-6">
+          <div className="mt-6 relative">
             <label className="block text-sm font-semibold text-gray-700 mb-2">Store Address</label>
-            <input type="text" value={form.storeAddress} onChange={e => updateField('storeAddress', e.target.value)}
-              className="w-full px-4 py-3 border border-gray-300 rounded-xl text-base focus:ring-2 focus:ring-orange-500/50 focus:border-orange-500 transition"
-              placeholder="123 Main St, City, State" />
+            <div className="relative">
+              <input ref={addressRef} type="text" value={form.storeAddress}
+                onChange={e => handleAddressChange(e.target.value)}
+                onFocus={() => { if (suggestions.length > 0) setShowSuggestions(true); }}
+                className="w-full px-4 py-3 border border-gray-300 rounded-xl text-base focus:ring-2 focus:ring-orange-500/50 focus:border-orange-500 transition pr-10"
+                placeholder="Start typing address..." autoComplete="off" />
+              {isFetchingSuggestions && (
+                <div className="absolute right-3 top-1/2 -translate-y-1/2">
+                  <svg className="w-5 h-5 text-orange-500 animate-spin" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none"/>
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/>
+                  </svg>
+                </div>
+              )}
+            </div>
+            {/* Suggestions dropdown */}
+            {showSuggestions && suggestions.length > 0 && (
+              <div ref={suggestionsRef}
+                className="absolute z-50 w-full mt-1 bg-white border border-gray-200 rounded-xl shadow-lg max-h-60 overflow-y-auto">
+                {suggestions.map((s, i) => (
+                  <button key={s.placeId || i} type="button"
+                    onClick={() => handleSuggestionSelect(s)}
+                    className="w-full text-left px-4 py-3 hover:bg-orange-50 border-b border-gray-50 last:border-0 transition flex items-start gap-3">
+                    <svg className="w-5 h-5 text-orange-400 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
+                    </svg>
+                    <span className="text-sm text-gray-700">{s.description}</span>
+                  </button>
+                ))}
+              </div>
+            )}
           </div>
         </div>
 
