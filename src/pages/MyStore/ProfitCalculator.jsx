@@ -223,6 +223,7 @@ export default function ProfitCalculator() {
                   <th className="text-right px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">Daily Savings</th>
                   <th className="text-right px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">Weekly Savings</th>
                   <th className="text-right px-4 py-3 text-xs font-semibold text-orange-500 uppercase tracking-wide">Monthly (30 Days)</th>
+                  <th className="text-right px-4 py-3 text-xs font-semibold text-green-600 uppercase tracking-wide">Yearly (365 Days)</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-50">
@@ -230,6 +231,7 @@ export default function ProfitCalculator() {
                   const daily = row.dailyOrders * benchmarkOrderValue * benchmarkSavingsRate;
                   const weekly = daily * 7;
                   const monthly = daily * 30;
+                  const yearly = daily * 365;
                   return (
                     <tr key={row.category} className="hover:bg-orange-50/30 transition">
                       <td className="px-6 py-4">
@@ -242,6 +244,7 @@ export default function ProfitCalculator() {
                       <td className="text-right px-4 py-4 text-gray-700 font-medium">{formatCurrency(daily)}</td>
                       <td className="text-right px-4 py-4 text-gray-700 font-medium">{formatCurrency(weekly)}</td>
                       <td className="text-right px-4 py-4 font-bold text-green-600">{formatCurrency(monthly)}</td>
+                      <td className="text-right px-4 py-4 font-bold text-green-700">{formatCurrency(yearly)}</td>
                     </tr>
                   );
                 })}
