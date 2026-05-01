@@ -21,17 +21,21 @@ export default function ProfitCalculator() {
   const navigate = useNavigate();
   const [dailyOrders, setDailyOrders] = useState(100);
   const [avgOrderValue, setAvgOrderValue] = useState(DEFAULT_ORDER_VALUE);
+  const [udoRateInput, setUdoRateInput] = useState(15);
 
   // Calculated savings
   const orders = Number(dailyOrders) || 0;
   const orderVal = Number(avgOrderValue) || 0;
-  const dailySavings = orders * orderVal * SAVINGS_RATE;
+  const udoRate = Number(udoRateInput) / 100;
+  const savingsRate = COMPETITOR_RATE - udoRate;
+  const dailySavings = orders * orderVal * savingsRate;
   const weeklySavings = dailySavings * 7;
   const monthlySavings = dailySavings * 30;
   const yearlySavings = dailySavings * 365;
 
   // For benchmark table
   const benchmarkOrderValue = orderVal || DEFAULT_ORDER_VALUE;
+  const benchmarkSavingsRate = savingsRate > 0 ? savingsRate : 0;
 
   return (
     <div className="min-h-screen bg-[#f9f7f5]">
@@ -146,10 +150,39 @@ export default function ProfitCalculator() {
                   />
                 </div>
               </div>
+
+              {/* U-DO Commission Rate Input */}
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  Your commission rate
+                </label>
+                <div className="relative">
+                  <input
+                    type="number"
+                    min="0"
+                    max="30"
+                    step="0.5"
+                    value={udoRateInput}
+                    onChange={(e) => setUdoRateInput(e.target.value)}
+                    className="w-full px-4 py-3 border border-gray-200 rounded-xl text-lg font-medium focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-orange-400 transition"
+                  />
+                  <span className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 text-sm">%</span>
+                </div>
+              </div>
+
+              {/* Competitor rate display */}
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  Competitor commission
+                </label>
+                <div className="px-4 py-3 border border-gray-100 rounded-xl bg-gray-50 text-lg font-medium text-gray-500">
+                  30%
+                </div>
+              </div>
             </div>
 
             {/* Results */}
-            {orders > 0 && orderVal > 0 ? (
+            {orders > 0 && orderVal > 0 && savingsRate > 0 ? (
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                 <div className="bg-orange-50 rounded-xl p-4 text-center">
                   <p className="text-xs font-medium text-orange-600 uppercase tracking-wide mb-1">Daily</p>
@@ -201,7 +234,7 @@ export default function ProfitCalculator() {
               </thead>
               <tbody className="divide-y divide-gray-50">
                 {BENCHMARK_DATA.map((row) => {
-                  const daily = row.dailyOrders * benchmarkOrderValue * SAVINGS_RATE;
+                  const daily = row.dailyOrders * benchmarkOrderValue * benchmarkSavingsRate;
                   const weekly = daily * 7;
                   const monthly = daily * 30;
                   return (
@@ -225,7 +258,7 @@ export default function ProfitCalculator() {
 
           <div className="px-6 py-3 bg-gray-50 border-t border-gray-100">
             <p className="text-xs text-gray-400">
-              💡 Savings calculated as the 15% commission difference (30% − 15%) × daily orders × average order value.
+              💡 Savings calculated as the commission difference (30% − {udoRateInput}%) × daily orders × average order value.
             </p>
           </div>
         </div>
