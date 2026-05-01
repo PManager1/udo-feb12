@@ -5,7 +5,6 @@ import StoreBrandInfo from './StoreBrandInfo';
 import ItemDrawer from './ItemDrawer';
 import CategoryModal from './CategoryModal';
 import ModifierGroupModal from './ModifierGroupModal';
-import ProfitCalculator from './ProfitCalculator';
 import Toast from './Toast';
 import { hasValidToken, handleSignOut } from './tokenHelper';
 import * as api from './api';
@@ -326,8 +325,6 @@ export default function MyStore() {
                 {/* Store Brand Info */}
                 <StoreBrandInfo />
 
-                {/* Profit Calculator */}
-                <ProfitCalculator />
 
                 {/* All Menu Items */}
                 <div className="mb-12">
@@ -524,8 +521,9 @@ function ItemCard({ item, onEdit, onDelete, onToggle }) {
         {item.description && (
           <p className="text-xs text-gray-500 mt-1 line-clamp-2">{item.description}</p>
         )}
-        <div className="flex gap-2 mt-3">
+        <div className="flex gap-6 mt-3">
           <button onClick={onEdit} className="text-xs text-orange-500 hover:text-orange-600 font-medium transition">Edit</button>
+          <span className="text-gray-300">|</span>
           <button onClick={onDelete} className="text-xs text-red-400 hover:text-red-600 font-medium transition">Delete</button>
         </div>
       </div>
