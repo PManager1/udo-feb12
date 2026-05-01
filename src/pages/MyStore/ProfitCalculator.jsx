@@ -119,7 +119,7 @@ export default function ProfitCalculator() {
               {/* U-DO Commission Rate Input */}
               <div>
                 <label className="block text-sm font-semibold text-gray-700 mb-2">
-                  Your commission rate
+                  U-DO charges to pay for the drivers
                 </label>
                 <div className="relative">
                   <input
