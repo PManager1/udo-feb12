@@ -11,7 +11,7 @@ const BENCHMARK_DATA = [
   { category: 'High Volume', icon: '🚀', dailyOrders: 80 },
 ];
 
-const DEFAULT_ORDER_VALUE = 30;
+const DEFAULT_ORDER_VALUE = 40;
 
 function formatCurrency(num) {
   return num.toLocaleString('en-US', { style: 'currency', currency: 'USD', minimumFractionDigits: 2 });
@@ -19,7 +19,7 @@ function formatCurrency(num) {
 
 export default function ProfitCalculator() {
   const navigate = useNavigate();
-  const [dailyOrders, setDailyOrders] = useState('');
+  const [dailyOrders, setDailyOrders] = useState(100);
   const [avgOrderValue, setAvgOrderValue] = useState(DEFAULT_ORDER_VALUE);
 
   // Calculated savings
