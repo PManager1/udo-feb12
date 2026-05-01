@@ -15,7 +15,7 @@ export const useApp = () => useContext(AppContext);
 
 export default function MyStore() {
   const navigate = useNavigate();
-  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(window.innerWidth < 768);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [syncStatus, setSyncStatus] = useState('checking'); // checking | online | offline | error
@@ -219,9 +219,19 @@ export default function MyStore() {
         <div className="flex-1 flex flex-col min-w-0">
           {/* Header */}
           <header className="sticky top-0 z-50 bg-white/80 backdrop-blur-md border-b border-gray-200 shadow-sm">
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center justify-between gap-4">
-              {/* Logo + Restaurant */}
-              <div className="flex items-center gap-3 flex-shrink-0">
+            <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-3 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+              {/* Top row on mobile: hamburger + logo + controls */}
+              <div className="flex items-center gap-3 w-full sm:w-auto sm:flex-shrink-0">
+                {/* Mobile hamburger */}
+                <button
+                  onClick={() => setSidebarCollapsed(false)}
+                  className="md:hidden p-2 text-gray-500 hover:text-orange-500 hover:bg-gray-100 rounded-lg transition"
+                  title="Open menu"
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+                  </svg>
+                </button>
                 <label className="relative cursor-pointer group" title="Click to upload logo">
                   <input type="file" accept="image/*" className="hidden" onChange={handleLogoUpload} />
                   {logoUrl ? (
@@ -234,20 +244,29 @@ export default function MyStore() {
                     </div>
                   )}
                 </label>
-                <div>
-                  <a href="/merchant/" className="text-sm font-bold text-orange-500 hover:text-orange-600 transition">{restaurantName}</a>
+                <div className="min-w-0">
+                  <a href="/merchant/" className="text-sm font-bold text-orange-500 hover:text-orange-600 transition truncate block">{restaurantName}</a>
+                </div>
+
+                {/* Right side controls — mobile: inline with logo */}
+                <div className="flex items-center gap-2 sm:hidden ml-auto flex-shrink-0">
+                  <div className={`flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium ${syncIcon.bg} ${syncIcon.text}`}>
+                    <div className={`w-1.5 h-1.5 rounded-full ${syncIcon.dot}`} />
+                    <span>{syncIcon.label}</span>
+                  </div>
+                  <button onClick={handleSignOut} className="text-gray-500 hover:text-orange-500 font-medium text-xs transition">Out</button>
                 </div>
               </div>
 
-              {/* Search */}
-              <div className="flex-1 max-w-xl">
+              {/* Search — full width on mobile */}
+              <div className="flex-1 w-full sm:max-w-xl order-last sm:order-none">
                 <div className="relative">
                   <input
                     type="text"
                     placeholder="Search menu items..."
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
-                    className="w-full pl-5 pr-12 py-3 bg-[#DADAD3] border border-gray-300 rounded-full text-base focus:outline-none focus:ring-2 focus:ring-gray-400/50 transition shadow-sm"
+                    className="w-full pl-5 pr-12 py-2.5 sm:py-3 bg-[#DADAD3] border border-gray-300 rounded-full text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-gray-400/50 transition shadow-sm"
                   />
                   <svg className="absolute right-4 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
@@ -255,8 +274,8 @@ export default function MyStore() {
                 </div>
               </div>
 
-              {/* Right side */}
-              <div className="flex items-center gap-4 flex-shrink-0">
+              {/* Right side — desktop only */}
+              <div className="hidden sm:flex items-center gap-4 flex-shrink-0">
                 <div className={`flex items-center gap-2 px-3 py-1.5 rounded-full text-sm font-medium ${syncIcon.bg} ${syncIcon.text}`}>
                   <div className={`w-2 h-2 rounded-full ${syncIcon.dot}`} />
                   <span>{syncIcon.label}</span>
@@ -278,17 +297,17 @@ export default function MyStore() {
                   </svg>
                   Back to Dashboard
                 </button>
-                <div className="flex justify-between items-center mb-6">
-                  <div>
-                    <h1 className="text-3xl font-bold text-gray-900">{currentCatObj.icon || '🍽️'} {currentCatObj.name || currentCatObj.title}</h1>
-                    <p className="text-gray-600 mt-1">{currentCatObj.description || ''}</p>
-                  </div>
-                  <div className="flex gap-3">
-                    <button onClick={() => openCategoryModal(currentCatObj.id)} className="bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold py-2 px-4 rounded-lg transition">
-                      Manage Category
+                  <div className="flex flex-col sm:flex-row sm:justify-between items-start sm:items-center mb-6 gap-3">
+                   <div className="min-w-0">
+                     <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 truncate">{currentCatObj.icon || '🍽️'} {currentCatObj.name || currentCatObj.title}</h1>
+                     <p className="text-gray-600 mt-1 text-sm sm:text-base">{currentCatObj.description || ''}</p>
+                   </div>
+                   <div className="flex gap-2 flex-shrink-0">
+                    <button onClick={() => openCategoryModal(currentCatObj.id)} className="bg-gray-100 hover:bg-gray-200 text-gray-700 font-semibold py-2 px-3 sm:px-4 rounded-lg text-sm transition">
+                      Manage
                     </button>
-                    <button onClick={() => openItemDrawer(null)} className="bg-orange-500 hover:bg-orange-600 text-white font-bold py-2 px-4 rounded-lg transition">
-                      Add Item
+                    <button onClick={() => openItemDrawer(null)} className="bg-orange-500 hover:bg-orange-600 text-white font-bold py-2 px-3 sm:px-4 rounded-lg text-sm transition">
+                      + Add Item
                     </button>
                   </div>
                 </div>
@@ -310,14 +329,16 @@ export default function MyStore() {
                     <h1 className="text-3xl font-bold text-gray-900">My Store</h1>
                     <p className="text-gray-600 mt-1">Manage your menu items and modifiers</p>
                   </div>
-                  <div className="flex gap-3">
-                    <button onClick={() => openCategoryModal(null)} className="bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold py-3 px-6 rounded-full text-lg transition shadow-sm hover:shadow-md flex items-center gap-2">
-                      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" /></svg>
-                      Add Category
+                  <div className="flex gap-2 sm:gap-3 w-full sm:w-auto">
+                    <button onClick={() => openCategoryModal(null)} className="flex-1 sm:flex-initial bg-gray-100 hover:bg-gray-200 text-gray-700 font-bold py-2.5 sm:py-3 px-4 sm:px-6 rounded-full text-sm sm:text-lg transition shadow-sm hover:shadow-md flex items-center justify-center gap-1 sm:gap-2">
+                      <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" /></svg>
+                      <span className="sm:hidden">Category</span>
+                      <span className="hidden sm:inline">Add Category</span>
                     </button>
-                    <button onClick={() => openItemDrawer(null)} className="bg-orange-500 hover:bg-orange-600 text-white font-bold py-3 px-6 rounded-full text-lg transition shadow-sm hover:shadow-md flex items-center gap-2">
-                      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" /></svg>
-                      Add New Item
+                    <button onClick={() => openItemDrawer(null)} className="flex-1 sm:flex-initial bg-orange-500 hover:bg-orange-600 text-white font-bold py-2.5 sm:py-3 px-4 sm:px-6 rounded-full text-sm sm:text-lg transition shadow-sm hover:shadow-md flex items-center justify-center gap-1 sm:gap-2">
+                      <svg className="w-5 h-5 sm:w-6 sm:h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" /></svg>
+                      <span className="sm:hidden">New Item</span>
+                      <span className="hidden sm:inline">Add New Item</span>
                     </button>
                   </div>
                 </div>
