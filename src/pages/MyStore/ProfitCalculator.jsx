@@ -115,6 +115,28 @@ export default function ProfitCalculator() {
 
           <div className="px-6 py-6">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-8">
+              {/* U-DO Commission Rate Input */}
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  Your commission rate
+                </label>
+                <div className="relative">
+                  <input
+                    type="number"
+                    min="0"
+                    max="30"
+                    step="0.5"
+                    value={udoRateInput}
+                    onChange={(e) => setUdoRateInput(e.target.value)}
+                    className="w-full px-4 py-3 border border-gray-200 rounded-xl text-lg font-medium focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-orange-400 transition"
+                  />
+                  <span className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 text-sm">%</span>
+                </div>
+              </div>
+
+              {/* spacer to keep commission rate on its own row on desktop */}
+              <div className="hidden sm:block" />
+
               {/* Daily Orders Input */}
               <div>
                 <label className="block text-sm font-semibold text-gray-700 mb-2">
@@ -148,35 +170,6 @@ export default function ProfitCalculator() {
                     onChange={(e) => setAvgOrderValue(e.target.value)}
                     className="w-full pl-8 pr-4 py-3 border border-gray-200 rounded-xl text-lg font-medium focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-orange-400 transition"
                   />
-                </div>
-              </div>
-
-              {/* U-DO Commission Rate Input */}
-              <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
-                  Your commission rate
-                </label>
-                <div className="relative">
-                  <input
-                    type="number"
-                    min="0"
-                    max="30"
-                    step="0.5"
-                    value={udoRateInput}
-                    onChange={(e) => setUdoRateInput(e.target.value)}
-                    className="w-full px-4 py-3 border border-gray-200 rounded-xl text-lg font-medium focus:outline-none focus:ring-2 focus:ring-orange-400 focus:border-orange-400 transition"
-                  />
-                  <span className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 text-sm">%</span>
-                </div>
-              </div>
-
-              {/* Competitor rate display */}
-              <div>
-                <label className="block text-sm font-semibold text-gray-700 mb-2">
-                  Competitor commission
-                </label>
-                <div className="px-4 py-3 border border-gray-100 rounded-xl bg-gray-50 text-lg font-medium text-gray-500">
-                  30%
                 </div>
               </div>
             </div>
