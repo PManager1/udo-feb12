@@ -68,6 +68,18 @@ export default function CategoryModal({ categoryId, onClose }) {
     }
   };
 
+  const handleDelete = async () => {
+    if (!confirm('Delete this category? Items in it will become uncategorized.')) return;
+    try {
+      await api.deleteCategory(categoryId);
+      showToast('Category deleted!');
+      onClose();
+      await loadAllData();
+    } catch (err) {
+      showToast(`Delete failed: ${err.message}`, 'error');
+    }
+  };
+
   const iconOptions = ['🍽️', '🍕', '🍔', '🌮', '🍣', '🥗', '🍝', '🥩', '🍰', '☕', '🥤', '🍜', '🥪', '🍗', '🧁', '🍦'];
 
   return (
@@ -78,11 +90,20 @@ export default function CategoryModal({ categoryId, onClose }) {
           {/* Header */}
           <div className="sticky top-0 bg-white border-b border-gray-200 px-6 py-4 flex items-center justify-between rounded-t-2xl">
             <h2 className="text-xl font-bold text-gray-900">{categoryId ? 'Edit Category' : 'Add Category'}</h2>
-            <button onClick={onClose} className="p-2 hover:bg-gray-100 rounded-full transition">
-              <svg className="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-              </svg>
-            </button>
+            <div className="flex items-center gap-1">
+              {categoryId && (
+                <button onClick={handleDelete} className="p-2 hover:bg-red-50 text-gray-400 hover:text-red-500 rounded-full transition" title="Delete category">
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                  </svg>
+                </button>
+              )}
+              <button onClick={onClose} className="p-2 hover:bg-gray-100 rounded-full transition">
+                <svg className="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
+            </div>
           </div>
 
           {loadingCat ? (
