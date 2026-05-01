@@ -24,6 +24,23 @@ const PRIMARY_ACTION_LABELS = {
 
 const FILTER_TABS = ['all', 'pending', 'confirmed', 'preparing', 'ready', 'picked_up', 'delivered', 'cancelled'];
 
+// TODO: Remove mock driver data when backend sends real driver fields
+const MOCK_DRIVERS = [
+  { driverName: 'Marcus J.', driverPhone: '202-555-1234', driverDistance: 1.2, driverEta: 4 },
+  { driverName: 'Sarah K.', driverPhone: '301-555-6789', driverDistance: 0.8, driverEta: 3 },
+  { driverName: 'David L.', driverPhone: '703-555-4567', driverDistance: 2.1, driverEta: 7 },
+];
+
+function injectMockDriverData(orders) {
+  let driverIdx = 0;
+  return orders.map(order => {
+    if ((order.status === 'ready' || order.status === 'picked_up') && !order.driverName) {
+      return { ...order, ...MOCK_DRIVERS[driverIdx++ % MOCK_DRIVERS.length], _driverDemo: true };
+    }
+    return order;
+  });
+}
+
 function formatTime(dateStr) {
   if (!dateStr) return '';
   const d = new Date(dateStr);
@@ -129,7 +146,7 @@ export default function OrdersPage() {
   const fetchOrders = useCallback(async () => {
     try {
       const data = await getOrders();
-      setOrders(data);
+      setOrders(injectMockDriverData(data));
       setError('');
     } catch (err) {
       setError(err.message || 'Failed to load orders');
@@ -304,6 +321,35 @@ export default function OrdersPage() {
                       </div>
                     </div>
 
+                    {/* Driver tracking badge — collapsed card (ready/picked_up only) */}
+                    {(order.status === 'ready' || order.status === 'picked_up') && (
+                      <div className="mt-2" onClick={(e) => e.stopPropagation()}>
+                        {order.driverName ? (
+                          <div className="flex items-center gap-2 text-xs bg-blue-50 text-blue-700 rounded-lg px-3 py-1.5">
+                            <span className="text-base">🚗</span>
+                            <span className="font-semibold">{order.driverName}</span>
+                            {order.driverDistance != null && (
+                              <>
+                                <span className="text-blue-300">·</span>
+                                <span>{order.driverDistance} mi away</span>
+                              </>
+                            )}
+                            {order.driverEta != null && (
+                              <>
+                                <span className="text-blue-300">·</span>
+                                <span>ETA {order.driverEta} min</span>
+                              </>
+                            )}
+                          </div>
+                        ) : (
+                          <div className="flex items-center gap-2 text-xs bg-gray-50 text-gray-400 rounded-lg px-3 py-1.5">
+                            <span className="text-base">⏳</span>
+                            <span>Awaiting driver assignment…</span>
+                          </div>
+                        )}
+                      </div>
+                    )}
+
                     {/* Quick action button — visible inline */}
                     {canAdvance && nextPrimary && (
                       <div className="mt-3 flex items-center gap-2" onClick={(e) => e.stopPropagation()}>
@@ -331,6 +377,79 @@ export default function OrdersPage() {
                   {/* Expanded Details */}
                   {isExpanded && (
                     <div className="border-t border-gray-100 px-4 py-4 bg-gray-50/50">
+                      {/* Driver info — expanded (ready/picked_up only) */}
+                      {(order.status === 'ready' || order.status === 'picked_up') && (
+                        <div className="mb-4 bg-white rounded-xl border border-blue-100 overflow-hidden">
+                          <div className="px-3 pt-3 pb-2 flex items-center gap-2">
+                            <span className="text-lg">🚗</span>
+                            <p className="text-xs text-blue-400 font-medium uppercase tracking-wide">Driver</p>
+                            {order._driverDemo && (
+                              <span className="text-[10px] bg-yellow-100 text-yellow-600 px-1.5 py-0.5 rounded-full font-medium ml-auto">🧪 Demo</span>
+                            )}
+                          </div>
+                          {order.driverName ? (
+                            <div className="px-3 pb-3">
+                              <div className="flex items-center gap-3">
+                                <div className="w-10 h-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600 font-bold text-lg">
+                                  {order.driverName.charAt(0).toUpperCase()}
+                                </div>
+                                <div className="flex-1">
+                                  <p className="font-semibold text-gray-900">{order.driverName}</p>
+                                  {order.driverPhone && (
+                                    <p className="text-sm text-gray-500">{order.driverPhone}</p>
+                                  )}
+                                </div>
+                                {order.driverPhone && (
+                                  <a href={`tel:${order.driverPhone}`}
+                                    className="p-2 bg-green-50 text-green-600 rounded-lg hover:bg-green-100 transition"
+                                    title="Call driver">
+                                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
+                                    </svg>
+                                  </a>
+                                )}
+                              </div>
+                              {/* Distance + ETA row */}
+                              {(order.driverDistance != null || order.driverEta != null) && (
+                                <div className="mt-2 flex items-center gap-4 text-sm">
+                                  {order.driverDistance != null && (
+                                    <div className="flex items-center gap-1 text-gray-600">
+                                      <svg className="w-4 h-4 text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                                      </svg>
+                                      <span className="font-medium">{order.driverDistance} mi away</span>
+                                    </div>
+                                  )}
+                                  {order.driverEta != null && (
+                                    <div className="flex items-center gap-1 text-gray-600">
+                                      <svg className="w-4 h-4 text-orange-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                      </svg>
+                                      <span className="font-medium">ETA {order.driverEta} min</span>
+                                    </div>
+                                  )}
+                                </div>
+                              )}
+                            </div>
+                          ) : (
+                            <div className="px-3 pb-3">
+                              <div className="flex items-center gap-2 text-gray-400 text-sm">
+                                <div className="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center">
+                                  <svg className="w-5 h-5 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                                  </svg>
+                                </div>
+                                <div>
+                                  <p className="font-medium text-gray-500">No driver assigned yet</p>
+                                  <p className="text-xs text-gray-400">A driver will be assigned shortly</p>
+                                </div>
+                              </div>
+                            </div>
+                          )}
+                        </div>
+                      )}
+
                       {/* Customer info */}
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-4">
                         <div className="bg-white rounded-xl p-3 border border-gray-100">

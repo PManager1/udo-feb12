@@ -59,6 +59,28 @@ Details: Once an order is "Ready," the card should show:
 
 Why: The merchant knows when to put the food in the bag so it’s hot when the driver walks in.
 
+> I dont see the driver assigned in any of the order stages the order goes thorugh. 
+
+You're right — the reason you don't see driver info is because:
+
+1. The **backend API doesn't return driver fields** (`driverName`, `driverPhone`, etc.) in the order data yet
+2. The driver section only appears on `ready` and `picked_up` statuses — but even then, without backend data, it would just show "Awaiting driver assignment..."
+
+## Fix: Add demo driver data for testing
+
+I'll add **mock driver data** to orders that are in `ready` or `picked_up` status so you can see how it looks. This is a development/demo helper that simulates what it'll look like when the backend sends real driver data.
+
+**Approach:**
+- After fetching orders, inject mock driver info into any order that's `ready` or `picked_up`
+- Mock data: name "Marcus J.", phone "202-555-1234", distance 1.2mi, ETA 4min
+- Add a small `🧪 Demo` tag so you know it's test data
+- Once the backend is ready to send real driver fields, we simply remove the mock injection
+
+**One file change:** `src/pages/MyStore/OrdersPage.jsx`
+
+**Toggle to Act mode** and I'll add the demo data so you can see it working.
+
+
 
 5. Performance Insights
 As an entrepreneur, you want to help them grow so they stay on your platform.
