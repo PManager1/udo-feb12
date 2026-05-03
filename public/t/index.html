@@ -161,6 +161,33 @@
       </div>
     </section>
 
+    <!-- STAY CONNECTED / EARLY ACCESS -->
+    <section class="bg-midnight text-white">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 py-16 lg:py-[120px]">
+        <div class="max-w-2xl mx-auto text-center">
+          <p class="text-[45px] sm:text-[56px] lg:text-[68px] leading-tight font-bold">
+            Be the First.<br>Start Saving Before Everyone Else.
+          </p>
+          <p class="font-mono tracking-wider leading-[1.75em] text-lg font-light mt-6 max-w-[550px] mx-auto">
+            We're looking for our first test customers in DC. Sign up now to lock in early rates, shape the platform, and keep more money in your pocket from day one.
+          </p>
+
+          <form id="early-access-form" class="mt-10 flex flex-col sm:flex-row gap-3 max-w-lg mx-auto" onsubmit="handleEarlyAccess(event)">
+            <input type="email" id="ea-email" placeholder="Email address" required
+              class="flex-1 bg-white/10 border border-white/20 text-white placeholder-white/50 px-4 py-3 text-lg font-mono focus:outline-none focus:border-white/60 transition" />
+            <input type="tel" id="ea-phone" placeholder="Phone number" required
+              class="flex-1 bg-white/10 border border-white/20 text-white placeholder-white/50 px-4 py-3 text-lg font-mono focus:outline-none focus:border-white/60 transition" />
+            <button type="submit"
+              class="bg-white text-black font-bold text-lg px-6 py-3 hover:bg-white/90 transition flex-shrink-0">
+              Count Me In
+            </button>
+          </form>
+
+          <div id="ea-status" class="mt-4 hidden"></div>
+        </div>
+      </div>
+    </section>
+
   </main>
 
   <!-- FOOTER -->
@@ -169,8 +196,8 @@
       <div class="flex flex-col gap-y-12 sm:grid sm:grid-cols-2 items-start w-full">
         <div class="flex flex-col gap-y-6">
           <h3 class="text-[34px] pb-2 text-black">Contact</h3>
-          <a href="mailto:team@thielfellowship.org" class="text-2xl h-[35px] border-b border-[#999] w-fit hover:text-black transition">team@thielfellowship.org</a>
-          <p class="text-lg">© 2026 The Thiel Foundation.<br>All rights reserved.</p>
+          <a href="mailto:team@thielfellowship.org" class="text-2xl h-[35px] border-b border-[#999] w-fit hover:text-black transition">team@udonow.com</a>
+          <p class="text-lg">© 2026 The U-DO Foundation.<br>All rights reserved.</p>
         </div>
         <div class="flex flex-col gap-y-2">
           <h3 class="text-[34px] pb-2 text-black">Navigate</h3>
@@ -181,5 +208,21 @@
     </div>
   </footer>
 
+  <script>
+    function handleEarlyAccess(e) {
+      e.preventDefault();
+      const email = document.getElementById('ea-email').value;
+      const phone = document.getElementById('ea-phone').value;
+      const statusEl = document.getElementById('ea-status');
+
+      // TODO: Replace with real API call when backend is ready
+      // fetch(API_BASE + 'early-access', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({email,phone}) })
+
+      statusEl.classList.remove('hidden');
+      statusEl.innerHTML = '<p class="font-mono text-sm text-white/80">✓ You\'re in! We\'ll reach out to <b>' + email + '</b> soon.</p>';
+
+      document.getElementById('early-access-form').reset();
+    }
+  </script>
 </body>
 </html>
