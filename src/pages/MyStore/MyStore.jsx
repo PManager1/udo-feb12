@@ -26,6 +26,9 @@ export default function MyStore() {
   const [modifierGroups, setModifierGroups] = useState([]);
   const [restaurantName, setRestaurantName] = useState('Restaurant Name');
   const [logoUrl, setLogoUrl] = useState('');
+  const [referralCode, setReferralCode] = useState('');
+  const [editingReferral, setEditingReferral] = useState(false);
+  const [referralInput, setReferralInput] = useState('');
 
   // Views
   const [currentCategory, setCurrentCategory] = useState(null); // null = dashboard, id = category detail
@@ -62,6 +65,7 @@ export default function MyStore() {
       const name = profile.restaurantName || profile.storeName || profile.name || 'Restaurant Name';
       setRestaurantName(name);
       if (profile.logoURL || profile.logo) setLogoUrl(profile.logoURL || profile.logo);
+      if (profile.referralCode) setReferralCode(profile.referralCode);
       setSyncStatus('online');
     } catch (err) {
       console.error('Failed to load data:', err);
@@ -178,6 +182,34 @@ export default function MyStore() {
   const closeModifierModal = () => {
     setModifierModalOpen(false);
     setEditingModifierGroup(null);
+  };
+
+  // Referral code handlers
+  const startEditReferral = () => {
+    setReferralInput(referralCode);
+    setEditingReferral(true);
+  };
+
+  const cancelEditReferral = () => {
+    setEditingReferral(false);
+    setReferralInput('');
+  };
+
+  const saveReferralCode = async () => {
+    const code = referralInput.trim().toUpperCase().slice(0, 4);
+    if (!code) {
+      showToast('Referral code cannot be empty', 'error');
+      return;
+    }
+    try {
+      await api.updateProfile({ referralCode: code });
+      setReferralCode(code);
+      setEditingReferral(false);
+      setReferralInput('');
+      showToast('Referral code updated!');
+    } catch (err) {
+      showToast(err.message || 'Failed to update referral code', 'error');
+    }
   };
 
   const contextValue = {
@@ -326,7 +358,40 @@ export default function MyStore() {
                 {/* Title bar */}
                 <div className="flex flex-col sm:flex-row sm:justify-between items-start sm:items-center mb-8 gap-4">
                   <div>
-                    <h1 className="text-3xl font-bold text-gray-900">My Store</h1>
+                    <div className="flex items-center gap-3">
+                      <h1 className="text-3xl font-bold text-gray-900">My Store</h1>
+                      {editingReferral ? (
+                        <div className="flex items-center gap-1.5">
+                          <span className="text-xs text-gray-500 font-medium">Referral code:</span>
+                          <input
+                            type="text"
+                            value={referralInput}
+                            onChange={(e) => setReferralInput(e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 4))}
+                            placeholder="CODE"
+                            maxLength={4}
+                            className="w-20 px-2 py-1 text-sm font-bold text-center border border-orange-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-400 uppercase"
+                            autoFocus
+                            onKeyDown={(e) => { if (e.key === 'Enter') saveReferralCode(); if (e.key === 'Escape') cancelEditReferral(); }}
+                          />
+                          <button onClick={saveReferralCode} className="p-1 text-green-600 hover:text-green-700 transition" title="Save">
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
+                          </button>
+                          <button onClick={cancelEditReferral} className="p-1 text-gray-400 hover:text-gray-600 transition" title="Cancel">
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" /></svg>
+                          </button>
+                        </div>
+                      ) : (
+                        <button onClick={startEditReferral} className="flex items-center gap-1.5 group">
+                          <span className="text-xs text-gray-500 font-medium">Referral code:</span>
+                          <span className="bg-orange-50 text-orange-600 text-sm font-bold px-2.5 py-0.5 rounded-lg border border-orange-200 group-hover:bg-orange-100 transition">
+                            {referralCode || '— — — —'}
+                          </span>
+                          <svg className="w-4 h-4 text-gray-400 group-hover:text-orange-500 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z" />
+                          </svg>
+                        </button>
+                      )}
+                    </div>
                     <p className="text-gray-600 mt-1">Manage your menu items and modifiers</p>
                   </div>
                   <div className="flex gap-2 sm:gap-3 w-full sm:w-auto">

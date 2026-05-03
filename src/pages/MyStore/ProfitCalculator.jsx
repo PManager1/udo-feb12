@@ -260,6 +260,80 @@ export default function ProfitCalculator() {
           </div>
         </div>
 
+        {/* The U-DO Strategy vs. The Visibility Trap */}
+        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+          <div className="bg-gradient-to-r from-orange-500 to-amber-500 px-6 py-5 text-white text-center">
+            <h3 className="text-xl sm:text-2xl font-bold">🎯 The U-DO Strategy vs. The Visibility Trap</h3>
+            <p className="text-orange-100 text-sm mt-1">This is exactly where your U-DO pitch becomes powerful for the merchant</p>
+          </div>
+          <div className="px-6 py-8">
+            <div className="bg-orange-50 border-l-4 border-orange-500 rounded-r-xl p-6">
+              <p className="text-gray-800 text-lg leading-relaxed italic">
+                "On Uber, you are spending <span className="font-bold text-red-600 not-italic">$20 in food discounts</span> just to get a customer's attention, and then paying Uber another <span className="font-bold text-red-600 not-italic">30%</span> to deliver it. With U-DO, we don't play those games. We give you a <span className="font-bold text-green-700 not-italic">fair 15% rate</span> from the start, so you don't have to bankrupt your margins just to be 'visible'."
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* The "Direct Pricing" Guarantee */}
+        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+          <div className="bg-gradient-to-r from-green-600 to-emerald-500 px-6 py-5 text-white text-center">
+            <h3 className="text-xl sm:text-2xl font-bold">✅ The "Direct Pricing" Guarantee</h3>
+          </div>
+          <div className="px-6 py-8 space-y-6">
+            {/* Uber problem */}
+            <div className="flex gap-4 items-start">
+              <span className="flex-shrink-0 w-10 h-10 rounded-full bg-red-100 text-red-600 flex items-center justify-center font-bold text-lg">⚠️</span>
+              <div>
+                <h4 className="font-bold text-gray-900 mb-1">The Problem</h4>
+                <p className="text-gray-600 leading-relaxed">
+                  Uber often allows or encourages restaurants to inflate their menu prices by <span className="font-bold text-red-600">15–20%</span> to cover commissions.
+                </p>
+              </div>
+            </div>
+
+            {/* U-DO move */}
+            <div className="flex gap-4 items-start">
+              <span className="flex-shrink-0 w-10 h-10 rounded-full bg-orange-100 text-orange-600 flex items-center justify-center font-bold text-lg">🤝</span>
+              <div>
+                <h4 className="font-bold text-gray-900 mb-1">The U-DO Move</h4>
+                <p className="text-gray-600 leading-relaxed">
+                  You tell the merchant: <span className="italic">"I'm only charging you <span className="font-bold text-orange-600">18–20% commission</span> (down from 30%). In exchange, you must list your <span className="font-bold text-orange-600">true in-store prices</span> on U-DO."</span>
+                </p>
+              </div>
+            </div>
+
+            {/* The value */}
+            <div className="flex gap-4 items-start">
+              <span className="flex-shrink-0 w-10 h-10 rounded-full bg-green-100 text-green-600 flex items-center justify-center font-bold text-lg">💎</span>
+              <div>
+                <h4 className="font-bold text-gray-900 mb-1">The Value</h4>
+                <p className="text-gray-600 leading-relaxed">
+                  The customer sees a burger for <span className="font-bold text-green-700">$12.00</span> on U-DO instead of <span className="font-bold text-red-600 line-through">$14.50</span> on Uber. This <span className="font-bold text-green-700">"Menu Parity"</span> is your strongest marketing tool.
+                </p>
+              </div>
+            </div>
+
+            {/* Visual price comparison */}
+            <div className="mt-4 bg-gray-50 rounded-xl p-5 border border-gray-100">
+              <p className="text-xs font-semibold text-gray-400 uppercase tracking-wide mb-3 text-center">Price comparison for the same burger</p>
+              <div className="flex flex-col sm:flex-row gap-4 items-center justify-center">
+                <div className="flex-1 text-center bg-red-50 rounded-xl p-4 border border-red-100">
+                  <p className="text-sm font-medium text-gray-500 mb-1">Uber Eats</p>
+                  <p className="text-3xl font-bold text-red-500">$14.50</p>
+                  <p className="text-xs text-red-400 mt-1">Inflated price to cover 30% commission</p>
+                </div>
+                <div className="text-2xl text-gray-300 font-bold">→</div>
+                <div className="flex-1 text-center bg-green-50 rounded-xl p-4 border border-green-200 ring-2 ring-green-200">
+                  <p className="text-sm font-medium text-gray-500 mb-1">U-DO</p>
+                  <p className="text-3xl font-bold text-green-600">$12.00</p>
+                  <p className="text-xs text-green-500 mt-1">True in-store price • Fair commission</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
   );

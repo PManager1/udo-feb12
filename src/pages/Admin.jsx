@@ -151,8 +151,21 @@ export default function Admin() {
     )
   }
 
-  function AdminCard({ id, icon, iconBg, iconColor, title, description, badge, badgeColor, badgeBg, children }) {
+  function AdminCard({ id, icon, iconBg, iconColor, title, description, badge, badgeColor, badgeBg, linkTo, linkHref, linkLabel, children }) {
     const isExpanded = expandedCard === id
+    const linkContent = linkTo ? (
+      <Link to={linkTo} onClick={e => e.stopPropagation()}
+        className="inline-flex items-center gap-1.5 text-sm font-semibold text-orange-600 hover:text-orange-700 mt-2 hover:underline">
+        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+        {linkLabel || 'Open Page →'}
+      </Link>
+    ) : linkHref ? (
+      <a href={linkHref} onClick={e => e.stopPropagation()}
+        className="inline-flex items-center gap-1.5 text-sm font-semibold text-orange-600 hover:text-orange-700 mt-2 hover:underline">
+        <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
+        {linkLabel || 'Open Page →'}
+      </a>
+    ) : null
     return (
       <div onClick={() => toggleCard(id)}
         className={`bg-white rounded-xl p-5 border cursor-pointer transition-all hover:-translate-y-0.5 hover:shadow-lg ${isExpanded ? 'border-orange-500 shadow-lg' : 'border-gray-200'}`}>
@@ -169,6 +182,7 @@ export default function Admin() {
             </div>
             <p className="text-sm text-gray-500 mt-1">{description}</p>
             {badge && <span className={`inline-block mt-2 text-xs font-medium ${badgeColor} ${badgeBg} px-2 py-1 rounded-full`}>{badge}</span>}
+            {linkContent}
           </div>
         </div>
         <div className={`border-t border-gray-100 mt-4 overflow-hidden transition-all duration-300 ${isExpanded ? 'max-h-[2000px] opacity-100 pt-4 pb-2' : 'max-h-0 opacity-0'}`}>
@@ -198,46 +212,33 @@ export default function Admin() {
       </header>
 
       <main className="max-w-6xl mx-auto px-6 py-8">
-        {/* Content Management */}
-        <div className="mb-8">
-          <h2 className="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
-            <span className="w-2 h-2 bg-orange-500 rounded-full inline-block"></span>
-            Content Management
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            <AdminCard id="search-overlay" title="Search Overlay Items" description="Toggle search suggestions on/off. Manage recent, popular & trending items."
-              badge="LIVE" badgeColor="text-purple-600" badgeBg="bg-purple-50"
-              icon={<svg className="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>}
-              iconBg="bg-purple-100">
-              <Link to="/searchOverlayAdmin/" className="inline-flex items-center gap-2 text-sm font-medium text-orange-600 hover:text-orange-700 mb-3">
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
-                Open Admin Page →
-              </Link>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
+
+            <AdminCard id="users" title="Users Management" description="CRUD operations for users and profiles."
+              linkTo="/admin/restaurant-owners/" linkLabel="Open Users Page →"
+              icon={<svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z" /></svg>}
+              iconBg="bg-blue-100">
               <div className="space-y-2">
-                <EndpointRow method="GET" path="/admin/search-overlay-items" tryable />
-                <ResponseBox rkey="/admin/search-overlay-items-GET" />
-                <EndpointRow method="PATCH" path="/admin/search-overlay-items/{id}/toggle" label="Needs body" />
+                <EndpointRow method="GET" path="/admin/users" tryable />
+                <ResponseBox rkey="/admin/users-GET" />
+                <EndpointRow method="POST" path="/admin/users" label="Needs body" />
+                <EndpointRow method="GET" path="/admin/users/{id}/profile" label="Needs ID" />
+                <EndpointRow method="PUT" path="/admin/users/{id}/profile-image" label="Needs body" />
               </div>
             </AdminCard>
 
             <AdminCard id="add-food" title="Add Food Item" description="Add new food items to restaurant menus with images and pricing."
               badge="PAGE" badgeColor="text-orange-600" badgeBg="bg-orange-50"
+              linkHref="/AddFoodItem/" linkLabel="Open Page →"
               icon={<svg className="w-6 h-6 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" /></svg>}
               iconBg="bg-orange-100">
-              <a href="/AddFoodItem/" className="inline-flex items-center gap-2 text-sm font-medium text-orange-600 hover:text-orange-700 mb-3">
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
-                Open Page →
-              </a>
             </AdminCard>
 
             <AdminCard id="food-categories" title="Food Categories" description="Manage shared food categories that appear on /addfooditem. Edit, delete, and toggle on/off."
               badge="PAGE" badgeColor="text-amber-600" badgeBg="bg-amber-50"
+              linkHref="/foodcategories/" linkLabel="Open Admin Page →"
               icon={<svg className="w-6 h-6 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M7 7h.01M7 3h5c.512 0 1.024.195 1.414.586l7 7a2 2 0 010 2.828l-7 7a2 2 0 01-2.828 0l-7-7A1.994 1.994 0 013 12V7a4 4 0 014-4z" /></svg>}
               iconBg="bg-amber-100">
-              <a href="/foodcategories/" className="inline-flex items-center gap-2 text-sm font-medium text-orange-600 hover:text-orange-700 mb-3">
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
-                Open Admin Page →
-              </a>
               <div className="space-y-2">
                 <EndpointRow method="GET" path="/food-categories" label="(public)" tryable />
                 <ResponseBox rkey="/food-categories-GET" />
@@ -250,34 +251,9 @@ export default function Admin() {
 
             <AdminCard id="restaurant-owners" title="Restaurant Owners" description="View all users and their linked restaurants. Click to expand restaurant details."
               badge="PAGE" badgeColor="text-teal-600" badgeBg="bg-teal-50"
+              linkTo="/admin/restaurant-owners/" linkLabel="Open Restaurant Owners →"
               icon={<svg className="w-6 h-6 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" /></svg>}
               iconBg="bg-teal-100">
-              <Link to="/admin/restaurant-owners/" className="inline-flex items-center gap-2 text-sm font-medium text-orange-600 hover:text-orange-700 mb-3">
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"/></svg>
-                Open Restaurant Owners →
-              </Link>
-            </AdminCard>
-
-          </div>
-        </div>
-
-        {/* Backend API */}
-        <div className="mb-8">
-          <h2 className="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
-            <span className="w-2 h-2 bg-blue-500 rounded-full inline-block"></span>
-            Backend API Endpoints
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            <AdminCard id="users" title="Users Management" description="CRUD operations for users and profiles."
-              icon={<svg className="w-6 h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197m13.5-9a2.25 2.25 0 11-4.5 0 2.25 2.25 0 014.5 0z" /></svg>}
-              iconBg="bg-blue-100">
-              <div className="space-y-2">
-                <EndpointRow method="GET" path="/admin/users" tryable />
-                <ResponseBox rkey="/admin/users-GET" />
-                <EndpointRow method="POST" path="/admin/users" label="Needs body" />
-                <EndpointRow method="GET" path="/admin/users/{id}/profile" label="Needs ID" />
-                <EndpointRow method="PUT" path="/admin/users/{id}/profile-image" label="Needs body" />
-              </div>
             </AdminCard>
 
             <AdminCard id="categories" title="Categories" description="Manage service categories with toggle on/off."
@@ -356,30 +332,36 @@ export default function Admin() {
                 <EndpointRow method="PUT" path="/admin/users/{id}/profile-image" label="Needs body + ID" />
               </div>
             </AdminCard>
-          </div>
+
+            <AdminCard id="search-overlay" title="Search Overlay Items" description="Toggle search suggestions on/off. Manage recent, popular & trending items."
+              badge="LIVE" badgeColor="text-purple-600" badgeBg="bg-purple-50"
+              linkTo="/searchOverlayAdmin/" linkLabel="Open Admin Page →"
+              icon={<svg className="w-6 h-6 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" /></svg>}
+              iconBg="bg-purple-100">
+              <div className="space-y-2">
+                <EndpointRow method="GET" path="/admin/search-overlay-items" tryable />
+                <ResponseBox rkey="/admin/search-overlay-items-GET" />
+                <EndpointRow method="PATCH" path="/admin/search-overlay-items/{id}/toggle" label="Needs body" />
+              </div>
+            </AdminCard>
+
         </div>
 
         {/* Quick Links */}
-        <div className="mb-8">
-          <h2 className="text-lg font-semibold text-gray-800 mb-4 flex items-center gap-2">
-            <span className="w-2 h-2 bg-green-500 rounded-full inline-block"></span>
-            Quick Links
-          </h2>
-          <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3">
-            {[
-              { to: '/dashboard/', emoji: '📊', label: 'Dashboard' },
-              { to: '/', emoji: '🏠', label: 'Home Page' },
-              { to: '/login/', emoji: '🔐', label: 'Login' },
-              { to: '/signup/', emoji: '📝', label: 'Signup' },
-              { to: '/profiles-list/', emoji: '👥', label: 'Profiles' },
-              { to: '/food-delivery/', emoji: '🍔', label: 'Food Delivery' },
-            ].map(link => (
-              <Link key={link.to} to={link.to} className="bg-white border border-gray-200 rounded-lg p-3 text-center hover:border-orange-400 transition">
-                <div className="text-2xl mb-1">{link.emoji}</div>
-                <div className="text-xs font-medium text-gray-700">{link.label}</div>
-              </Link>
-            ))}
-          </div>
+        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-3 mb-8">
+          {[
+            { to: '/dashboard/', emoji: '📊', label: 'Dashboard' },
+            { to: '/', emoji: '🏠', label: 'Home Page' },
+            { to: '/login/', emoji: '🔐', label: 'Login' },
+            { to: '/signup/', emoji: '📝', label: 'Signup' },
+            { to: '/profiles-list/', emoji: '👥', label: 'Profiles' },
+            { to: '/food-delivery/', emoji: '🍔', label: 'Food Delivery' },
+          ].map(link => (
+            <Link key={link.to} to={link.to} className="bg-white border border-gray-200 rounded-lg p-3 text-center hover:border-orange-400 transition">
+              <div className="text-2xl mb-1">{link.emoji}</div>
+              <div className="text-xs font-medium text-gray-700">{link.label}</div>
+            </Link>
+          ))}
         </div>
 
         <div className="text-center text-xs text-gray-400 py-6 border-t border-gray-100">
