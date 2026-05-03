@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Thiel Fellowship</title>
+  <meta name="description" content="The Thiel Fellowship gives $250,000 to young people who want to build new things instead of sitting in a classroom.">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: { midnight: '#151515' },
+          fontFamily: { sans: ['Helvetica Neue','Helvetica','Arial','sans-serif'], mono: ['Courier New','monospace'] }
+        }
+      }
+    }
+  </script>
+  <style>
+    ::selection { background:#000; color:#fff; }
+    body { -webkit-font-smoothing:antialiased; }
+    .group:hover .arrow-move { transform:translateX(1rem); }
+    @media(min-width:640px){ .group:hover .arrow-move { transform:translateX(1.5rem); } }
+  </style>
+</head>
+<body class="bg-midnight text-white">
+
+  <!-- NAVBAR -->
+  <nav class="absolute top-0 left-0 right-0 z-50">
+    <div class="max-w-7xl mx-auto flex items-center justify-between h-[150px] px-4 sm:px-6">
+      <a href="/">
+        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 228 82" class="w-[180px] sm:w-[220px]">
+          <path fill="#fff" d="M9.83 10.5H.83V4.95h24.62v5.56H16.44V35H9.83zM27.65 4.95h5.98V16.27h.13q1.14-1.89 2.9-2.74 1.77-.88 3.45-.88 2.4 0 3.92.67 1.56.63 2.44 1.81.88 1.14 1.22 2.82.38 1.64.38 3.66V35h-5.98V22.71q0-2.7-.84-4-.84-1.35-2.99-1.35-2.44 0-3.54 1.47-1.09 1.43-1.09 4.76V35h-5.98zm30.47 4.93h-5.98V4.95h5.98zm-5.98 3.37h5.98V35h-5.98zm24.7 8.54q-.42-2.27-1.52-3.45-1.05-1.18-3.24-1.18-1.43 0-2.4.5a4.6 4.6 0 0 0-1.52 1.18 4.9 4.9 0 0 0-.8 1.52 7.7 7.7 0 0 0-.25 1.43zm-9.72 3.79q.13 2.9 1.47 4.21t3.87 1.3q1.81 0 3.12-.88 1.3-.93 1.6-1.94h5.26q-1.26 3.92-3.87 5.6-2.61 1.68-6.31 1.68-2.57 0-4.63-.8-2.06-.84-3.49-2.36-1.43-1.51-2.23-3.62-.76-2.1-.76-4.63 0-2.44.8-4.55.8-2.1 2.27-3.62a10.6 10.6 0 0 1 3.49-2.44q2.06-.88 4.55-.88 2.78 0 4.84 1.09 2.06 1.05 3.37 2.86 1.35 1.81 1.94 4.13.59 2.31.42 4.84zM85.9 4.95h5.98V35H85.9zM3.18 43.95h21.13v5.56H9.79v6.94h12.59v5.14H9.79V74H3.18zm38.34 16.84q-.42-2.27-1.52-3.45-1.05-1.18-3.24-1.18-1.43 0-2.4.5a4.6 4.6 0 0 0-1.52 1.18 4.9 4.9 0 0 0-.8 1.52 7.7 7.7 0 0 0-.25 1.43zm-9.72 3.79q.13 2.9 1.47 4.21t3.87 1.3q1.81 0 3.12-.88 1.3-.93 1.6-1.94h5.26q-1.26 3.92-3.87 5.6-2.61 1.68-6.31 1.68-2.57 0-4.63-.8-2.06-.84-3.49-2.36-1.43-1.51-2.23-3.62-.76-2.1-.76-4.63 0-2.44.8-4.55.8-2.1 2.27-3.62a10.6 10.6 0 0 1 3.49-2.44q2.06-.88 4.55-.88 2.78 0 4.84 1.09 2.06 1.05 3.37 2.86 1.35 1.81 1.94 4.13.59 2.31.42 4.84zm18.78-20.63h5.98V74h-5.98zm10.22 0h5.98V74h-5.98zm10.35 19.2q0 1.3.25 2.57.25 1.22.84 2.23.63.97 1.64 1.56 1.01.59 2.53.59t2.53-.59a4.4 4.4 0 0 0 1.64-1.56q.63-1.01.88-2.23.25-1.26.25-2.57t-.25-2.57q-.25-1.26-.88-2.23a4.4 4.4 0 0 0-1.64-1.56q-1.01-.63-2.53-.63t-2.53.63a4.85 4.85 0 0 0-1.64 1.56q-.59.97-.84 2.23a13 13 0 0 0-.25 2.57m-5.98 0q0-2.61.8-4.72.8-2.14 2.27-3.62 1.47-1.51 3.54-2.31 2.06-.84 4.63-.84t4.63.84q2.1.8 3.58 2.31 1.47 1.47 2.27 3.62.8 2.1.8 4.72t-.8 4.71-2.27 3.62q-1.47 1.47-3.58 2.27-2.06.8-4.63.8t-4.63-.8-3.54-2.27q-1.47-1.51-2.27-3.62t-.8-4.71M120.82 74h-6.14l-3.87-14.61h-.08L107.02 74h-6.19l-6.9-21.76h6.31l4 14.77h.08l3.62-14.77h5.81l3.7 14.73h.08l4-14.73h6.14zm13.4-7.07q0 .97.38 1.68.42.67 1.05 1.14.63.42 1.43.63.84.21 1.73.21.63 0 1.3-.13a5.1 5.1 0 0 0 1.26-.46q.59-.34.97-.84.38-.55.38-1.35 0-1.35-1.81-2.02-1.77-.67-4.97-1.35-1.3-.3-2.57-.67a10 10 0 0 1-2.19-1.05 5.4 5.4 0 0 1-1.56-1.64q-.59-1.01-.59-2.44 0-2.1.8-3.45a6.04 6.04 0 0 1 2.19-2.1q1.35-.8 3.03-1.09a17.6 17.6 0 0 1 3.45-.34q1.77 0 3.41.34 1.68.34 2.99 1.14a6.54 6.54 0 0 1 2.15 2.14q.88 1.3 1.05 3.33h-5.68q-.13-1.73-1.3-2.31-1.18-.63-2.78-.63-.5 0-1.09.08a3.5 3.5 0 0 0-1.09.25 2.16 2.16 0 0 0-.8.63q-.34.38-.34 1.05 0 .8.59 1.3.59.5 1.52.84.97.3 2.19.55 1.22.25 2.48.55a24 24 0 0 1 2.53.72q1.26.42 2.23 1.14a5.1 5.1 0 0 1 1.56 1.73q.59 1.01.59 2.53 0 2.14-.88 3.62a6.8 6.8 0 0 1-2.23 2.31q-1.39.88-3.2 1.22a17.2 17.2 0 0 1-3.62.38q-1.89 0-3.7-.38-1.81-.38-3.24-1.26a7.6 7.6 0 0 1-2.31-2.31q-.88-1.47-.97-3.66zm17.35-22.98h5.98v11.32h.13q1.14-1.89 2.9-2.74 1.77-.88 3.45-.88 2.4 0 3.92.67 1.56.63 2.44 1.81.88 1.14 1.22 2.82.38 1.64.38 3.66V74h-5.98V61.71q0-2.7-.84-4-.84-1.35-2.99-1.35-2.44 0-3.54 1.47-1.09 1.43-1.09 4.76V74h-5.98zm30.47 4.93h-5.98v-4.93h5.98zm-5.98 3.37h5.98V74h-5.98zM197.1 70.09q1.47 0 2.44-.59a4.6 4.6 0 0 0 1.6-1.52q.63-.97.88-2.23.25-1.26.25-2.57t-.3-2.57q-.25-1.26-.88-2.23a4.7 4.7 0 0 0-1.64-1.6q-.97-.63-2.4-.63-1.47 0-2.48.63a5 5 0 0 0-1.6 1.56q-.59.97-.84 2.23a13.2 13.2 0 0 0-.25 2.61q0 1.3.25 2.57.3 1.26.88 2.23a5 5 0 0 0 1.64 1.52q1.01.59 2.44.59m-10.99-17.85h5.68v2.78h.08q1.09-1.77 2.78-2.57t3.7-.8q2.57 0 4.42.97a9.1 9.1 0 0 1 3.07 2.57q1.22 1.6 1.81 3.75a16.3 16.3 0 0 1 .59 4.42q0 2.19-.59 4.21-.59 2.02-1.81 3.58a8.6 8.6 0 0 1-2.99 2.48q-1.77.93-4.17.93-2.02 0-3.75-.8a7.25 7.25 0 0 1-2.78-2.44h-.08v10.31h-5.98zm29.19-19.25v1.68h-2.84v7.8h-1.99v-7.8h-2.85v-1.68zm2.98 9.48h-1.85v-9.48h2.88l1.72 7.46 1.71-7.46h2.85v9.48h-1.85v-6.41q0-.28.01-.77l-1.8 7.96h-1.92l-1.78-7.96q0 .27.01.77z"/>
+        </svg>
+      </a>
+      <div class="hidden sm:flex items-center gap-12">
+        <a href="/faq" class="text-xl font-light tracking-wider hover:text-white/80 transition">FAQ</a>
+        <a href="/apply" class="text-xl font-light tracking-wider hover:text-white/80 transition">Apply</a>
+      </div>
+      <!-- Mobile hamburger -->
+      <button class="sm:hidden" aria-label="Menu">
+        <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-width="1.5" d="M5 7h14M5 12h14M5 17h14"/>
+        </svg>
+      </button>
+    </div>
+  </nav>
+
+  <!-- MAIN CONTENT -->
+  <main class="bg-white text-black">
+
+    <!-- HERO -->
+    <section class="bg-midnight text-white min-h-[735px] max-h-[1000px] h-screen pt-[150px] sm:pt-[200px]">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 pb-12">
+       
+        <p class="mt-[10%] sm:mt-12 text-[45px] sm:text-[72px] md:text-[80px] lg:text-[98px] leading-tight w-4/5 sm:w-full lg:max-w-[1024px]">
+          Did you know the base pay for DoorDash and Uber Eats is just $2? 
+        </p>
+         <p class="font-mono tracking-wider leading-[1.75em] text-lg md:w-1/2 font-light max-w-[600px]">
+          While corporate valuations soar into the <b>billions</b>, the people on the front lines are stuck with a base wage that hasn't moved in years. We think people's time is worth more than a couple of quarters and a prayer for a tip.
+        </p>
+        
+        <div class="group cursor-pointer mt-[20%] sm:mt-[100px]">
+          <a href="/apply" class="flex items-center border-t-2 border-white w-[180px] sm:w-[270px] pt-4">
+            <span class="text-lg sm:text-[28px] font-light">Apply Now</span>
+            <svg class="arrow-move ml-3 w-4 h-4 transition-transform duration-150" fill="#fff" viewBox="0 0 17 14">
+              <path d="m16 7 .354-.354.353.354-.353.354zM1 7.5a.5.5 0 0 1 0-1zM10.354.646l6 6-.708.708-6-6zm6 6.708-6 6-.708-.708 6-6zM16 7.5H1v-1h15z"/>
+            </svg>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- WHAT -->
+    <section class="border-b border-gray-200">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 py-16 lg:py-[150px] lg:grid lg:grid-cols-[0.2fr_0.8fr] flex flex-col gap-y-12">
+        <h2 class="text-[34px] select-none">What</h2>
+        <p class="text-[22px] sm:text-[32px] tracking-wide leading-[1.4em]">
+          Founded by technology entrepreneur and investor Peter Thiel in 2011, the Thiel Fellowship is a two-year program for young people who want to build new things. Thiel Fellows skip or stop out of college to receive a $250,000 grant and support from the Thiel Foundation's network of founders, investors, and scientists.
+        </p>
+      </div>
+    </section>
+
+    <!-- WHY -->
+    <section>
+      <h2 class="max-w-7xl mx-auto px-4 sm:px-6 text-[34px] select-none pt-16 md:pt-[150px] pb-4 sm:pb-9">Why</h2>
+
+      <!-- Why 01 -->
+      <div class="max-w-7xl mx-auto border-b border-gray-200">
+        <div class="flex flex-col gap-y-12 lg:grid lg:grid-cols-2 pb-12 md:pb-[100px]">
+          <div class="p-[10%] pb-0">
+            <p class="text-lg opacity-75">01</p>
+            <p class="text-[48px] sm:text-[72px] lg:text-[110px] font-bold leading-[1.15em] pt-10">A different path for everyone</p>
+          </div>
+          <div class="p-[10%] bg-midnight text-white">
+            <p class="text-lg opacity-75">01</p>
+            <p class="text-[36px] sm:text-[40px] leading-[1.2em] pt-10">"Knowledge that is acquired under compulsion obtains no hold on the mind."</p>
+            <p class="text-[22px] opacity-75 pt-6 pb-12">- Plato</p>
+            <p class="text-lg leading-[1.8em] pb-6">
+              College can be good for learning about what's been done before, but it can also discourage you from doing something new. Each of our fellows charts a unique course; together they have proven that young people can succeed by thinking for themselves instead of following a traditional track and competing on old career tracks.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Why 02 -->
+      <div class="max-w-7xl mx-auto border-b border-gray-200">
+        <div class="flex flex-col gap-y-12 lg:grid lg:grid-cols-2 py-12 md:py-[100px]">
+          <div class="px-[10%] pb-0">
+            <p class="text-lg opacity-75">02</p>
+            <p class="text-[48px] sm:text-[72px] lg:text-[110px] font-bold leading-[1.15em] pt-10">Freedom to get stuff done</p>
+          </div>
+          <div class="p-[10%] bg-midnight text-white">
+            <p class="text-lg opacity-75">02</p>
+            <p class="text-[36px] sm:text-[40px] leading-[1.2em] pt-10">"My grandmother wanted me to have an education, so she kept me out of school"</p>
+            <p class="text-[22px] opacity-75 pt-6 pb-12">- Margaret Mead</p>
+            <p class="text-lg leading-[1.8em] pb-6">
+              Pursue ideas that matter instead of mandatory tests. Take on big risks instead of big debt. How you spend your two years in the Fellowship is up to you — we're here to help, but we won't get in the way.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Why 03 -->
+      <div class="max-w-7xl mx-auto border-b border-gray-200">
+        <div class="flex flex-col gap-y-12 lg:grid lg:grid-cols-2 py-12 md:py-[100px]">
+          <div class="px-[10%] pb-0">
+            <p class="text-lg opacity-75">03</p>
+            <p class="text-[48px] sm:text-[72px] lg:text-[110px] font-bold leading-[1.15em] pt-10">Our network is yours</p>
+          </div>
+          <div class="p-[10%] bg-midnight text-white">
+            <p class="text-lg opacity-75">03</p>
+            <p class="text-[36px] sm:text-[40px] leading-[1.2em] pt-10">"That major that she majored in don't make no money / But she won't drop out, her parents'll look at her funny"</p>
+            <p class="text-[22px] opacity-75 pt-6 pb-12">- Kanye</p>
+            <p class="text-lg leading-[1.8em] pb-6">
+              The hardest thing about being a young entrepreneur is that you haven't met everyone you'll need to know to make your venture succeed. We can help connect you — to investors, partners, prospective customers — in Silicon Valley and beyond.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- AS SEEN IN -->
+    <section class="border-b border-gray-200">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 flex flex-col gap-y-12 py-16 lg:py-[150px] xl:grid xl:grid-cols-[0.2fr_0.8fr]">
+        <h2 class="text-[34px] select-none">As seen in</h2>
+        <div class="flex flex-col lg:grid lg:grid-cols-3 gap-x-12 gap-y-12">
+          <div class="flex flex-col gap-y-6 border-b-2 border-black pb-6">
+            <p class="text-[26px] sm:text-[26px] leading-tight">— The New York Times</p>
+            <p class="font-mono text-lg pb-[125px]">"Thanks to the Thiel Fellowship, access to some of the nation's most successful businesspeople is quick and easy."</p>
+          </div>
+          <div class="flex flex-col gap-y-6 border-b-2 border-black pb-6">
+            <p class="text-[26px] sm:text-[26px] leading-tight">— TechCrunch</p>
+            <p class="font-mono text-lg pb-[125px]">"Thiel's fellowship pays kids a stipend that liberates them to work on ways to improve the world, rather than saddling them with debt. They get mentorship, workshops, connections to resources, and an alumni network without a formal alma mater."</p>
+          </div>
+          <div class="flex flex-col gap-y-6 border-b sm:border-b-2 border-black pb-6">
+            <p class="text-[26px] sm:text-[26px] leading-tight">— Wall Street Journal</p>
+            <p class="font-mono text-lg pb-[125px]">"Not long ago, dropping out of school to start a company was considered risky. For this generation, it is a badge of honor, evidence of ambition and focus."</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="bg-[#ededed] w-full">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 py-12 sm:py-0 sm:h-[400px] flex items-center text-[#999]">
+      <div class="flex flex-col gap-y-12 sm:grid sm:grid-cols-2 items-start w-full">
+        <div class="flex flex-col gap-y-6">
+          <h3 class="text-[34px] pb-2 text-black">Contact</h3>
+          <a href="mailto:team@thielfellowship.org" class="text-2xl h-[35px] border-b border-[#999] w-fit hover:text-black transition">team@thielfellowship.org</a>
+          <p class="text-lg">© 2026 The Thiel Foundation.<br>All rights reserved.</p>
+        </div>
+        <div class="flex flex-col gap-y-2">
+          <h3 class="text-[34px] pb-2 text-black">Navigate</h3>
+          <a href="/apply" class="text-[21px] h-[33px] border-b border-[#999] w-fit hover:text-black transition">Apply Now</a>
+          <a href="/jobs" class="text-[21px] h-[33px] border-b border-[#999] w-fit hover:text-black transition">Thiel Fellow Job Board</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>

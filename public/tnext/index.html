@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>U-DO</title>
+  <meta name="description" content="A Different Path for the DMV">
+
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2270%22 font-family=%22Arial, sans-serif%22 font-weight=%22900%22 letter-spacing=%22-2%22><tspan fill=%22%23f97316%22>U</tspan><tspan fill=%22%23000000%22>DO</tspan></text></svg>">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: { midnight: '#151515' },
+          fontFamily: { sans: ['Nunito','Helvetica Neue','Helvetica','Arial','sans-serif'], mono: ['Nunito','Courier New','monospace'] }
+        }
+      }
+    }
+  </script>
+  <style>
+    ::selection { background:#000; color:#fff; }
+    body { -webkit-font-smoothing:antialiased; }
+    body, body * { font-family: 'Nunito', sans-serif !important; }
+    .group:hover .arrow-move { transform:translateX(1rem); }
+    @media(min-width:640px){ .group:hover .arrow-move { transform:translateX(1.5rem); } }
+  </style>
+</head>
+<body class="bg-midnight text-white">
+
+  <!-- NAVBAR -->
+  <nav class="absolute top-0 left-0 right-0 z-50">
+    <div class="max-w-7xl mx-auto flex items-center justify-between h-[150px] px-4 sm:px-6">
+      <a href="/">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 228 82" class="w-[180px] sm:w-[220px]">
+  <text
+    x="65"
+    y="50"
+    font-family="Nunito, Arial, sans-serif"
+    font-size="46"
+    font-weight="700"
+    fill="#fff"
+    text-anchor="middle"
+    dominant-baseline="middle"
+    letter-spacing="-2.2px">
+    U-DO
+  </text>
+</svg>
+
+      </a>
+      <div class="hidden sm:flex items-center gap-12">
+        <!-- <a href="/faq" class="text-xl font-light tracking-wider hover:text-white/80 transition">FAQ</a> -->
+        <!-- <a href="/apply" class="text-xl font-light tracking-wider hover:text-white/80 transition">Apply</a> -->
+      </div>
+      <!-- Mobile hamburger -->
+      <button class="sm:hidden" aria-label="Menu">
+        <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-width="1.5" d="M5 7h14M5 12h14M5 17h14"/>
+        </svg>
+      </button>
+    </div>
+  </nav>
+
+  <!-- MAIN CONTENT -->
+  <main class="bg-white text-black">
+
+    <!-- HERO -->
+    <section class="bg-midnight text-white min-h-[735px] max-h-[1000px] h-screen pt-[150px] sm:pt-[200px]">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 pb-12">
+       
+        <p class="mt-[10%] sm:mt-12 text-[45px] sm:text-[72px] md:text-[80px] lg:text-[98px] leading-tight w-4/5 sm:w-full lg:max-w-[1024px]">
+          Did you know the base pay for DoorDash and Uber Eats is just $2? 
+        </p>
+         <p class="font-mono tracking-wider leading-[1.75em] text-lg md:w-1/2 font-light max-w-[600px] pt-[25px]">
+           While corporate owners pay themselves the <b>billions</b>, the people on the front lines are stuck with a base wage that has gone down with years. We think people's time is worth more than a couple of quarters and a prayer for a tip.
+         </p>
+        
+        <div class="group cursor-pointer mt-[20%] sm:mt-[100px]">
+          <a href="#early-access" class="flex items-center border-t-2 border-white w-[180px] sm:w-[270px] pt-4">
+            <span class="text-lg sm:text-[28px] font-light">Count me in</span>
+            <svg class="arrow-move ml-3 w-4 h-4 transition-transform duration-150" fill="#fff" viewBox="0 0 17 14">
+              <path d="m16 7 .354-.354.353.354-.353.354zM1 7.5a.5.5 0 0 1 0-1zM10.354.646l6 6-.708.708-6-6zm6 6.708-6 6-.708-.708 6-6zM16 7.5H1v-1h15z"/>
+            </svg>
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- WHAT -->
+    <section class="border-b border-gray-200">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 py-16 lg:py-[150px] lg:grid lg:grid-cols-[0.2fr_0.8fr] flex flex-col gap-y-12">
+        <h2 class="text-[34px] select-none">What</h2>
+        <p class="text-[22px] sm:text-[32px] tracking-wide leading-[1.4em]">
+          Founded by a local veteran, U-DO is a food delivery movement built for community wealth, not corporate empires. Local restaurants and drivers skip predatory high commissions for a "fair-trade" delivery model supported by a network of neighbors. While traditional apps trap drivers in a stagnant $2 base pay, U-DO ensures we serve the people who actually move our local economy.
+        </p>
+      </div>
+    </section>
+
+    <!-- WHY -->
+    <section>
+      <h2 class="max-w-7xl mx-auto px-4 sm:px-6 text-[34px] select-none pt-16 md:pt-[150px] pb-4 sm:pb-9">Why</h2>
+
+      <!-- Why 01 -->
+      <div class="max-w-7xl mx-auto border-b border-gray-200">
+        <div class="flex flex-col gap-y-12 lg:grid lg:grid-cols-2 pb-12 md:pb-[100px]">
+          <div class="p-[10%] pb-0">
+            <p class="text-lg opacity-75">01</p>
+            <p class="text-[48px] sm:text-[72px] lg:text-[110px] font-bold leading-[1.15em] pt-10">A different path for DC</p>
+          </div>
+          <div class="p-[10%] bg-midnight text-white">
+            <p class="text-lg opacity-75">01</p>
+            <p class="text-[36px] sm:text-[40px] leading-[1.2em] pt-10">"The digital economy is a system of control without responsibility, managing workers without ever formally employing them"</p>
+            <p class="text-[22px] opacity-75 pt-6 pb-12">- Gig Economy documentary</p>
+             
+          <p class="text-lg leading-[1.8em] pb-6">
+            Standard gig apps extract profit from our local communities, leaving behind wage stagnation and economic insecurity. U-DO offers a different path: a local food delivery model where neighbors can finally succeed by working for themselves instead of being exploited by predatory systems. We are here to show that by stopping the "corporate tax" on every meal, we can create a future of shared prosperity for every driver and restaurant owner in our neighborhood.
+          </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Why 02 -->
+      <div class="max-w-7xl mx-auto border-b border-gray-200">
+        <div class="flex flex-col gap-y-12 lg:grid lg:grid-cols-2 py-12 md:py-[100px]">
+          <div class="px-[10%] pb-0">
+            <p class="text-lg opacity-75">02</p>
+            <p class="text-[48px] sm:text-[72px] lg:text-[110px] font-bold leading-[1.15em] pt-10">Freedom from Predatory DoorDash and Uber Eats Fees</p>
+          </div>
+          <div class="p-[10%] bg-midnight text-white">
+            <p class="text-lg opacity-75">02</p>
+            <p class="text-[36px] sm:text-[40px] leading-[1.2em] pt-10">"Customers shouldn't be buried in 'service fees' and 'hidden fees.' The delivery fee is the only real fee you should be paying—not a percentage-based tax on your appetite."</p>
+            <p class="text-[22px] opacity-75 pt-6 pb-12"> </p>
+            <p class="text-lg leading-[1.8em] pb-6"> 
+              Stop paying a 15% 'Service Fee' just because you ordered a larger meal. Why should a $100 order cost you $15 more in fees than a $10 order if the work is the same? U-DO strips away the corporate fluff. By removing the predatory fees that DoorDash and Uber Eats pile on, we make food more affordable for customers and more profitable for drivers. How you spend your savings is up to you—we’re here to provide the $1 platform, not a growing list of extra charges.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Why 03 -->
+      <!-- <div class="max-w-7xl mx-auto border-b border-gray-200">
+        <div class="flex flex-col gap-y-12 lg:grid lg:grid-cols-2 py-12 md:py-[100px]">
+          <div class="px-[10%] pb-0">
+            <p class="text-lg opacity-75">03</p>
+            <p class="text-[48px] sm:text-[72px] lg:text-[110px] font-bold leading-[1.15em] pt-10">Our network is yours</p>
+          </div>
+          <div class="p-[10%] bg-midnight text-white">
+            <p class="text-lg opacity-75">03</p>
+            <p class="text-[36px] sm:text-[40px] leading-[1.2em] pt-10">"That major that she majored in don't make no money / But she won't drop out, her parents'll look at her funny"</p>
+            <p class="text-[22px] opacity-75 pt-6 pb-12">- Kanye</p>
+            <p class="text-lg leading-[1.8em] pb-6">
+              The hardest thing about being a young entrepreneur is that you haven't met everyone you'll need to know to make your venture succeed. We can help connect you — to investors, partners, prospective customers — in Silicon Valley and beyond.
+            </p>
+          </div>
+        </div>
+      </div> -->
+    </section>
+
+    <!-- AS SEEN IN -->
+    <!-- <section class="border-b border-gray-200">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 flex flex-col gap-y-12 py-16 lg:py-[150px] xl:grid xl:grid-cols-[0.2fr_0.8fr]">
+        <h2 class="text-[34px] select-none">As seen in</h2>
+        <div class="flex flex-col lg:grid lg:grid-cols-3 gap-x-12 gap-y-12">
+          <div class="flex flex-col gap-y-6 border-b-2 border-black pb-6">
+            <p class="text-[26px] sm:text-[26px] leading-tight">— The New York Times</p>
+            <p class="font-mono text-lg pb-[125px]">"Thanks to the , access to some of the nation's most successful businesspeople is quick and easy."</p>
+          </div>
+          <div class="flex flex-col gap-y-6 border-b-2 border-black pb-6">
+            <p class="text-[26px] sm:text-[26px] leading-tight">— TechCrunch</p>
+            <p class="font-mono text-lg pb-[125px]">" pays kids a stipend that liberates them to work on ways to improve the world, rather than saddling them with debt. They get mentorship, workshops, connections to resources, and an alumni network without a formal alma mater."</p>
+          </div>
+          <div class="flex flex-col gap-y-6 border-b sm:border-b-2 border-black pb-6">
+            <p class="text-[26px] sm:text-[26px] leading-tight">— Wall Street Journal</p>
+            <p class="font-mono text-lg pb-[125px]">"Not long ago, dropping out of school to start a company was considered risky. For this generation, it is a badge of honor, evidence of ambition and focus."</p>
+          </div>
+        </div>
+      </div>
+    </section> -->
+
+    <!-- STAY CONNECTED / EARLY ACCESS -->
+    <section id="early-access" class="bg-midnight text-white">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 py-16 lg:py-[120px]">
+        <div class="max-w-2xl mx-auto text-center">
+          <p class="text-[45px] sm:text-[56px] lg:text-[68px] leading-tight font-bold">
+            Be the First.<br>Start Saving Before Everyone Else.
+          </p>
+          <p class="font-mono tracking-wider leading-[1.75em] text-lg font-light mt-6 max-w-[550px] mx-auto">
+            We're looking for our first test customers in DC. Sign up now to lock in early rates, shape the platform, and keep more money in your pocket from day one.
+          </p>
+
+          <p class="text-sm text-white/50 mt-8 max-w-lg mx-auto">Enter your email, phone number, or both — whichever works for you.</p>
+          <form id="early-access-form" class="mt-4 flex flex-col sm:flex-row gap-3 max-w-lg mx-auto" onsubmit="handleEarlyAccess(event)">
+            <input type="email" id="ea-email" placeholder="Email address"
+              class="flex-1 bg-white/10 border border-white/20 text-white placeholder-white/50 px-4 py-3 text-lg font-mono focus:outline-none focus:border-white/60 transition" />
+            <input type="tel" id="ea-phone" placeholder="Phone number"
+              class="flex-1 bg-white/10 border border-white/20 text-white placeholder-white/50 px-4 py-3 text-lg font-mono focus:outline-none focus:border-white/60 transition" />
+            <button type="submit"
+              class="bg-white text-black font-bold text-lg px-6 py-3 hover:bg-white/90 transition flex-shrink-0">
+              Count Me In
+            </button>
+          </form>
+
+          <div id="ea-status" class="mt-4 hidden"></div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="bg-[#ededed] w-full">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-12 py-12 sm:py-0 sm:h-[400px] flex items-center text-[#999]">
+      <div class="flex flex-col gap-y-12 sm:grid sm:grid-cols-2 items-start w-full">
+        <div class="flex flex-col gap-y-6">
+          <h3 class="text-[34px] pb-2 text-black">Contact</h3>
+          <a href="mailto:team@udonow.com" class="text-2xl h-[35px] border-b border-[#999] w-fit hover:text-black transition">team@udonow.com</a>
+          <p class="text-lg">© 2026 The U-DO Team.<br>All rights reserved.</p>
+        </div>
+        <div class="flex flex-col gap-y-2">
+          <h3 class="text-[34px] pb-2 text-black">Navigate</h3>
+          <a href="/apply" class="text-[21px] h-[33px] border-b border-[#999] w-fit hover:text-black transition">Apply Now</a>
+          
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    function handleEarlyAccess(e) {
+      e.preventDefault();
+      const email = document.getElementById('ea-email').value;
+      const phone = document.getElementById('ea-phone').value;
+      const statusEl = document.getElementById('ea-status');
+
+      // TODO: Replace with real API call when backend is ready
+      // fetch(API_BASE + 'early-access', { method:'POST', headers:{'Content-Type':'application/json'}, body: JSON.stringify({email,phone}) })
+
+      statusEl.classList.remove('hidden');
+      statusEl.innerHTML = '<p class="font-mono text-sm text-white/80">✓ You\'re in! We\'ll reach out to <b>' + email + '</b> soon.</p>';
+
+      document.getElementById('early-access-form').reset();
+    }
+  </script>
+</body>
+</html>
