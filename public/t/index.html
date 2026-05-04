@@ -73,7 +73,7 @@
       <div class="max-w-7xl mx-auto px-4 sm:px-6 pb-12">
        
         <p class="mt-[10%] sm:mt-12 text-[45px] sm:text-[72px] md:text-[80px] lg:text-[98px] leading-tight w-4/5 sm:w-full lg:max-w-[1024px]">
-          Did you know the base pay for DoorDash and Uber Eats is just $2? 
+          Did you know the base pay for DoorDash and Uber Eats is just $2? <a href="#" onclick="openBasePayModal(event)" title="Click to see proof" class="inline-flex items-center gap-1 text-orange-400 hover:text-orange-300 transition align-middle text-[45px] sm:text-[72px] md:text-[80px] lg:text-[98px]"> <svg class="w-6 h-6 sm:w-8 sm:h-8 inline" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg> <span class="text-lg sm:text-xl">see proof</span></a>
         </p>
          <p class="font-mono tracking-wider leading-[1.75em] text-lg md:w-1/2 font-light max-w-[600px] pt-[25px]">
            While corporate owners pay themselves the <b>billions</b>, the people on the front lines are stuck with a base wage that has gone down with years. We think people's time is worth more than a couple of quarters and a prayer for a tip.
@@ -123,7 +123,11 @@
             <br><br>
               > New trending : doordash workers are now starting to live in their cars bc they cant pay the rising cost of the rent. <a href="#" onclick="openProofModal(event)" title="Click to view the source" class="inline-flex items-center gap-1 text-orange-400 hover:text-orange-300 transition align-middle"> <svg class="w-4 h-4 inline" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg> see proof</a>.
             <br><br>
+               > If a customer pays good tips these company's AI learns that pattern and they charge you more next time, bc they know you have extra money, so why pay the worker , pay the company. <a href="#" onclick="openProofModal(event)" title="Click to view the source" class="inline-flex items-center gap-1 text-orange-400 hover:text-orange-300 transition align-middle"> <svg class="w-4 h-4 inline" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg> see proof</a>.
+            <br><br>
             
+            > When companies charge you $20 in "surge pricing," the person doing the actual work only sees about $1 or $2 of it. The rest goes straight to the billionaires at the top. <a href="#" onclick="openProofModal(event)" title="Click to view the source" class="inline-flex items-center gap-1 text-orange-400 hover:text-orange-300 transition align-middle"> <svg class="w-4 h-4 inline" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg> see proof</a>.
+            <br><br>
             We are here to show that by stopping the "corporate tax" on every meal, we can create a future of shared prosperity for every driver and restaurant owner in our neighborhood.
           </p>
           </div>
@@ -239,6 +243,14 @@
     </div>
   </footer>
 
+  <!-- BASE PAY MODAL -->
+  <div id="base-pay-modal" class="fixed inset-0 z-[999] hidden items-center justify-center bg-black/80" onclick="closeBasePayModal(event)">
+    <div class="relative max-w-4xl w-full mx-4" onclick="event.stopPropagation()">
+      <button onclick="closeBasePayModal()" class="absolute -top-10 right-0 text-white text-3xl hover:text-orange-400 transition leading-none">&times;</button>
+      <img src="/img/home/base_pay.png" alt="Proof - Base pay is just $2" class="w-full rounded-lg shadow-2xl">
+    </div>
+  </div>
+
   <!-- PROOF MODAL -->
   <div id="proof-modal" class="fixed inset-0 z-[999] hidden items-center justify-center bg-black/80" onclick="closeProofModal(event)">
     <div class="relative max-w-4xl w-full mx-4" onclick="event.stopPropagation()">
@@ -250,6 +262,8 @@
   <script>
     function openProofModal(e) { e.preventDefault(); document.getElementById('proof-modal').classList.remove('hidden'); document.getElementById('proof-modal').classList.add('flex'); document.body.style.overflow='hidden'; }
     function closeProofModal(e) { if(e && e.target !== document.getElementById('proof-modal')) return; document.getElementById('proof-modal').classList.add('hidden'); document.getElementById('proof-modal').classList.remove('flex'); document.body.style.overflow=''; }
+    function openBasePayModal(e) { e.preventDefault(); document.getElementById('base-pay-modal').classList.remove('hidden'); document.getElementById('base-pay-modal').classList.add('flex'); document.body.style.overflow='hidden'; }
+    function closeBasePayModal(e) { if(e && e.target !== document.getElementById('base-pay-modal')) return; document.getElementById('base-pay-modal').classList.add('hidden'); document.getElementById('base-pay-modal').classList.remove('flex'); document.body.style.overflow=''; }
     function handleEarlyAccess(e) {
       e.preventDefault();
       const email = document.getElementById('ea-email').value;
